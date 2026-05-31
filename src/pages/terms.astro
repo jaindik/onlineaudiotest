@@ -1,0 +1,180 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "url": "https://onlineaudiotest.com/terms",
+  "name": "Terms & Conditions — OnlineAudioTest.com",
+  "description": "Terms and conditions for using OnlineAudioTest.com. Free audio test tools provided as-is, with no warranty.",
+  "inLanguage": "en-US",
+  "dateModified": "2025-06-01",
+  "isPartOf": { "@type": "WebSite", "url": "https://onlineaudiotest.com", "name": "OnlineAudioTest.com" },
+  "publisher": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com", "logo": "https://onlineaudiotest.com/icon.png" }
+};
+---
+
+<Layout
+  title="Terms & Conditions — OnlineAudioTest.com"
+  description="Terms and conditions for using OnlineAudioTest.com. Free audio test tools provided as-is, with no warranty. Read our terms before using the service."
+  canonical="https://onlineaudiotest.com/terms"
+  schema={schema}
+>
+
+  <div class="policy-page container">
+    <div class="policy-inner">
+
+      <header class="policy-header">
+        <span class="eyebrow">Legal</span>
+        <h1>Terms &amp; Conditions</h1>
+        <p class="policy-meta">Last updated: <time datetime="2025-06-01">June 1, 2025</time></p>
+      </header>
+
+      <div class="policy-body">
+
+        <section>
+          <h2>Agreement to Terms</h2>
+          <p>By accessing or using OnlineAudioTest.com ("the site", "we", "our"), you agree to be bound by these Terms and Conditions. If you disagree with any part of these terms, you may not use the site.</p>
+        </section>
+
+        <section>
+          <h2>Use of the Service</h2>
+          <p>OnlineAudioTest.com provides free, browser-based audio testing tools including a microphone test, stereo/speaker test, and audio latency test. These tools are provided for personal, non-commercial diagnostic purposes.</p>
+          <p>You agree not to:</p>
+          <ul>
+            <li>Use the site for any unlawful purpose</li>
+            <li>Attempt to reverse-engineer, scrape, or systematically extract content from the site</li>
+            <li>Use automated tools to access the site in a way that places unreasonable load on our servers</li>
+            <li>Attempt to interfere with or disrupt the security or integrity of the site</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Intellectual Property</h2>
+          <p>All content on this site — including but not limited to text, code, design, graphics, and tool functionality — is the property of OnlineAudioTest.com and is protected by applicable intellectual property laws.</p>
+          <p>You may not reproduce, distribute, or create derivative works from any content on this site without prior written permission, except as permitted by applicable law (e.g. for personal, non-commercial use with attribution).</p>
+        </section>
+
+        <section>
+          <h2>Disclaimer of Warranties</h2>
+          <p>The tools and content on OnlineAudioTest.com are provided <strong>"as is"</strong> and <strong>"as available"</strong>, without any warranty of any kind, express or implied. We make no warranty that:</p>
+          <ul>
+            <li>The tools will be accurate, complete, or error-free</li>
+            <li>The tools will be available at all times without interruption</li>
+            <li>Results will be suitable for your specific diagnostic needs</li>
+            <li>The site is free of viruses or other harmful components</li>
+          </ul>
+          <p>Audio test results depend on your device hardware, browser implementation, and system configuration. Results are informational only and should not be used as the sole basis for purchasing, repair, or professional audio decisions.</p>
+        </section>
+
+        <section>
+          <h2>Limitation of Liability</h2>
+          <p>To the maximum extent permitted by applicable law, OnlineAudioTest.com and its operators shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of data, revenue, or profit, arising out of or in connection with your use of — or inability to use — the site or its tools.</p>
+          <p>Our total liability for any claim arising from your use of the site shall not exceed the amount you paid to use the service (which, as this is a free service, is zero).</p>
+        </section>
+
+        <section>
+          <h2>Third-Party Links and Services</h2>
+          <p>The site may contain links to third-party websites or services. These are provided for convenience only. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of third-party sites. We encourage you to read the privacy policy and terms of any third-party site you visit.</p>
+        </section>
+
+        <section>
+          <h2>Privacy</h2>
+          <p>Your use of the site is also governed by our <a href="/privacy">Privacy Policy</a>, which is incorporated into these Terms by reference.</p>
+        </section>
+
+        <section>
+          <h2>Modifications to the Service</h2>
+          <p>We reserve the right to modify, suspend, or discontinue any part of the site at any time, with or without notice. We shall not be liable to you or any third party for any such modification, suspension, or discontinuation.</p>
+        </section>
+
+        <section>
+          <h2>Changes to These Terms</h2>
+          <p>We may update these Terms from time to time. When we do, we will revise the "Last updated" date. Continued use of the site after any change constitutes your acceptance of the new Terms.</p>
+        </section>
+
+        <section>
+          <h2>Governing Law</h2>
+          <p>These Terms shall be governed by and construed in accordance with applicable laws, without regard to conflict of law principles. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the competent courts in the applicable jurisdiction.</p>
+        </section>
+
+        <section>
+          <h2>Contact</h2>
+          <p>If you have questions about these Terms, please <a href="/contact">contact us</a>.</p>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+</Layout>
+
+<style>
+  .policy-page {
+    padding-top: var(--s-4xl);
+    padding-bottom: var(--s-5xl);
+  }
+  .policy-inner {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+  .policy-header {
+    margin-bottom: var(--s-2xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  .policy-header h1 {
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -1.5px;
+    color: var(--ink);
+  }
+  .policy-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+  }
+  .policy-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2xl);
+  }
+  .policy-body section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-md);
+    padding-bottom: var(--s-2xl);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .policy-body section:last-child { border-bottom: none; }
+  .policy-body h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+  }
+  .policy-body p {
+    font-size: 15px;
+    color: var(--body-text);
+    line-height: 1.75;
+  }
+  .policy-body ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+    padding-left: var(--s-lg);
+    list-style: disc;
+  }
+  .policy-body li {
+    font-size: 15px;
+    color: var(--body-text);
+    line-height: 1.6;
+  }
+  .policy-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  strong { color: var(--ink); font-weight: 500; }
+</style>

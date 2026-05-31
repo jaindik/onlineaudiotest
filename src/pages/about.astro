@@ -1,0 +1,155 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "url": "https://onlineaudiotest.com/about",
+  "name": "About OnlineAudioTest.com",
+  "description": "OnlineAudioTest.com is a free, privacy-first suite of browser-based audio diagnostic tools. No download, no signup — just instant mic check, stereo audio test, and latency test.",
+  "inLanguage": "en-US",
+  "isPartOf": { "@type": "WebSite", "url": "https://onlineaudiotest.com", "name": "OnlineAudioTest.com" },
+  "publisher": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com", "logo": "https://onlineaudiotest.com/icon.png" }
+};
+---
+
+<Layout
+  title="About Us — OnlineAudioTest.com"
+  description="OnlineAudioTest.com is a free, privacy-first suite of browser-based audio diagnostic tools. No download, no signup — just instant mic check, stereo audio test, and latency test."
+  canonical="https://onlineaudiotest.com/about"
+  schema={schema}
+>
+
+  <div class="about-page container">
+    <div class="about-inner">
+
+      <header class="about-header">
+        <span class="eyebrow">About</span>
+        <h1>Built for anyone who just needs their audio to work.</h1>
+        <p class="about-lead">OnlineAudioTest.com is a free collection of browser-based audio diagnostic tools. No download. No account. No friction.</p>
+      </header>
+
+      <div class="about-grid">
+
+        <div class="about-block">
+          <h2>What we do</h2>
+          <p>We provide three focused audio testing tools — a <a href="/mic-test">mic check</a>, a <a href="/speaker-test">left right audio test</a> for speakers and headphones, and an <a href="/latency-test">audio latency test</a> for Bluetooth and system delay. Each tool does exactly one job, gives you clear feedback, and gets out of your way.</p>
+          <p>Every test runs entirely inside your browser using the Web Audio API. Nothing is downloaded, installed, or uploaded. Your mic audio never leaves your device.</p>
+        </div>
+
+        <div class="about-block">
+          <h2>Why we built it</h2>
+          <p>Most audio troubleshooting involves either downloading a dedicated app, digging through OS settings menus, or asking a tech-savvy friend. None of those are good options when you're 10 minutes before a Zoom interview and your mic sounds like it's underwater.</p>
+          <p>We built OnlineAudioTest.com to be the fastest possible first step in diagnosing any audio issue — a tool you can open on any device, in any browser, right now.</p>
+        </div>
+
+        <div class="about-block">
+          <h2>Our principles</h2>
+          <ul>
+            <li><strong>Privacy first.</strong> Microphone audio is processed locally and never transmitted. We don't record anything.</li>
+            <li><strong>No bloat.</strong> Each tool does one thing well. There are no dashboards, settings panels, or upsell prompts.</li>
+            <li><strong>Always free.</strong> Every feature on the site is free with no paywall.</li>
+            <li><strong>Works everywhere.</strong> Mobile, tablet, desktop — every test is responsive and touch-friendly.</li>
+          </ul>
+        </div>
+
+        <div class="about-block">
+          <h2>Who uses it</h2>
+          <p>Our users range from remote workers doing a quick mic check before a call, to musicians checking headphone frequency balance, to gamers diagnosing Bluetooth lag. If you've ever had an audio problem and wanted a fast, honest answer — this site is for you.</p>
+        </div>
+
+      </div>
+
+      <div class="about-cta-row">
+        <a href="/mic-test" class="btn btn-primary btn-lg">Mic Check Online</a>
+        <a href="/speaker-test" class="btn btn-secondary btn-lg">Left Right Audio Test</a>
+        <a href="/latency-test" class="btn btn-secondary btn-lg">Audio Latency Test</a>
+      </div>
+
+    </div>
+  </div>
+
+</Layout>
+
+<style>
+  .about-page {
+    padding-top: var(--s-4xl);
+    padding-bottom: var(--s-5xl);
+  }
+  .about-inner {
+    max-width: 800px;
+    margin-inline: auto;
+  }
+  .about-header {
+    margin-bottom: var(--s-3xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-md);
+  }
+  .about-header h1 {
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 600;
+    letter-spacing: -1.8px;
+    color: var(--ink);
+    line-height: 1.1;
+    max-width: 640px;
+  }
+  .about-lead {
+    font-size: 18px;
+    color: var(--body-text);
+    line-height: 1.6;
+    max-width: 560px;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-xl);
+    margin-bottom: var(--s-3xl);
+  }
+  .about-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-md);
+    padding: var(--s-xl);
+    background: var(--canvas);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-3);
+  }
+  .about-block h2 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .about-block p {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.7;
+  }
+  .about-block ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+    padding-left: var(--s-md);
+    list-style: disc;
+  }
+  .about-block li {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.6;
+  }
+  .about-block a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+  strong { color: var(--ink); font-weight: 500; }
+  .about-cta-row {
+    display: flex;
+    gap: var(--s-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: var(--s-lg);
+    border-top: 1px solid var(--hairline);
+  }
+  @media (max-width: 640px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .about-header h1 { letter-spacing: -1px; }
+  }
+</style>

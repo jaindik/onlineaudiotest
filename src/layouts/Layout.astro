@@ -1,23 +1,914 @@
+﻿---
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  schema?: object;
+  pageClass?: string;
+  sidebar?: boolean;
+  keywords?: string;
+}
+
+const { title, description, canonical, schema, pageClass = '', sidebar = false, keywords } = Astro.props;
+const currentPath = Astro.url.pathname;
+const site = 'https://onlineaudiotest.com';
+const canonicalURL = canonical || new URL(Astro.url.pathname, site).href;
+const ogImage = `${site}/ogImage.png`;
+---
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="canonical" href={canonicalURL} />
+  <meta name="generator" content={Astro.generator} />
+
+  <!-- Primary Meta -->
+  <title>{title}</title>
+  <meta name="title" content={title} />
+  <meta name="description" content={description} />
+  {keywords && <meta name="keywords" content={keywords} />}
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="author" content="OnlineAudioTest.com" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={title} />
+  <meta property="og:site_name" content="OnlineAudioTest.com" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@onlineaudiotest" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image:alt" content={title} />
+
+  <!-- Fonts: Geist (Vercel's typeface, open-sourced) + Geist Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet" />
+
+  <!-- Schema.org JSON-LD -->
+  {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+</head>
+<body class={pageClass}>
+
+  <!-- ───── NAV ───── -->
+  <header class="nav" role="banner">
+    <div class="nav-inner container">
+      <a href="/" class="nav-logo" aria-label="OnlineAudioTest home">
+        <img src="/icon.png" width="22" height="22" alt="" aria-hidden="true" />
+        <span class="logo-text">onlineaudiotest</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="/mic-test" class:list={['nav-link', { 'nav-active': currentPath === '/mic-test' }]}>
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="7" y="2" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="7" y1="19" x2="13" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span class="nav-link-text">Mic Test</span>
+        </a>
+        <a href="/speaker-test" class:list={['nav-link', { 'nav-active': currentPath === '/speaker-test' }]}>
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M14 7a4 4 0 010 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span class="nav-link-text">Speaker Test</span>
+        </a>
+        <a href="/latency-test" class:list={['nav-link', { 'nav-active': currentPath === '/latency-test' }]}>
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 6v4.5l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="nav-link-text">Latency Test</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ───── CONTENT ───── -->
+  {sidebar ? (
+    <div class="page-layout">
+      <main id="main-content" class="page-main">
+        <slot />
+      </main>
+      <aside class="tool-sidebar" aria-label="Other tests">
+        <div class="sidebar-inner">
+
+          <a href="/mic-test" class:list={['sidebar-item', { active: currentPath === '/mic-test' }]}>
+            <div class="sidebar-icon">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <rect x="7" y="2" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="7" y1="19" x2="13" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="sidebar-text">
+              <span class="sidebar-item-title">Test your Microphone</span>
+              <span class="sidebar-item-desc">Input levels &amp; recording</span>
+            </div>
+          </a>
+
+          <a href="/speaker-test" class:list={['sidebar-item', { active: currentPath === '/speaker-test' }]}>
+            <div class="sidebar-icon">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="M14 7a4 4 0 010 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="sidebar-text">
+              <span class="sidebar-item-title">Test your Speakers</span>
+              <span class="sidebar-item-desc">Left, right &amp; stereo output</span>
+            </div>
+          </a>
+
+          <a href="/latency-test" class:list={['sidebar-item', { active: currentPath === '/latency-test' }]}>
+            <div class="sidebar-icon">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10 6v4.5l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="sidebar-text">
+              <span class="sidebar-item-title">Audio Latency Test</span>
+              <span class="sidebar-item-desc">Bluetooth delay &amp; lag check</span>
+            </div>
+          </a>
+
+        </div>
+      </aside>
+    </div>
+  ) : (
+    <main id="main-content">
+      <slot />
+    </main>
+  )}
+
+  <!-- ───── FOOTER ───── -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="nav-logo footer-logo">
+          <img src="/icon.png" width="18" height="18" alt="" aria-hidden="true" />
+          <span>onlineaudiotest</span>
+        </a>
+        <p class="footer-tagline">Free browser-based audio diagnostics. No download required.</p>
+      </div>
+
+      <div class="footer-cols">
+        <div class="footer-col">
+          <span class="footer-col-label">Tools</span>
+          <a href="/mic-test" class="footer-link">Mic Check Online</a>
+          <a href="/speaker-test" class="footer-link">Left Right Audio Test</a>
+          <a href="/speaker-test" class="footer-link">Headphone Test</a>
+          <a href="/latency-test" class="footer-link">Audio Latency Test</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-label">Company</span>
+          <a href="/" class="footer-link">Home</a>
+          <a href="/about" class="footer-link">About Us</a>
+          <a href="/contact" class="footer-link">Contact Us</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-label">Legal</span>
+          <a href="/privacy" class="footer-link">Privacy Policy</a>
+          <a href="/terms" class="footer-link">Terms &amp; Conditions</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom container">
+      <span class="caption-mono">© {new Date().getFullYear()} OnlineAudioTest.com - All rights reserved.</span>
+    </div>
+  </footer>
+
+</body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style is:global>
+  /* ═══════════════════════════════════════════
+     DESIGN SYSTEM - mirrors DESIGN.md tokens
+  ═══════════════════════════════════════════ */
+  :root {
+    /* Fonts */
+    --font-sans: 'Geist', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace;
+
+    /* Colors */
+    --ink:              #171717;
+    --body-text:        #4d4d4d;
+    --mute:             #888888;
+    --canvas:           #ffffff;
+    --canvas-soft:      #fafafa;
+    --canvas-soft-2:    #f5f5f5;
+    --hairline:         #ebebeb;
+    --hairline-strong:  #a1a1a1;
+    --link:             #0070f3;
+    --link-deep:        #0761d1;
+    --on-primary:       #ffffff;
+    --cyan:             #50e3c2;
+    --success:          #0070f3;
+    --error:            #ee0000;
+
+    /* Brand gradients */
+    --grad-develop: linear-gradient(to bottom, #93c5fd, #60a5fa);
+    --grad-preview: linear-gradient(135deg, #7928ca 0%, #ff0080 100%);
+    --grad-ship:    linear-gradient(135deg, #ff4d4d 0%, #f9cb28 100%);
+    --grad-hero: radial-gradient(ellipse at 20% 50%, rgba(0,124,240,.18) 0%, transparent 60%),
+                 radial-gradient(ellipse at 80% 20%, rgba(0,223,216,.14) 0%, transparent 55%),
+                 radial-gradient(ellipse at 60% 80%, rgba(121,40,202,.12) 0%, transparent 55%),
+                 radial-gradient(ellipse at 90% 70%, rgba(255,0,128,.10) 0%, transparent 50%),
+                 radial-gradient(ellipse at 40% 10%, rgba(255,77,77,.08) 0%, transparent 50%),
+                 radial-gradient(ellipse at 10% 90%, rgba(249,203,40,.08) 0%, transparent 50%);
+
+    /* Border radius */
+    --r-xs:   4px;
+    --r-sm:   6px;
+    --r-md:   8px;
+    --r-lg:   12px;
+    --r-xl:   16px;
+    --r-pill: 100px;
+    --r-full: 9999px;
+
+    /* Spacing */
+    --s-xxs: 4px;
+    --s-xs:  8px;
+    --s-sm:  12px;
+    --s-md:  16px;
+    --s-lg:  24px;
+    --s-xl:  32px;
+    --s-2xl: 40px;
+    --s-3xl: 48px;
+    --s-4xl: 64px;
+    --s-5xl: 96px;
+    --s-section: 192px;
+
+    /* Stacked shadows (Vercel-style) */
+    --shadow-1: inset 0 0 0 1px rgba(0,0,0,.08);
+    --shadow-2: 0 1px 1px rgba(0,0,0,.02),0 2px 2px rgba(0,0,0,.04), inset 0 0 0 1px rgba(0,0,0,.08);
+    --shadow-3: 0 2px 2px rgba(0,0,0,.04),0 8px 8px -8px rgba(0,0,0,.04), inset 0 0 0 1px rgba(0,0,0,.08);
+    --shadow-4: 0 2px 2px rgba(0,0,0,.04),0 8px 16px -4px rgba(0,0,0,.04), inset 0 0 0 1px rgba(0,0,0,.08);
+
+    /* Nav */
+    --nav-height: 64px;
+    --container-max: 1200px;
+    --container-pad: var(--s-lg);
+  }
+
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink);
+    background: var(--canvas-soft);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection { background: var(--ink); color: var(--on-primary); }
+
+  img, video { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { cursor: pointer; font-family: inherit; }
+  ul { list-style: none; }
+
+  /* ── Layout helpers ── */
+  .container {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-pad);
+  }
+
+  /* ── Typography tokens ── */
+  .display-xl { font-size: 48px; font-weight: 600; line-height: 48px; letter-spacing: -2.4px; }
+  .display-lg { font-size: 32px; font-weight: 600; line-height: 40px; letter-spacing: -1.28px; }
+  .display-md { font-size: 24px; font-weight: 600; line-height: 32px; letter-spacing: -0.96px; }
+  .display-sm { font-size: 20px; font-weight: 600; line-height: 28px; letter-spacing: -0.6px; }
+  .body-lg    { font-size: 18px; font-weight: 400; line-height: 28px; }
+  .body-md    { font-size: 16px; font-weight: 400; line-height: 24px; }
+  .body-sm    { font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: -0.28px; }
+  .caption    { font-size: 12px; font-weight: 400; line-height: 16px; }
+  .caption-mono { font-family: var(--font-mono); font-size: 12px; font-weight: 400; line-height: 16px; }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-xs);
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    transition: opacity .15s, transform .1s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; pointer-events: none; }
+
+  .btn-primary {
+    background: var(--grad-develop);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: var(--r-pill);
+    padding: 0 var(--s-sm);
+    height: 40px;
+    font-weight: 600;
+  }
+  .btn-primary:hover { opacity: .88; }
+
+  .btn-secondary {
+    background: var(--canvas);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: var(--r-pill);
+    padding: 0 var(--s-sm);
+    height: 44px;
+    box-shadow: var(--shadow-1);
+  }
+  .btn-secondary:hover { background: var(--canvas-soft-2); }
+
+  .btn-sm {
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: var(--r-pill);
+    padding: 0 var(--s-xs);
+    height: 32px;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--body-text);
+    font-size: 14px;
+    border-radius: var(--r-full);
+    padding: var(--s-xxs) var(--s-sm);
+    height: 32px;
+  }
+  .btn-ghost:hover { background: var(--canvas-soft-2); }
+
+  .btn-lg {
+    font-size: 16px;
+    height: 48px;
+    padding: 0 var(--s-xl);
+    border-radius: var(--r-pill);
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--canvas);
+    border-radius: var(--r-md);
+    padding: var(--s-lg);
+    box-shadow: var(--shadow-2);
+  }
+  .card-lg {
+    background: var(--canvas);
+    border-radius: var(--r-lg);
+    padding: var(--s-xl);
+    box-shadow: var(--shadow-3);
+  }
+  .card-soft {
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    padding: var(--s-lg);
+    box-shadow: var(--shadow-1);
+  }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-xxs);
+    background: var(--canvas-soft);
+    color: var(--body-text);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    border-radius: var(--r-full);
+    padding: 0 var(--s-xs);
+    height: 24px;
+    box-shadow: var(--shadow-1);
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--hairline-strong);
+    flex-shrink: 0;
+  }
+  .badge-dot.green  { background: #00b894; }
+  .badge-dot.blue   { background: var(--link); }
+  .badge-dot.purple { background: #7928ca; }
+
+  /* ── Eyebrow label ── */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  /* ════════════════════════
+       NAV
+  ════════════════════════ */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--hairline);
+    height: var(--nav-height);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-height);
+    gap: var(--s-lg);
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--s-xs);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--s-xxs);
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--body-text);
+    padding: var(--s-xs) var(--s-sm);
+    border-radius: var(--r-full);
+    transition: color .15s, background .15s;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  .nav-link:hover  { color: var(--ink); background: var(--canvas-soft-2); }
+  .nav-link.nav-active { color: var(--ink); font-weight: 500; background: var(--canvas-soft-2); }
+  .nav-link svg { flex-shrink: 0; }
+
+  /* Mobile: icons only - no hamburger, no drawer */
+  @media (max-width: 768px) {
+    .nav-link-text { display: none; }
+    .nav-link { padding: var(--s-xs); }
+  }
+
+  /* ════════════════════════
+       FOOTER
+  ════════════════════════ */
+  .footer {
+    background: var(--canvas);
+    border-top: 1px solid var(--hairline);
+    padding-top: var(--s-4xl);
+    padding-bottom: var(--s-xl);
+    margin-top: 0;
+  }
+  .footer-inner {
+    display: flex;
+    gap: var(--s-4xl);
+    padding-bottom: var(--s-xl);
+    border-bottom: 1px solid var(--hairline);
+    flex-wrap: wrap;
+  }
+  .footer-brand {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  .footer-logo { color: var(--body-text); }
+  .footer-tagline { font-size: 14px; color: var(--mute); max-width: 260px; line-height: 1.5; }
+  .footer-cols { display: flex; gap: var(--s-4xl); flex-wrap: wrap; }
+  .footer-col { display: flex; flex-direction: column; gap: var(--s-xs); min-width: 120px; }
+  .footer-col-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: var(--s-xxs);
+  }
+  .footer-link { font-size: 14px; color: var(--body-text); transition: color .15s; }
+  .footer-link:hover { color: var(--ink); }
+  .footer-bottom { padding-top: var(--s-lg); }
+  .footer-bottom .caption-mono { color: var(--mute); }
+
+  /* ════════════════════════
+       TOOL PAGE COMMONS
+  ════════════════════════ */
+  .tool-hero {
+    padding-top: var(--s-4xl);
+    padding-bottom: var(--s-xl);
+    text-align: center;
+  }
+  .tool-hero h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 600;
+    letter-spacing: -2px;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: var(--s-md);
+  }
+  .tool-hero p {
+    font-size: 18px;
+    color: var(--body-text);
+    max-width: 540px;
+    margin-inline: auto;
+    line-height: 1.6;
+  }
+
+  .tool-card-wrap {
+    max-width: 640px;
+    margin-inline: auto;
+    padding: 0 var(--container-pad);
+    margin-bottom: var(--s-3xl);
+  }
+
+  .tool-card {
+    background: var(--canvas);
+    border-radius: var(--r-lg);
+    padding: var(--s-xl);
+    box-shadow: var(--shadow-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-lg);
+  }
+
+  /* Status pill */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-sm);
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+    background: var(--canvas-soft);
+    border-radius: var(--r-full);
+    padding: 4px 10px;
+    box-shadow: var(--shadow-1);
+  }
+  .status-pill .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--hairline-strong);
+    transition: background .3s;
+    flex-shrink: 0;
+  }
+  .status-pill .dot.active  { background: #60a5fa; box-shadow: 0 0 0 3px rgba(96,165,250,.25); }
+  .status-pill .dot.error   { background: var(--error); }
+  .status-pill .dot.warning { background: var(--warning, #f5a623); }
+
+  /* Channel indicators */
+  .channels {
+    display: flex;
+    gap: var(--s-sm);
+    justify-content: center;
+  }
+  .channel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-xs);
+  }
+  .channel-ring {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 1.5px solid var(--hairline);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--mute);
+    background: var(--canvas-soft);
+    transition: all .25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .channel-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity .25s;
+  }
+  .channel-ring.active {
+    border-color: transparent;
+    color: var(--canvas);
+  }
+  .channel-ring.active::before { opacity: 1; }
+  .channel-ring.left.active  { background: var(--grad-develop); box-shadow: 0 0 0 4px rgba(96,165,250,.2); }
+  .channel-ring.right.active { background: #7928ca; box-shadow: 0 0 0 4px rgba(121,40,202,.15); }
+  .channel-ring.both.active  { background: var(--grad-develop); }
+  .channel-label { font-size: 12px; color: var(--mute); font-family: var(--font-mono); }
+
+  /* Action row */
+  .action-row {
+    display: flex;
+    gap: var(--s-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 0;
+  }
+
+  /* Level meter */
+  .meter-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+  }
+  .meter-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .meter-track {
+    height: 6px;
+    background: var(--canvas-soft-2);
+    border-radius: var(--r-full);
+    overflow: hidden;
+    box-shadow: var(--shadow-1);
+  }
+  .meter-fill {
+    height: 100%;
+    border-radius: var(--r-full);
+    background: var(--grad-develop);
+    width: 0%;
+    transition: width .08s linear;
+  }
+  .meter-fill.high { background: var(--grad-preview); }
+  .meter-fill.clip { background: var(--grad-ship); }
+
+  /* Canvas waveform */
+  .waveform-canvas {
+    width: 100%;
+    height: 80px;
+    border-radius: var(--r-sm);
+    background: var(--canvas-soft-2);
+    display: block;
+  }
+
+  /* Result note */
+  .result-note {
+    font-size: 14px;
+    color: var(--mute);
+    text-align: center;
+    min-height: 20px;
+    font-family: var(--font-mono);
+    transition: color .2s;
+  }
+  .result-note.success { color: #3b82f6; }
+  .result-note.error   { color: var(--error); }
+
+  /* FAQ section */
+  .faq-section {
+    max-width: 680px;
+    margin-inline: auto;
+    padding: 0 var(--container-pad);
+    padding-bottom: var(--s-5xl);
+  }
+  .faq-section h2 {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.96px;
+    margin-bottom: var(--s-xl);
+  }
+  .faq-item { border-top: 1px solid var(--hairline); padding: var(--s-lg) 0; }
+  .faq-item:last-child { border-bottom: 1px solid var(--hairline); }
+  .faq-q { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: var(--s-xs); }
+  .faq-a { font-size: 14px; color: var(--body-text); line-height: 1.6; }
+
+  /* How it works */
+  .how-section {
+    max-width: 680px;
+    margin-inline: auto;
+    padding: 0 var(--container-pad);
+    margin-bottom: var(--s-3xl);
+  }
+  .how-section h2 {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.96px;
+    margin-bottom: var(--s-xl);
+  }
+  .steps { display: flex; flex-direction: column; gap: var(--s-md); }
+  .step {
+    display: flex;
+    gap: var(--s-md);
+    align-items: flex-start;
+  }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+    background: var(--canvas-soft-2);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    box-shadow: var(--shadow-1);
+  }
+  .step-body { font-size: 14px; color: var(--body-text); line-height: 1.6; }
+  .step-body strong { color: var(--ink); font-weight: 500; }
+
+  /* Ad slot */
+  .ad-slot {
+    background: var(--canvas-soft);
+    border: 1px dashed var(--hairline);
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--s-xxs);
+    color: var(--mute);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .ad-slot-lg    { width: 100%; height: 90px; max-width: 728px; margin-inline: auto; }
+  .ad-slot-rect  { width: 100%; height: 280px; max-width: 336px; margin-inline: auto; }
+  .ad-wrap { padding: 0 var(--container-pad); margin-bottom: var(--s-3xl); }
+  .ad-wrap-center { display: flex; justify-content: center; }
+
+  /* Utilities */
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+  .text-center { text-align: center; }
+  .mt-sm { margin-top: var(--s-sm); }
+  .mt-md { margin-top: var(--s-md); }
+  .mt-lg { margin-top: var(--s-lg); }
+  .mb-lg { margin-bottom: var(--s-lg); }
+
+  /* ════════════════════════
+       PAGE + SIDEBAR LAYOUT
+  ════════════════════════ */
+  .page-layout {
+    max-width: 1440px;
+    margin-inline: auto;
+    display: flex;
+    align-items: stretch;
+  }
+  .page-main {
+    flex: 1;
+    min-width: 0;
+  }
+  .tool-sidebar {
+    width: 256px;
+    flex-shrink: 0;
+    border-left: 1px solid var(--hairline);
+  }
+  .sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: sticky;
+    top: var(--nav-height);
+    max-height: calc(100vh - var(--nav-height));
+    overflow-y: auto;
+    padding: var(--s-4xl) var(--s-xl) var(--s-4xl) var(--s-lg);
+  }
+  .sidebar-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mute);
+    padding: 0 var(--s-sm);
+    margin-bottom: var(--s-xs);
+  }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: var(--s-sm);
+    padding: var(--s-xs) var(--s-sm);
+    border-radius: var(--r-md);
+    transition: background .15s;
+    color: var(--body-text);
+    text-decoration: none;
+  }
+  .sidebar-item:hover { background: var(--canvas-soft-2); color: var(--ink); }
+  .sidebar-item.active { background: var(--canvas-soft-2); color: var(--ink); }
+  .sidebar-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--r-sm);
+    background: var(--canvas-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-1);
+    transition: background .15s;
+    color: var(--mute);
+  }
+  .sidebar-item:hover .sidebar-icon,
+  .sidebar-item.active .sidebar-icon {
+    background: var(--canvas);
+    color: var(--ink);
+  }
+  .sidebar-item.active .sidebar-icon {
+    background: var(--grad-develop);
+    color: var(--on-primary);
+    box-shadow: 0 0 0 2px rgba(96,165,250,.3);
+  }
+  .sidebar-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .sidebar-item-title {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: inherit;
+  }
+  .sidebar-item-desc {
+    font-size: 11px;
+    color: var(--mute);
+    line-height: 1.3;
+  }
+  .sidebar-item:hover .sidebar-item-desc,
+  .sidebar-item.active .sidebar-item-desc { color: var(--body-text); }
+
+  /* 1080px - sidebar collapses */
+  @media (max-width: 1080px) {
+    .tool-sidebar { display: none; }
+    .page-layout { display: block; }
+  }
+
+  /* 768px - nav text hidden (handled above in nav block) */
+
+  /* 640px - tool cards, footer */
+  @media (max-width: 640px) {
+    .display-xl { font-size: 32px; letter-spacing: -1.5px; }
+    .tool-card { padding: var(--s-lg); }
+    .tool-hero { padding-top: var(--s-3xl); padding-bottom: var(--s-lg); }
+    .tool-hero p { font-size: 16px; }
+    .channel-ring { width: 60px; height: 60px; }
+    .action-row { padding: 16px 0; }
+    .footer-inner { flex-direction: column; gap: var(--s-xl); }
+    .footer-cols { gap: var(--s-xl); }
+    .how-section { margin-bottom: var(--s-xl); }
+    .faq-section { padding-bottom: var(--s-3xl); }
+  }
+
+  /* 480px - small phones: reduce container padding, compress further */
+  @media (max-width: 480px) {
+    :root { --container-pad: 16px; }
+    .tool-card { padding: var(--s-md); gap: var(--s-md); }
+    .btn-lg { height: 44px; padding: 0 var(--s-lg); font-size: 15px; }
+    .logo-text { display: none; }
+  }
 </style>

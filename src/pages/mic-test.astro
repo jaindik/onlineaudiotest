@@ -1,0 +1,393 @@
+﻿---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Mic Check Online - Free Microphone & Earphone Mic Test",
+  "url": "https://onlineaudiotest.com/mic-test",
+  "description": "Free mic check online. Test your microphone, earphone mic, or headset mic instantly in your browser. Real-time waveform, input level meter, audio recording and playback. No download.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires getUserMedia API support",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": ["Microphone detection", "Earphone mic test", "Real-time waveform display", "Input level monitoring", "Audio recording", "Playback audio test"],
+  "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com" }
+};
+---
+
+<Layout
+  title="Mic Check Online - Free Microphone Test & Earphone Mic Check"
+  description="Free mic check online. Test your microphone, earphone mic, or headset instantly in your browser. See real-time input levels, record a clip, and play it back. No download."
+  keywords="mic check, mic check online, earphone mic test, microphone test online, headset mic test, online mic test, microphone check"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>Mic Check Online</h1>
+    <p>Free mic check for microphones, earphone mics, and headsets. Monitor real-time input levels, record a clip, and play it back — all in your browser, nothing uploaded.</p>
+  </section>
+
+  <!-- TOOL -->
+  <div class="tool-card-wrap">
+    <div class="tool-card" id="mic-tool">
+
+      <!-- Status -->
+      <div class="status-bar">
+        <div class="status-pill" id="status-pill">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Click to start</span>
+        </div>
+        <span class="eyebrow caption-mono" id="timer-label">00:00</span>
+      </div>
+
+      <!-- Permission card (shown before mic is granted) -->
+      <div class="perm-card" id="perm-card">
+        <div class="perm-icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect x="12" y="4" width="8" height="16" rx="4" stroke="#171717" stroke-width="1.5"/>
+            <path d="M7 16a9 9 0 0018 0" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="16" y1="25" x2="16" y2="29" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="11" y1="29" x2="21" y2="29" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="perm-text">Click <strong>Start Mic Test</strong>, then allow microphone access when your browser asks. Your audio is never sent anywhere - it stays in your browser.</p>
+      </div>
+
+      <!-- Level meter (hidden until mic active) -->
+      <div class="mic-visuals" id="mic-visuals" hidden>
+        <canvas class="waveform-canvas" id="waveform" width="560" height="80" aria-label="Microphone waveform"></canvas>
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span class="eyebrow">Input level</span>
+            <span class="caption-mono" id="db-label">- dB</span>
+          </div>
+          <div class="meter-track">
+            <div class="meter-fill" id="meter-fill"></div>
+          </div>
+        </div>
+        <!-- Playback area -->
+        <div class="playback-area" id="playback-area" hidden>
+          <div class="playback-label">
+            <span class="eyebrow">Recording</span>
+            <span class="caption-mono" id="rec-duration">0s</span>
+          </div>
+          <audio id="playback-audio" controls class="audio-player"></audio>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-row" id="action-row">
+        <button class="btn btn-primary btn-lg" id="btn-start" style="min-width:160px">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+            <rect x="5.5" y="1" width="4" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M2.5 7.5a5 5 0 0010 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="7.5" y1="12.5" x2="7.5" y2="14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="5" y1="14" x2="10" y2="14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          Test My Microphone
+        </button>
+      </div>
+
+      <!-- Result -->
+      <p class="result-note" id="result-note">Your microphone audio is processed locally and never uploaded.</p>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <h2>How the mic test works</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Click "Start Mic Test"</strong> - your browser will request microphone permission. Click "Allow" to proceed.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Speak into your microphone.</strong> The level meter and waveform should respond in real time. If they don't move, your mic may not be selected as the default input device.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Recording starts automatically.</strong> Speak into your mic, then click <strong>"Stop &amp; Play Back"</strong> to hear how you sound. No audio is sent to any server.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Click "Stop &amp; Play Back"</strong> when you're done. Your recording plays back instantly and the microphone is released.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">Why isn't my microphone being detected?</p>
+      <p class="faq-a">Check that your microphone is connected and set as the default input device in your OS sound settings. On Windows: Settings → Sound → Input. On Mac: System Preferences → Sound → Input. Also ensure no other app has exclusive access to the mic.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Is my voice recorded and stored anywhere?</p>
+      <p class="faq-a">No. All audio processing happens entirely in your browser using the Web Audio API and MediaRecorder API. No audio data is transmitted to any server.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">The level meter isn't moving. What should I do?</p>
+      <p class="faq-a">Make sure you clicked "Allow" when the browser asked for mic permission. Check your system volume mixer isn't muting the microphone. Try a different browser if the issue persists.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why does my recording sound echo-y or distorted?</p>
+      <p class="faq-a">Echo usually means your speakers are feeding back into your microphone. Use headphones while recording to eliminate this. Distortion typically indicates your input gain is too high - lower the mic sensitivity in your OS settings.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  (() => {
+    type State = 'idle' | 'requesting' | 'monitoring' | 'recording' | 'stopped';
+
+    let state: State = 'idle';
+    let stream: MediaStream | null = null;
+    let audioCtx: AudioContext | null = null;
+    let analyser: AnalyserNode | null = null;
+    let recorder: MediaRecorder | null = null;
+    let animFrame = 0;
+    let chunks: BlobPart[] = [];
+    let recStart = 0;
+    let monitorStart = 0;
+
+    const btnStart    = document.getElementById('btn-start') as HTMLButtonElement;
+    const actionRow   = document.getElementById('action-row')!;
+    const statusDot   = document.getElementById('status-dot')!;
+    const statusText  = document.getElementById('status-text')!;
+    const timerLabel  = document.getElementById('timer-label')!;
+    const resultNote  = document.getElementById('result-note')!;
+    const permCard    = document.getElementById('perm-card')!;
+    const micVisuals  = document.getElementById('mic-visuals')!;
+    const meterFill   = document.getElementById('meter-fill')!;
+    const dbLabel     = document.getElementById('db-label')!;
+    const waveCanvas  = document.getElementById('waveform') as HTMLCanvasElement;
+    const canvasCtx   = waveCanvas.getContext('2d')!;
+    const playbackArea = document.getElementById('playback-area')!;
+    const playbackAudio = document.getElementById('playback-audio') as HTMLAudioElement;
+    const recDuration  = document.getElementById('rec-duration')!;
+
+    // Timer
+    let timerInterval: ReturnType<typeof setInterval> | null = null;
+    function startTimer(label = '00:00') {
+      timerLabel.textContent = label;
+      const startAt = Date.now();
+      timerInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startAt) / 1000);
+        const m = Math.floor(elapsed / 60).toString().padStart(2, '0');
+        const s = (elapsed % 60).toString().padStart(2, '0');
+        timerLabel.textContent = `${m}:${s}`;
+      }, 500);
+    }
+    function stopTimer() {
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    }
+
+    function setStatus(s: State, msg: string) {
+      statusText.textContent = msg;
+      statusDot.className = 'dot';
+      if (s === 'monitoring' || s === 'recording') statusDot.classList.add('active');
+      if (s === 'requesting') statusDot.classList.add('warning');
+    }
+
+    function drawWaveform() {
+      if (!analyser) return;
+      animFrame = requestAnimationFrame(drawWaveform);
+
+      const bufLen = analyser.frequencyBinCount;
+      const timeData = new Uint8Array(bufLen);
+      const freqData = new Uint8Array(bufLen);
+      analyser.getByteTimeDomainData(timeData);
+      analyser.getByteFrequencyData(freqData);
+
+      const W = waveCanvas.width;
+      const H = waveCanvas.height;
+      canvasCtx.clearRect(0, 0, W, H);
+
+      // Background
+      canvasCtx.fillStyle = '#f5f5f5';
+      canvasCtx.fillRect(0, 0, W, H);
+
+      // RMS level
+      let sum = 0;
+      for (let i = 0; i < bufLen; i++) sum += ((timeData[i] / 128) - 1) ** 2;
+      const rms = Math.sqrt(sum / bufLen);
+      const db = 20 * Math.log10(Math.max(rms, 1e-10));
+      const pct = Math.min(100, Math.max(0, (db + 60) / 60 * 100));
+
+      meterFill.style.width = `${pct}%`;
+      meterFill.className = 'meter-fill' + (pct > 85 ? ' clip' : pct > 65 ? ' high' : '');
+      dbLabel.textContent = db > -60 ? `${db.toFixed(1)} dB` : '- dB';
+
+      // Waveform line
+      canvasCtx.beginPath();
+      canvasCtx.strokeStyle = '#007cf0';
+      canvasCtx.lineWidth = 1.5;
+      canvasCtx.lineJoin = 'round';
+
+      const step = W / bufLen;
+      for (let i = 0; i < bufLen; i++) {
+        const v = timeData[i] / 128;
+        const y = (v * H) / 2;
+        i === 0 ? canvasCtx.moveTo(0, y) : canvasCtx.lineTo(i * step, y);
+      }
+      canvasCtx.stroke();
+    }
+
+    async function startMic() {
+      state = 'requesting';
+      setStatus('requesting', 'Requesting mic access…');
+      btnStart.disabled = true;
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      } catch {
+        setStatus('idle', 'Permission denied');
+        resultNote.textContent = 'Microphone access was denied. Please allow it in your browser settings and try again.';
+        resultNote.className = 'result-note error';
+        btnStart.disabled = false;
+        return;
+      }
+
+      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const source = audioCtx.createMediaStreamSource(stream);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 1024;
+      source.connect(analyser);
+
+      permCard.hidden = true;
+      micVisuals.hidden = false;
+      state = 'recording';
+      setStatus('recording', 'Recording…');
+      resultNote.textContent = 'Microphone active - recording in progress.';
+      resultNote.className = 'result-note success';
+      monitorStart = Date.now();
+      startTimer();
+      drawWaveform();
+      startRecording();
+
+      // Swap to single stop button
+      actionRow.innerHTML = `
+        <button class="btn btn-primary btn-lg" id="btn-stop" style="min-width:180px">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="8" height="8" rx="1.5" fill="currentColor"/></svg>
+          Stop &amp; Play Back
+        </button>
+      `;
+      document.getElementById('btn-stop')?.addEventListener('click', stopMic);
+    }
+
+    function startRecording() {
+      if (!stream) return;
+      chunks = [];
+      const mimeType = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/webm', 'audio/ogg']
+        .find(t => MediaRecorder.isTypeSupported(t)) ?? '';
+      recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      const capturedMime = recorder.mimeType || mimeType || 'audio/webm';
+      recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+      recorder.onstop = () => {
+        // Release media resources after all chunks are collected
+        stream?.getTracks().forEach(t => t.stop());
+        audioCtx?.close();
+        stream = null; audioCtx = null; analyser = null; recorder = null;
+
+        const blob = new Blob(chunks, { type: capturedMime });
+        const url = URL.createObjectURL(blob);
+        playbackAudio.src = url;
+        const dur = Math.round((Date.now() - recStart) / 1000);
+        recDuration.textContent = `${dur}s`;
+        playbackArea.hidden = false;
+        resultNote.textContent = 'Recording complete - press play to listen back.';
+        resultNote.className = 'result-note success';
+
+        state = 'idle';
+        setStatus('idle', 'Test complete');
+        timerLabel.textContent = '-';
+        meterFill.style.width = '0%';
+        dbLabel.textContent = '- dB';
+        actionRow.innerHTML = `<button class="btn btn-primary btn-lg" id="btn-start" style="min-width:160px"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><rect x="5.5" y="1" width="4" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 7.5a5 5 0 0010 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="7.5" y1="12.5" x2="7.5" y2="14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="5" y1="14" x2="10" y2="14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Test My Microphone</button>`;
+        document.getElementById('btn-start')?.addEventListener('click', startMic);
+        resultNote.textContent = 'Recording saved - press play above, or start a new test.';
+        resultNote.className = 'result-note success';
+      };
+      recorder.start(100); // collect chunks every 100ms so final chunk is never the only one
+      recStart = Date.now();
+    }
+
+    function stopMic() {
+      // Disable button immediately to prevent double-click
+      const stopBtn = document.getElementById('btn-stop') as HTMLButtonElement | null;
+      if (stopBtn) stopBtn.disabled = true;
+      cancelAnimationFrame(animFrame);
+      stopTimer();
+      // recorder.stop() fires ondataavailable then onstop asynchronously;
+      // all cleanup happens inside onstop so tracks outlive the final chunk collection
+      if (recorder && recorder.state !== 'inactive') {
+        recorder.stop();
+      } else {
+        stream?.getTracks().forEach(t => t.stop());
+        audioCtx?.close();
+        stream = null; audioCtx = null; analyser = null; recorder = null;
+        state = 'idle';
+        setStatus('idle', 'Stopped');
+      }
+    }
+
+    btnStart.addEventListener('click', startMic);
+  })();
+</script>
+
+<style>
+
+  .perm-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-md);
+    padding: var(--s-xl);
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    text-align: center;
+  }
+  .perm-icon {
+    width: 56px; height: 56px;
+    background: var(--canvas-soft-2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-1);
+  }
+  .perm-text { font-size: 14px; color: var(--body-text); line-height: 1.6; max-width: 380px; }
+  .perm-text strong { color: var(--ink); font-weight: 500; }
+
+  .mic-visuals {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-md);
+  }
+
+  .playback-area {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+    padding: var(--s-md);
+    background: var(--canvas-soft);
+    border-radius: var(--r-sm);
+  }
+  .playback-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .audio-player {
+    width: 100%;
+    height: 36px;
+    border-radius: var(--r-full);
+    accent-color: var(--ink);
+  }
+</style>

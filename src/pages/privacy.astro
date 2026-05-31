@@ -1,0 +1,197 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "url": "https://onlineaudiotest.com/privacy",
+  "name": "Privacy Policy — OnlineAudioTest.com",
+  "description": "Privacy policy for OnlineAudioTest.com. All audio processing happens locally in your browser. No data is sent to any server.",
+  "inLanguage": "en-US",
+  "dateModified": "2025-06-01",
+  "isPartOf": { "@type": "WebSite", "url": "https://onlineaudiotest.com", "name": "OnlineAudioTest.com" },
+  "publisher": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com", "logo": "https://onlineaudiotest.com/icon.png" }
+};
+---
+
+<Layout
+  title="Privacy Policy — OnlineAudioTest.com"
+  description="Privacy policy for OnlineAudioTest.com. Learn how we handle your data — all audio processing happens locally in your browser. No data is sent to any server."
+  canonical="https://onlineaudiotest.com/privacy"
+  schema={schema}
+>
+
+  <div class="policy-page container">
+    <div class="policy-inner">
+
+      <header class="policy-header">
+        <span class="eyebrow">Legal</span>
+        <h1>Privacy Policy</h1>
+        <p class="policy-meta">Last updated: <time datetime="2025-06-01">June 1, 2025</time></p>
+      </header>
+
+      <div class="policy-body">
+
+        <section>
+          <h2>Overview</h2>
+          <p>OnlineAudioTest.com ("we", "our", or "the site") is a free, browser-based suite of audio diagnostic tools. We are committed to protecting your privacy. This policy explains what data we collect (if any), how we use it, and what rights you have.</p>
+          <p>The short version: <strong>we do not collect, transmit, or store your microphone audio or any personal audio data.</strong> All audio processing happens entirely within your browser using the Web Audio API and MediaRecorder API. Nothing is uploaded to our servers.</p>
+        </section>
+
+        <section>
+          <h2>Information We Collect</h2>
+          <h3>Audio Data</h3>
+          <p>We do <strong>not</strong> collect, record, or transmit microphone input or any audio data you generate while using the tools on this site. All microphone access is handled by your browser's native APIs. Audio data never leaves your device.</p>
+
+          <h3>Usage Data (Analytics)</h3>
+          <p>We may collect anonymous, aggregated usage data — such as page views, browser type, and referring pages — using privacy-respecting analytics tools. This data cannot be used to identify you individually and is used solely to understand how the tools are used so we can improve them.</p>
+
+          <h3>Cookies</h3>
+          <p>We may use cookies for the following purposes:</p>
+          <ul>
+            <li><strong>Analytics cookies:</strong> To measure site traffic and popular tools.</li>
+            <li><strong>Advertising cookies:</strong> If third-party ads are displayed on the site, ad partners may set their own cookies per their respective privacy policies.</li>
+          </ul>
+          <p>You can control cookie preferences through your browser settings. Disabling cookies will not affect the functionality of the audio test tools.</p>
+
+          <h3>Contact Forms</h3>
+          <p>If you contact us via the contact form, we collect your name, email address, and the message you submit. This information is used solely to respond to your inquiry and is not shared with third parties.</p>
+        </section>
+
+        <section>
+          <h2>How We Use Your Information</h2>
+          <ul>
+            <li>To operate and improve the audio testing tools</li>
+            <li>To respond to support requests and inquiries</li>
+            <li>To measure site performance and diagnose technical issues</li>
+            <li>To serve relevant advertising (if applicable)</li>
+          </ul>
+          <p>We do not sell, rent, or share your personal information with third parties for their marketing purposes.</p>
+        </section>
+
+        <section>
+          <h2>Third-Party Services</h2>
+          <p>The site may use third-party services that have their own privacy policies, including:</p>
+          <ul>
+            <li><strong>Google Analytics</strong> (if enabled) — for anonymous usage statistics</li>
+            <li><strong>Google AdSense</strong> (if enabled) — for serving advertisements</li>
+            <li><strong>Google Fonts</strong> — to load the Geist typeface; Google may log the request</li>
+          </ul>
+          <p>We encourage you to review the privacy policies of these third parties.</p>
+        </section>
+
+        <section>
+          <h2>Data Retention</h2>
+          <p>Since we do not collect audio data, there is nothing to retain. Contact form submissions are kept only as long as necessary to respond to your inquiry, after which they are deleted.</p>
+        </section>
+
+        <section>
+          <h2>Children's Privacy</h2>
+          <p>OnlineAudioTest.com is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you believe a child has provided personal information through our site, please contact us so we can delete it.</p>
+        </section>
+
+        <section>
+          <h2>Your Rights</h2>
+          <p>Depending on your location, you may have the right to:</p>
+          <ul>
+            <li>Access the personal data we hold about you</li>
+            <li>Request correction or deletion of your data</li>
+            <li>Object to or restrict certain processing of your data</li>
+            <li>Lodge a complaint with a supervisory authority (for EEA residents)</li>
+          </ul>
+          <p>To exercise any of these rights, contact us at the address below.</p>
+        </section>
+
+        <section>
+          <h2>Changes to This Policy</h2>
+          <p>We may update this Privacy Policy from time to time. When we do, we will revise the "Last updated" date at the top. We encourage you to review this page periodically.</p>
+        </section>
+
+        <section>
+          <h2>Contact</h2>
+          <p>If you have questions or concerns about this Privacy Policy, please contact us via the <a href="/contact">Contact page</a>.</p>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+</Layout>
+
+<style>
+  .policy-page {
+    padding-top: var(--s-4xl);
+    padding-bottom: var(--s-5xl);
+  }
+  .policy-inner {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+  .policy-header {
+    margin-bottom: var(--s-2xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  .policy-header h1 {
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -1.5px;
+    color: var(--ink);
+  }
+  .policy-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+  }
+  .policy-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2xl);
+  }
+  .policy-body section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-md);
+    padding-bottom: var(--s-2xl);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .policy-body section:last-child {
+    border-bottom: none;
+  }
+  .policy-body h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+  }
+  .policy-body h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: var(--s-xs);
+  }
+  .policy-body p {
+    font-size: 15px;
+    color: var(--body-text);
+    line-height: 1.75;
+  }
+  .policy-body ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+    padding-left: var(--s-lg);
+    list-style: disc;
+  }
+  .policy-body li {
+    font-size: 15px;
+    color: var(--body-text);
+    line-height: 1.6;
+  }
+  .policy-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  strong { color: var(--ink); font-weight: 500; }
+</style>

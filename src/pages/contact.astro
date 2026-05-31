@@ -1,0 +1,308 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "url": "https://onlineaudiotest.com/contact",
+  "name": "Contact OnlineAudioTest.com",
+  "description": "Get in touch with OnlineAudioTest.com. Report a bug, suggest a feature, or ask a question about our free audio test tools.",
+  "inLanguage": "en-US",
+  "isPartOf": { "@type": "WebSite", "url": "https://onlineaudiotest.com", "name": "OnlineAudioTest.com" },
+  "publisher": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com", "logo": "https://onlineaudiotest.com/icon.png" }
+};
+---
+
+<Layout
+  title="Contact Us — OnlineAudioTest.com"
+  description="Get in touch with OnlineAudioTest.com. Report a bug, suggest a feature, or ask a question about our free audio test tools."
+  canonical="https://onlineaudiotest.com/contact"
+  schema={schema}
+>
+
+  <div class="contact-page container">
+    <div class="contact-inner">
+
+      <header class="contact-header">
+        <span class="eyebrow">Get in touch</span>
+        <h1>Contact Us</h1>
+        <p class="contact-lead">Have a bug report, feature idea, or question? Send us a message and we'll get back to you within 2–3 business days.</p>
+      </header>
+
+      <div class="contact-layout">
+
+        <form
+          class="contact-form card-lg"
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          action="/contact?success=true"
+          novalidate
+          id="contact-form"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+
+          <div class="field-group">
+            <label class="field-label" for="name">Your name</label>
+            <input
+              class="field-input"
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Jane Smith"
+              required
+              autocomplete="name"
+            />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="email">Email address</label>
+            <input
+              class="field-input"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="jane@example.com"
+              required
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="subject">Subject</label>
+            <select class="field-input field-select" id="subject" name="subject" required>
+              <option value="" disabled selected>Select a topic</option>
+              <option value="bug">Bug report</option>
+              <option value="feature">Feature request</option>
+              <option value="feedback">General feedback</option>
+              <option value="business">Business inquiry</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="message">Message</label>
+            <textarea
+              class="field-input field-textarea"
+              id="message"
+              name="message"
+              placeholder="Describe your question or issue in as much detail as helpful..."
+              required
+              rows="5"
+            ></textarea>
+          </div>
+
+          <div class="form-footer">
+            <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">
+              Send message
+            </button>
+            <p class="form-note caption-mono">We respond within 2–3 business days.</p>
+          </div>
+
+          <div class="form-success" id="form-success" hidden>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="8" stroke="#00b894" stroke-width="1.5"/>
+              <path d="M6.5 10l2.5 2.5 4.5-4.5" stroke="#00b894" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Message sent. We'll be in touch shortly.</span>
+          </div>
+        </form>
+
+        <aside class="contact-aside">
+
+          <div class="contact-info-card card-soft">
+            <h2>Before you write</h2>
+            <p>Check the FAQ on the <a href="/#faq">home page</a> — your question may already be answered there.</p>
+          </div>
+
+          <div class="contact-info-card card-soft">
+            <h2>Reporting a bug?</h2>
+            <p>Please include:</p>
+            <ul>
+              <li>The tool you were using (Mic Test, Speaker Test, or Latency Test)</li>
+              <li>Your browser and version (e.g. Chrome 124)</li>
+              <li>Your operating system</li>
+              <li>What you expected vs. what happened</li>
+            </ul>
+          </div>
+
+          <div class="contact-info-card card-soft">
+            <h2>Response time</h2>
+            <p>We aim to reply within 2–3 business days. For urgent issues, check if the tool works in a different browser first — that resolves most reported issues.</p>
+          </div>
+
+        </aside>
+
+      </div>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const successMsg = document.getElementById('form-success')!;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+  // Show success state if redirected back with ?success=true
+  if (new URLSearchParams(window.location.search).get('success') === 'true') {
+    successMsg.hidden = false;
+    form.hidden = true;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    try {
+      const data = new FormData(form);
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data as any).toString(),
+      });
+      if (res.ok) {
+        form.reset();
+        successMsg.hidden = false;
+        submitBtn.hidden = true;
+      } else {
+        throw new Error('Network error');
+      }
+    } catch {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send message';
+      alert('Something went wrong. Please try again or email us directly.');
+    }
+  });
+</script>
+
+<style>
+  .contact-page {
+    padding-top: var(--s-4xl);
+    padding-bottom: var(--s-5xl);
+  }
+  .contact-inner { max-width: 960px; margin-inline: auto; }
+  .contact-header {
+    margin-bottom: var(--s-2xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  .contact-header h1 {
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -1.5px;
+    color: var(--ink);
+  }
+  .contact-lead {
+    font-size: 16px;
+    color: var(--body-text);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--s-xl);
+    align-items: start;
+  }
+
+  /* Form */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-lg);
+  }
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+  }
+  .field-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .field-input {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--canvas-soft);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-md);
+    padding: var(--s-sm) var(--s-md);
+    width: 100%;
+    transition: border-color .15s, box-shadow .15s;
+    outline: none;
+    line-height: 1.5;
+  }
+  .field-input::placeholder { color: var(--mute); }
+  .field-input:focus {
+    border-color: var(--link);
+    box-shadow: 0 0 0 3px rgba(0,112,243,.12);
+    background: var(--canvas);
+  }
+  .field-select { cursor: pointer; appearance: auto; }
+  .field-textarea { resize: vertical; min-height: 120px; }
+  .form-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--s-md);
+    flex-wrap: wrap;
+  }
+  .form-note { color: var(--mute); }
+  .form-success {
+    display: flex;
+    align-items: center;
+    gap: var(--s-sm);
+    padding: var(--s-md) var(--s-lg);
+    background: #f0fdf7;
+    border: 1px solid rgba(0,184,148,.25);
+    border-radius: var(--r-md);
+    font-size: 14px;
+    color: #006b52;
+    font-weight: 500;
+  }
+
+  /* Aside */
+  .contact-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  .contact-info-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  .contact-info-card h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .contact-info-card p {
+    font-size: 13px;
+    color: var(--body-text);
+    line-height: 1.6;
+  }
+  .contact-info-card ul {
+    padding-left: var(--s-md);
+    list-style: disc;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .contact-info-card li {
+    font-size: 13px;
+    color: var(--body-text);
+    line-height: 1.5;
+  }
+  .contact-info-card a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+
+  @media (max-width: 768px) {
+    .contact-layout { grid-template-columns: 1fr; }
+    .contact-aside { order: -1; }
+  }
+</style>

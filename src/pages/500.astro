@@ -1,0 +1,143 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="500 — Server Error | OnlineAudioTest.com"
+  description="Something went wrong on our end. Please try again in a moment."
+>
+  <div class="error-main container" id="main-content">
+
+    <div class="error-code-wrap">
+      <span class="error-code caption-mono">500</span>
+    </div>
+
+    <h1 class="error-title">Something went wrong.</h1>
+    <p class="error-desc">We're having trouble on our end. The issue has been logged. Please try again in a moment — the audio tools themselves run entirely in your browser, so they may still work.</p>
+
+    <div class="error-actions">
+      <button class="btn btn-primary btn-lg" onclick="window.location.reload()">Try again</button>
+      <a href="/" class="btn btn-secondary btn-lg">Go to home page</a>
+    </div>
+
+    <div class="error-tools">
+      <a href="/mic-test" class="error-tool-card">
+        <div class="error-tool-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="7" y="2" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="7" y1="19" x2="13" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="error-tool-name">Mic Check</span>
+        <span class="error-tool-desc">Test your microphone</span>
+      </a>
+      <a href="/speaker-test" class="error-tool-card">
+        <div class="error-tool-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M14 7a4 4 0 010 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="error-tool-name">Left Right Test</span>
+        <span class="error-tool-desc">Stereo &amp; headphone check</span>
+      </a>
+      <a href="/latency-test" class="error-tool-card">
+        <div class="error-tool-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 6v4.5l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="error-tool-name">Latency Test</span>
+        <span class="error-tool-desc">Bluetooth &amp; audio delay</span>
+      </a>
+    </div>
+
+  </div>
+</Layout>
+
+<style>
+  .error-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: var(--s-5xl);
+    padding-bottom: var(--s-5xl);
+    gap: var(--s-lg);
+    min-height: 60vh;
+  }
+  .error-code-wrap {
+    background: #fff8ed;
+    border: 1px solid rgba(245,166,35,.3);
+    border-radius: var(--r-md);
+    padding: var(--s-xs) var(--s-md);
+  }
+  .error-code {
+    font-size: 13px;
+    letter-spacing: .1em;
+    color: #ab570a;
+  }
+  .error-title {
+    font-size: clamp(32px, 6vw, 52px);
+    font-weight: 600;
+    letter-spacing: -2.5px;
+    color: var(--ink);
+    line-height: 1;
+    margin: 0;
+  }
+  .error-desc {
+    font-size: 16px;
+    color: var(--body-text);
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .error-actions {
+    display: flex;
+    gap: var(--s-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .error-tools {
+    display: flex;
+    gap: var(--s-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: var(--s-xl);
+    border-top: 1px solid var(--hairline);
+    width: 100%;
+    max-width: 520px;
+  }
+  .error-tool-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-xs);
+    padding: var(--s-lg) var(--s-xl);
+    background: var(--canvas);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-3);
+    color: var(--body-text);
+    text-decoration: none;
+    transition: box-shadow .2s, transform .15s;
+    min-width: 140px;
+  }
+  .error-tool-card:hover { box-shadow: var(--shadow-4); transform: translateY(-2px); }
+  .error-tool-icon {
+    width: 44px; height: 44px;
+    background: var(--canvas-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-1);
+    color: var(--mute);
+    transition: color .15s;
+  }
+  .error-tool-card:hover .error-tool-icon { color: var(--ink); }
+  .error-tool-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .error-tool-desc { font-size: 12px; color: var(--mute); }
+</style>

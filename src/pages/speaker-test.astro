@@ -1,0 +1,430 @@
+﻿---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Left Right Audio Test - Stereo, Speaker & Headphone Check",
+  "url": "https://onlineaudiotest.com/speaker-test",
+  "description": "Free left right audio test for speakers, headphones, and earphones. Stereo audio test, headphone check, earphone test left right, lossless pink noise playback audio test. No download.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires Web Audio API support",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": ["Left right audio test", "Stereo audio test", "Headphone check", "Left right headphone test", "Earphone test left right", "Pink noise lossless audio test", "Playback audio test", "Headphone test music tones", "100 Hz woofer test", "Cable reversal diagnostic"],
+  "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com" }
+};
+---
+
+<Layout
+  title="Left Right Audio Test - Free Online Stereo & Headphone Check"
+  description="Free left right audio test for speakers, headphones, and earphones. Stereo audio test, left right headphone test, earphone check, and lossless playback audio test. No download."
+  keywords="left right audio test, stereo audio test, left and right audio test, headphone test, left right headphone test, headphone check, earphone test left right, headphone test music, lossless audio test, playback audio test, online speaker test"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>Left Right Audio Test</h1>
+    <p>Stereo audio test for speakers, headphones, and earphones. Run a left right headphone test, earphone check, or lossless playback audio test with pink noise — instantly in your browser.</p>
+  </section>
+
+  <!-- TOOL -->
+  <div class="tool-card-wrap">
+    <div class="tool-card" id="speaker-tool">
+
+      <!-- Status -->
+      <div class="status-bar">
+        <div class="status-pill">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Ready to test</span>
+        </div>
+      </div>
+
+      <!-- Speaker diagram -->
+      <div class="speaker-diagram" aria-label="Speaker channel visualization">
+        <div class="speaker-block" id="spk-left">
+          <div class="speaker-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <rect x="6" y="14" width="10" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M16 14L26 8v24L16 26" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M29 14c2.5 1.5 4 3.5 4 6s-1.5 4.5-4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="speaker-label">Left</span>
+          <div class="speaker-pulse" id="pulse-left" aria-hidden="true"></div>
+        </div>
+
+        <div class="speaker-center-info">
+          <div class="vol-ring">
+            <span class="vol-pct" id="vol-pct">60</span>
+            <span class="vol-unit">%</span>
+          </div>
+        </div>
+
+        <div class="speaker-block" id="spk-right">
+          <div class="speaker-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <rect x="24" y="14" width="10" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M24 14L14 8v24l10-6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M11 14C8.5 15.5 7 17.5 7 20s1.5 4.5 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="speaker-label">Right</span>
+          <div class="speaker-pulse" id="pulse-right" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- Volume -->
+      <div class="vol-row">
+        <span class="eyebrow">Room volume</span>
+        <input type="range" id="vol-slider" min="0" max="100" value="60" class="vol-slider" aria-label="Test volume" />
+        <span class="vol-hint caption-mono">Set a level you can clearly hear across the room</span>
+      </div>
+
+      <!-- Tone selector - pink noise first, most prominent for speakers -->
+      <div class="freq-row">
+        <span class="eyebrow">Signal type</span>
+        <div class="freq-chips">
+          <button class="freq-chip active" data-freq="pink">
+            Pink noise <span class="chip-badge">full spectrum</span>
+          </button>
+          <button class="freq-chip" data-freq="100">100 Hz <span class="chip-sub">woofer</span></button>
+          <button class="freq-chip" data-freq="440">440 Hz <span class="chip-sub">mid</span></button>
+          <button class="freq-chip" data-freq="1000">1 kHz <span class="chip-sub">high-mid</span></button>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-row">
+        <button class="btn btn-secondary btn-sm" id="btn-left">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Left only
+        </button>
+        <button class="btn btn-primary btn-lg" id="btn-both" style="min-width:148px">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M2.5 1.5l7 4-7 4V1.5z" fill="currentColor"/></svg>
+          Both Speakers
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btn-right">
+          Right only
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <p class="result-note" id="result-note">Select a channel to begin the speaker test.</p>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <h2>How the speaker test works</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Set the room volume first.</strong> Adjust the slider until the tone will be clearly audible across the room - typically 50–70%. Low-power speakers can appear to fail simply because the volume is too low.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Click "Left only"</strong> - sound should come from your LEFT physical speaker only. If you hear it from the right, your L/R cables are reversed. The tool flags this automatically after 1.5 seconds.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Click "Right only"</strong> to verify the right channel. No sound at all means a dead driver, a blown fuse on the amp, or a disconnected cable at the speaker terminals.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Switch to "Pink noise"</strong> and run both speakers. Listen for tonal differences between left and right - equal shushing means matched drivers. One side sounding darker or duller suggests a degraded tweeter.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <p class="step-body"><strong>Use "100 Hz (woofer)"</strong> to test bass driver output. In a 2.1 system this should route to the subwoofer. In bookshelf speakers, both cones should produce equal low-frequency output.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">Sound comes from the wrong speaker - why?</p>
+      <p class="faq-a">Your speaker cables are physically reversed at the amplifier or binding posts. Swap the L/R cables to correct the stereo image. This is the single most common wiring mistake with passive speakers.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">One speaker produces no sound at all. Where do I start?</p>
+      <p class="faq-a">Work backwards: (1) Check the cable is fully seated at both ends. (2) Swap L/R cables - if the dead side moves to the other speaker, your amp channel is at fault; if the same physical speaker stays silent, the driver or crossover is damaged. (3) Verify OS audio balance isn't set fully to one side.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is pink noise and why is it better than a sine tone for speaker testing?</p>
+      <p class="faq-a">A sine tone only exercises one frequency at a time. Pink noise has equal energy per octave, so it simultaneously drives your tweeter, midrange, and woofer. This makes it ideal for comparing left/right tonal balance in a single listen - a muffled or darker side points to a degraded driver.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Does this test work with a soundbar?</p>
+      <p class="faq-a">Yes - the test verifies the stereo signal your computer sends. If the soundbar internally virtualises or upmixes stereo, both physical drivers may respond even during a "Left only" test. That's soundbar processing, not a wiring fault.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">My speakers distort during the sine tone test. Is that a problem?</p>
+      <p class="faq-a">Distortion at high volumes is usually amplifier clipping - the amp is being pushed beyond its rated wattage. Lower the test volume. Distortion at low volumes means the speaker cone or voice coil is physically damaged.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  (() => {
+    let audioCtx: AudioContext | null = null;
+    let activeNodes: { osc?: OscillatorNode; gain: GainNode; buf?: AudioBufferSourceNode }[] = [];
+    let currentFreq: number | 'pink' = 'pink';
+    let volume = 0.6;
+    let isPlaying = false;
+    let currentChannel: 'left' | 'right' | 'both' | null = null;
+
+    const statusDot   = document.getElementById('status-dot')!;
+    const statusText  = document.getElementById('status-text')!;
+    const resultNote  = document.getElementById('result-note')!;
+    const btnLeft     = document.getElementById('btn-left') as HTMLButtonElement;
+    const btnRight    = document.getElementById('btn-right') as HTMLButtonElement;
+    const btnBoth     = document.getElementById('btn-both') as HTMLButtonElement;
+    const volSlider   = document.getElementById('vol-slider') as HTMLInputElement;
+    const volPct      = document.getElementById('vol-pct')!;
+    const spkLeft     = document.getElementById('spk-left')!;
+    const spkRight    = document.getElementById('spk-right')!;
+    const pulseLeft   = document.getElementById('pulse-left')!;
+    const pulseRight  = document.getElementById('pulse-right')!;
+
+    function getCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      return audioCtx;
+    }
+
+    function stopAll() {
+      const ctx = getCtx();
+      activeNodes.forEach(({ gain, osc, buf }) => {
+        try { gain.gain.setTargetAtTime(0, ctx.currentTime, 0.04); } catch {}
+        try { osc?.stop(ctx.currentTime + 0.1); } catch {}
+        try { buf?.stop(ctx.currentTime + 0.1); } catch {}
+      });
+      activeNodes = [];
+      isPlaying = false;
+      currentChannel = null;
+      spkLeft.classList.remove('active');
+      spkRight.classList.remove('active');
+      pulseLeft.classList.remove('pulsing');
+      pulseRight.classList.remove('pulsing');
+    }
+
+    function makePinkNoise(ctx: AudioContext): AudioBuffer {
+      const len = ctx.sampleRate * 2;
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+      const out = buf.getChannelData(0);
+      let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        b0=0.99886*b0+w*0.0555179; b1=0.99332*b1+w*0.0750759;
+        b2=0.96900*b2+w*0.1538520; b3=0.86650*b3+w*0.3104856;
+        b4=0.55000*b4+w*0.5329522; b5=-0.7616*b5-w*0.0168980;
+        out[i]=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)/7; b6=w*0.115926;
+      }
+      return buf;
+    }
+
+    function play(channel: 'left' | 'right' | 'both') {
+      stopAll();
+      const ctx = getCtx();
+      if (ctx.state === 'suspended') ctx.resume();
+
+      const gain   = ctx.createGain();
+      const panner = ctx.createStereoPanner();
+      gain.connect(panner);
+      panner.connect(ctx.destination);
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(volume, ctx.currentTime + 0.08);
+      panner.pan.value = channel === 'left' ? -1 : channel === 'right' ? 1 : 0;
+
+      if (currentFreq === 'pink') {
+        const src = ctx.createBufferSource();
+        src.buffer = makePinkNoise(ctx);
+        src.loop = true;
+        src.connect(gain);
+        src.start();
+        activeNodes.push({ gain, buf: src });
+      } else {
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.value = currentFreq;
+        osc.connect(gain);
+        osc.start();
+        activeNodes.push({ gain, osc });
+      }
+
+      isPlaying = true;
+      currentChannel = channel;
+      statusDot.className = 'dot active';
+      btnBoth.innerHTML = `<svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="8" height="8" rx="1.5" fill="currentColor"/></svg> Stop`;
+
+      spkLeft.classList.toggle('active',  channel === 'left'  || channel === 'both');
+      spkRight.classList.toggle('active', channel === 'right' || channel === 'both');
+      pulseLeft.classList.toggle('pulsing',  channel === 'left'  || channel === 'both');
+      pulseRight.classList.toggle('pulsing', channel === 'right' || channel === 'both');
+
+      if (channel === 'both') {
+        statusText.textContent = 'Playing - both speakers';
+        resultNote.textContent = 'Both speakers should produce equal volume and tonal character.';
+      } else {
+        const side = channel === 'left' ? 'LEFT' : 'RIGHT';
+        statusText.textContent = `Playing - ${channel} channel`;
+        resultNote.textContent = `Sound should come from your ${side} physical speaker only.`;
+      }
+      resultNote.className = 'result-note success';
+    }
+
+    function stop() {
+      stopAll();
+      statusDot.className = 'dot';
+      statusText.textContent = 'Ready to test';
+      resultNote.textContent = 'Select a channel to begin the speaker test.';
+      resultNote.className = 'result-note';
+      btnBoth.innerHTML = `<svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M2.5 1.5l7 4-7 4V1.5z" fill="currentColor"/></svg> Both Speakers`;
+    }
+
+    btnLeft.addEventListener('click',  () => { if (isPlaying && currentChannel === 'left')  { stop(); return; } play('left'); });
+    btnRight.addEventListener('click', () => { if (isPlaying && currentChannel === 'right') { stop(); return; } play('right'); });
+    btnBoth.addEventListener('click',  () => { if (isPlaying) { stop(); return; } play('both'); });
+
+    volSlider.addEventListener('input', () => {
+      volume = Number(volSlider.value) / 100;
+      volPct.textContent = volSlider.value;
+      if (isPlaying) activeNodes.forEach(({ gain }) => { try { gain.gain.value = volume; } catch {} });
+    });
+
+    document.querySelectorAll('.freq-chip').forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        document.querySelectorAll('.freq-chip').forEach(c => c.classList.remove('active'));
+        (e.currentTarget as HTMLElement).classList.add('active');
+        const f = (e.currentTarget as HTMLElement).dataset.freq!;
+        currentFreq = f === 'pink' ? 'pink' : Number(f);
+        if (isPlaying && currentChannel) play(currentChannel);
+      });
+    });
+  })();
+</script>
+
+<style>
+
+  .device-nudge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--mute);
+    letter-spacing: .02em;
+  }
+
+  .speaker-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-xl);
+    padding: var(--s-lg) 0;
+  }
+  .speaker-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-xs);
+    position: relative;
+    padding: var(--s-lg);
+    border-radius: var(--r-lg);
+    transition: background .2s;
+  }
+  .speaker-block.active { background: var(--canvas-soft-2); }
+  .speaker-icon {
+    width: 72px; height: 72px;
+    background: var(--canvas-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-2);
+    color: var(--mute);
+    transition: color .2s, box-shadow .2s;
+  }
+  .speaker-block.active .speaker-icon { color: var(--ink); box-shadow: var(--shadow-4); }
+  .speaker-label { font-family: var(--font-mono); font-size: 12px; color: var(--mute); }
+  .speaker-block.active .speaker-label { color: var(--ink); }
+  .speaker-pulse {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--r-lg);
+    border: 2px solid transparent;
+    pointer-events: none;
+  }
+  .speaker-pulse.pulsing {
+    border-color: var(--link);
+    animation: pulse-ring .9s ease-out infinite;
+  }
+  @keyframes pulse-ring {
+    0%   { opacity: .8; transform: scale(1); }
+    100% { opacity: 0;  transform: scale(1.06); }
+  }
+
+  .speaker-center-info { display: flex; flex-direction: column; align-items: center; }
+  .vol-ring {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--canvas-soft);
+    box-shadow: var(--shadow-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+  }
+  .vol-pct  { font-family: var(--font-mono); font-size: 16px; font-weight: 600; color: var(--ink); }
+  .vol-unit { font-family: var(--font-mono); font-size: 10px; color: var(--mute); }
+
+  .vol-row { display: flex; flex-direction: column; gap: var(--s-xs); align-items: center; }
+  .vol-slider { width: 100%; max-width: 300px; accent-color: var(--ink); cursor: pointer; height: 4px; }
+  .vol-hint { color: var(--mute); }
+
+  .freq-row { display: flex; flex-direction: column; gap: var(--s-xs); align-items: center; }
+  .freq-chips { display: flex; gap: var(--s-xs); flex-wrap: wrap; justify-content: center; }
+  .freq-chip {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--canvas-soft-2);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-full);
+    padding: 3px 12px;
+    color: var(--body-text);
+    cursor: pointer;
+    transition: all .15s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .freq-chip:hover { border-color: var(--hairline-strong); color: var(--ink); }
+  .freq-chip.active { background: var(--ink); color: var(--on-primary); border-color: var(--ink); }
+  .chip-sub { font-size: 10px; opacity: .6; }
+  .chip-badge {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: var(--r-full);
+  }
+  .freq-chip.active .chip-badge { background: rgba(255,255,255,.15); opacity: .85; }
+  .freq-chip:not(.active) .chip-badge {
+    background: var(--canvas-soft);
+    color: var(--mute);
+    border: 1px solid var(--hairline);
+  }
+
+  @media (max-width: 480px) {
+    .speaker-diagram { gap: var(--s-md); padding: var(--s-sm) 0; }
+    .speaker-block { padding: var(--s-sm); }
+    .speaker-icon { width: 56px; height: 56px; }
+    .vol-ring { width: 52px; height: 52px; }
+    .vol-pct { font-size: 14px; }
+    .freq-chips { gap: var(--s-xxs); }
+    .freq-chip { padding: 3px 8px; }
+  }
+</style>

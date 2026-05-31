@@ -1,11 +1,538 @@
----
-import Welcome from '../components/Welcome.astro';
+﻿---
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "OnlineAudioTest.com",
+      "url": "https://onlineaudiotest.com",
+      "description": "Free browser-based audio test tools. Mic check online, left right audio test, stereo audio test, headphone test, and audio latency test — no download required.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://onlineaudiotest.com/{search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "name": "OnlineAudioTest.com",
+      "url": "https://onlineaudiotest.com",
+      "logo": "https://onlineaudiotest.com/icon.png"
+    },
+    {
+      "@type": "ItemList",
+      "name": "Free Online Audio Test Tools",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "url": "https://onlineaudiotest.com/mic-test",     "name": "Mic Check Online — Free Microphone & Earphone Mic Test" },
+        { "@type": "ListItem", "position": 2, "url": "https://onlineaudiotest.com/speaker-test", "name": "Left Right Audio Test — Stereo & Headphone Check" },
+        { "@type": "ListItem", "position": 3, "url": "https://onlineaudiotest.com/latency-test", "name": "Audio Latency Test — Bluetooth & AirPods Delay" }
+      ]
+    },
+  ]
+};
+
+const tools = [
+  {
+    href: '/mic-test',
+    eyebrow: 'Mic Check Online',
+    title: 'Mic Test',
+    desc: 'Mic check online in seconds. Detect your microphone, monitor real-time input levels, run an earphone mic test, and play back your recording instantly.',
+    gradClass: 'develop',
+    cta: 'Test my microphone →',
+  },
+  {
+    href: '/speaker-test',
+    eyebrow: 'Left Right Audio Test',
+    title: 'Speaker & Headphone Test',
+    desc: 'Stereo audio test for speakers, headphones, and earphones. Left right audio test, headphone check, pink noise lossless audio test, and playback audio test.',
+    gradClass: 'preview',
+    cta: 'Run stereo test →',
+  },
+  {
+    href: '/latency-test',
+    eyebrow: 'Bluetooth & System Delay',
+    title: 'Latency Test',
+    desc: 'Audio latency test in milliseconds. Measure Bluetooth audio delay, AirPods lag, Zoom sync issues, and gaming latency — instantly in your browser.',
+    gradClass: 'ship',
+    cta: 'Measure latency →',
+  },
+];
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="Audio Test - Free Online Mic Check, Left Right Audio & Headphone Test"
+  description="Free audio test online. Mic check, left right audio test, stereo audio test, headphone test, earphone mic test, and audio latency test — all in your browser. No download."
+  keywords="audio test, left right audio test, stereo audio test, mic check, mic check online, headphone test, left right headphone test, headphone check, earphone mic test, earphone test left right, audio latency test, bluetooth audio test, airpods test, playback audio test, lossless audio test"
+  schema={schema}
+>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-gradient" aria-hidden="true"></div>
+    <div class="container hero-content">
+      <div class="hero-badge-row">
+        <span class="badge">
+          <span class="badge-dot green"></span>
+          All tools free · No signup
+        </span>
+      </div>
+      <h1 class="hero-title">
+        Free online audio test.<br />Instant results.
+      </h1>
+      <p class="hero-desc">
+        Mic check, left right audio test, headphone test, stereo audio test, and Bluetooth latency - all free, all in your browser, zero friction.
+      </p>
+      <div class="hero-actions">
+        <a href="/mic-test" class="btn btn-primary btn-lg">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="7" y="2" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="7" y1="19" x2="13" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Mic Check Online
+        </a>
+        <a href="/speaker-test" class="btn btn-secondary btn-lg">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M14 7a4 4 0 010 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Left Right Audio Test
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOL GRID -->
+  <section class="tools-section">
+    <div class="container">
+      <div class="tools-header">
+        <span class="eyebrow">Audio Tools</span>
+        <h2 class="display-md tools-title">Three audio tests. Every device.</h2>
+      </div>
+      <div class="tools-grid">
+        {tools.map(tool => (
+          <a href={tool.href} class="tool-card-link">
+            <article class="tool-card-item">
+              <div class={`tool-card-accent accent-${tool.gradClass}`}></div>
+              <div class="tool-card-body">
+                <span class="eyebrow">{tool.eyebrow}</span>
+                <h3 class="tool-card-title">{tool.title}</h3>
+                <p class="tool-card-desc">{tool.desc}</p>
+              </div>
+              <div class="tool-card-footer">
+                <span class="tool-card-cta">{tool.cta}</span>
+              </div>
+            </article>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY SECTION -->
+  <section class="why-section">
+    <div class="container">
+      <div class="why-header">
+        <span class="eyebrow">Why OnlineAudioTest</span>
+        <h2 class="display-md why-title">Built for clarity. Designed for speed.</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card card-soft">
+          <span class="why-icon">⚡</span>
+          <h3 class="why-card-title">Instant, no friction</h3>
+          <p class="why-card-desc">No account. No download. No app store. One click and your test is running.</p>
+        </div>
+        <div class="why-card card-soft">
+          <span class="why-icon">🎯</span>
+          <h3 class="why-card-title">Focused tools only</h3>
+          <p class="why-card-desc">No bloat. Every page does exactly one thing - with clear, honest feedback.</p>
+        </div>
+        <div class="why-card card-soft">
+          <span class="why-icon">🔒</span>
+          <h3 class="why-card-title">Private by default</h3>
+          <p class="why-card-desc">Mic audio is processed entirely in your browser. Nothing is sent to any server.</p>
+        </div>
+        <div class="why-card card-soft">
+          <span class="why-icon">📱</span>
+          <h3 class="why-card-title">Works everywhere</h3>
+          <p class="why-card-desc">Mobile, tablet, desktop - every test is touch-friendly and fully responsive.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ JSON-LD (separate block so Google can isolate the FAQPage type) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why does my headphone audio keep cutting out?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Intermittent headphone audio is usually caused by a loose or damaged cable near the 3.5mm jack, a low Bluetooth battery forcing a codec downgrade, or wireless interference. Plug your headphones into a different device to isolate whether the fault is in the headphones or the source. For Bluetooth, move closer to your device, disconnect competing Bluetooth connections, and check that your battery is above 20%."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is audio only playing in one headphone?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Single-ear audio usually means a broken wire inside the cable (most commonly near the plug or ear cup), a damaged driver on one side, or an OS audio balance setting shifted fully to one channel. First check System Settings → Sound → Balance and confirm it is centered. Then run a left right audio test on OnlineAudioTest.com to confirm which channel is silent, and test the headphones on a second device to rule out a software issue."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does my headphone audio sound muffled?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Muffled headphone audio typically means the high-frequency drivers are degraded, a foam ear pad is blocking the driver, or an equalizer preset is cutting the treble. Check your device EQ settings first. If no EQ is applied, run a headphone test with pink noise — if one ear sounds noticeably darker than the other, that driver is damaged. Dirty or clogged earphone mesh grilles are another common cause on in-ear models."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I test audio latency?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Open the Audio Latency Test on OnlineAudioTest.com. The tool measures your audio output delay in milliseconds using the Web Audio API — no microphone or extra hardware required. For wired connections, expect under 10 ms. For Bluetooth, the result reflects codec buffering and typically ranges from 40 ms (aptX Low Latency, LC3) to over 200 ms (standard SBC)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is latency in audio?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Audio latency is the delay between when a sound is generated by software or hardware and when you actually hear it through speakers or headphones. It is measured in milliseconds (ms). Low latency matters most in gaming, music production, and video calls, where even a 100 ms delay can cause noticeable lip-sync issues or make real-time monitoring unusable."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is low latency audio?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Low latency audio refers to a signal path with minimal delay — generally under 20 ms for professional work or under 40 ms for consumer listening. Wired audio achieves 5–10 ms. Bluetooth latency depends on the codec: SBC can exceed 200 ms, aptX Low Latency targets under 40 ms, and Bluetooth LE Audio with LC3 is designed to reach below 40 ms. You can measure your exact output latency using the Latency Test on OnlineAudioTest.com."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I check if my mic is working?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Open the Mic Test page on OnlineAudioTest.com and click 'Test My Microphone.' Allow browser microphone access when prompted. If the waveform and level meter respond to your voice, your mic is detected and working. If nothing moves, check that the correct input device is selected in your OS sound settings (Windows: Settings → Sound → Input; Mac: System Settings → Sound → Input) and that no other app has exclusive mic access."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I do a left right audio test?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Open the Speaker Test on OnlineAudioTest.com and click 'Left only' — you should hear sound only from your left speaker or left ear. Then click 'Right only.' If audio plays from the wrong side, your stereo channels are swapped. If one side is completely silent, that channel or driver is faulty. The test works for headphones, earphones, AirPods, and desktop speakers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a stereo audio test?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A stereo audio test verifies that your audio output's left and right channels are working independently and at equal volume. It plays audio through each channel in isolation so you can confirm correct stereo imaging, detect dead channels, and identify reversed wiring. OnlineAudioTest.com includes a stereo audio test with sine tones and pink noise for both speakers and headphones."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does my microphone have echo or sound distorted?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Echo usually means your speakers are feeding back into your open microphone. Wear headphones while recording to break this feedback loop. Distortion typically indicates your input gain is set too high — lower the microphone sensitivity in your OS sound settings (Windows: Recording Devices → Properties → Levels; Mac: System Settings → Sound → Input volume). You can monitor your live mic signal using the Mic Test on OnlineAudioTest.com."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- SEO CONTENT -->
+  <section class="seo-section">
+    <div class="container seo-inner">
+
+      <h2>Free Online Audio Test — Everything You Need, Right in Your Browser</h2>
+      <p>Whether you just plugged in a new pair of headphones, updated your audio drivers, or you're troubleshooting a video call where no one can hear you — a quick audio test is the fastest way to find out exactly what's working and what's not. OnlineAudioTest.com is a free, browser-based suite of audio diagnostic tools that gives you real answers in seconds. No download, no install, no account required.</p>
+
+      <h3>Mic Check Online — Is Your Microphone Working?</h3>
+      <p>The mic check is the most commonly needed audio test, and our mic check online tool handles every scenario. Whether you're using a built-in laptop microphone, a USB desk mic, a Bluetooth headset, or an earphone mic — simply click "Test My Microphone" and grant browser access. You'll immediately see a live waveform and input level meter respond to your voice, confirming the mic is being detected and the signal is strong enough for a call or recording session.</p>
+      <p>The earphone mic test works for any in-line mic — Apple EarPods, Android earphones, gaming headsets, and podcast microphones are all supported. A built-in playback feature records a short clip and lets you hear exactly how your voice sounds to others. This is the fastest way to catch echo, background noise, low gain, or distortion before your next Zoom call or recording session.</p>
+
+      <h3>Left Right Audio Test — Stereo Channel Verification</h3>
+      <p>A stereo audio test is essential whenever you set up new audio hardware or suspect a channel imbalance. Our left right audio test plays audio through each channel independently — left first, then right — so you instantly confirm whether both sides of your headphones, earphones, or speakers are producing sound at equal volume. If the left channel test plays audio from the right side, your stereo channels are swapped — a common issue after a driver reset or hardware reconnect that's easy to fix once identified.</p>
+      <p>The left and right audio test also works as a headphone check and earphone test left right. If one ear is completely silent, you've found a hardware fault in the driver or cable. Works equally well as a left right headphone test for over-ear cans, in-ear monitors, AirPods, and everyday earbuds.</p>
+
+      <h3>Headphone Test — Music, Frequency, and Balance</h3>
+      <p>Our speaker test doubles as a full headphone test with pink noise and sine tones sweeping bass, midrange, and high-frequency ranges. This headphone test music mode lets you hear real tonal differences between each driver — a darker or quieter ear reveals a degraded driver or a channel imbalance in your amplifier chain. The headphone check runs at any volume you set, making it suitable for quiet desk testing or normal listening-level evaluation.</p>
+      <p>The lossless audio test mode uses pink noise — a full-spectrum signal with equal energy per octave — to drive your headphone drivers across their entire rated frequency range simultaneously. This is faster and more revealing than a single-tone sine wave for spotting frequency holes, driver damage, or tonal imbalance between the left and right earpieces.</p>
+
+      <h3>Audio Latency Test — Measure Bluetooth Delay</h3>
+      <p>Audio latency is the gap between when a sound is generated and when you actually hear it. For wired headphones and speakers, this is typically under 10 ms and completely imperceptible. For Bluetooth audio, the delay varies dramatically by codec: SBC can introduce 100–200 ms of lag, while aptX Low Latency or LC3 (used in Bluetooth LE Audio) can bring it below 40 ms.</p>
+      <p>Our audio latency test measures your device's actual output delay in milliseconds. This Bluetooth audio test is essential for gamers experiencing lip-sync issues, musicians monitoring through wireless headphones, and video editors who need audio and video to stay precisely aligned. The AirPods test and general Bluetooth audio test give you a concrete latency figure so you know whether your wireless headphones are performing within normal range for their codec.</p>
+
+      <h3>Privacy First — Your Audio Never Leaves Your Browser</h3>
+      <p>Every audio test on this site processes data locally using browser-native APIs. Microphone audio is captured with the MediaRecorder API and is never transmitted to any server. Speaker, headphone, and latency tests generate all audio internally using the Web Audio API — no audio files are fetched from external sources, and no analytics software logs your results. Your tests are entirely private, from the first click to the last.</p>
+
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="faq-home-section">
+    <div class="container faq-home-inner">
+      <div class="faq-home-header">
+        <span class="eyebrow">FAQ</span>
+        <h2 class="display-md">Frequently asked questions</h2>
+      </div>
+
+      <div class="faq-home-grid">
+
+        <details class="faq-home-item">
+          <summary class="faq-home-q">Why does my headphone audio keep cutting out?</summary>
+          <p class="faq-home-a">Intermittent audio is usually a loose or damaged cable near the 3.5mm jack, low Bluetooth battery forcing a codec downgrade, or wireless interference. Plug your headphones into a different device first. For Bluetooth, move closer to the source, disconnect competing connections, and keep battery above 20%.</p>
+        </details>
+
+        <details class="faq-home-item">
+          <summary class="faq-home-q">Why is audio only playing in one headphone?</summary>
+          <p class="faq-home-a">Single-ear audio usually means a broken wire near the plug, a damaged driver on one side, or a balance setting shifted fully to one channel. Check System Settings → Sound → Balance first. Then run the <a href="/speaker-test">left right audio test</a> to confirm which channel is silent, and test on a second device to rule out software.</p>
+        </details>
+
+        <details class="faq-home-item">
+          <summary class="faq-home-q">Why does my headphone audio sound muffled?</summary>
+          <p class="faq-home-a">Muffled audio usually means a degraded tweeter/driver, a blocked ear pad, or an EQ preset cutting treble. Check your device EQ first. If no EQ is applied, run a <a href="/speaker-test">headphone test with pink noise</a> — if one ear sounds darker than the other, that driver is damaged. Dirty grilles on in-ear models are another common cause.</p>
+        </details>
+
+        <details class="faq-home-item">
+          <summary class="faq-home-q">How do I test audio latency?</summary>
+          <p class="faq-home-a">Open the <a href="/latency-test">Audio Latency Test</a> — no microphone or extra hardware required. The tool measures your output delay in milliseconds using the Web Audio API. Wired connections typically show under 10 ms. Bluetooth ranges from ~40 ms (aptX Low Latency) to over 200 ms (SBC codec).</p>
+        </details>
+
+        <details class="faq-home-item">
+          <summary class="faq-home-q">What is latency in audio?</summary>
+          <p class="faq-home-a">Audio latency is the delay between when a sound is generated and when you actually hear it, measured in milliseconds (ms). It matters most in gaming, music production, and video calls — even a 100 ms delay causes noticeable lip-sync issues or makes real-time monitoring unusable.</p>
+        </details>
+
+        <details class="faq-home-item">
+          <summary class="faq-home-q">What is low latency audio?</summary>
+          <p class="faq-home-a">Low latency audio means a signal path with minimal delay — under 20 ms for professional use, under 40 ms for consumer listening. Wired audio achieves 5–10 ms. Bluetooth depends on the codec: SBC can exceed 200 ms, aptX Low Latency targets under 40 ms, and Bluetooth LE Audio (LC3) is designed for below 40 ms. Measure your exact delay with the <a href="/latency-test">Latency Test</a>.</p>
+        </details>
+
+        <details class="faq-home-item">
+          <summary class="faq-home-q">How do I check if my mic is working?</summary>
+          <p class="faq-home-a">Open the <a href="/mic-test">Mic Check</a> and click "Test My Microphone." Allow browser access. If the waveform and level meter respond to your voice, your mic is working. If nothing moves, verify the correct input device is selected in OS settings (Windows: Settings → Sound → Input; Mac: System Settings → Sound → Input) and no other app has exclusive mic access.</p>
+        </details>
+
+        <details class="faq-home-item">
+          <summary class="faq-home-q">How do I do a left right audio test?</summary>
+          <p class="faq-home-a">Open the <a href="/speaker-test">Speaker Test</a> and click "Left only" — you should hear sound only from your left speaker or left ear. Then "Right only." If audio plays from the wrong side, your channels are swapped. If one side is silent, that channel or driver is faulty. Works for headphones, earphones, AirPods, and desktop speakers.</p>
+        </details>
+
+        <details class="faq-home-item">
+          <summary class="faq-home-q">What is a stereo audio test?</summary>
+          <p class="faq-home-a">A stereo audio test verifies that the left and right channels of your audio output work independently and at equal volume. It plays audio through each channel in isolation to confirm correct stereo imaging, detect dead channels, and identify reversed wiring. Our <a href="/speaker-test">stereo test</a> includes sine tones and full-spectrum pink noise.</p>
+        </details>
+
+        <details class="faq-home-item">
+          <summary class="faq-home-q">Why does my microphone have echo or sound distorted?</summary>
+          <p class="faq-home-a">Echo means your speakers are feeding back into your open mic — wear headphones while recording to break that loop. Distortion means input gain is too high — lower the microphone sensitivity in OS settings (Windows: Recording Devices → Properties → Levels; Mac: System Settings → Sound → Input volume). Monitor your live signal with the <a href="/mic-test">Mic Test</a>.</p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
 </Layout>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    padding: var(--s-section) var(--container-pad) var(--s-5xl);
+    text-align: center;
+    overflow: hidden;
+    background: var(--canvas);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .hero-gradient {
+    position: absolute;
+    inset: -30% -10%;
+    background: var(--grad-hero);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-badge-row { margin-bottom: var(--s-xl); }
+  .hero-title {
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 600;
+    line-height: .96;
+    letter-spacing: -3.5px;
+    color: var(--ink);
+    margin-bottom: var(--s-lg);
+  }
+  .hero-desc {
+    font-size: 18px;
+    color: var(--body-text);
+    max-width: 500px;
+    margin-inline: auto;
+    margin-bottom: var(--s-xl);
+    line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: var(--s-sm); justify-content: center; flex-wrap: wrap; }
+
+  /* Tools grid - 3 columns */
+  .tools-section { padding: var(--s-5xl) var(--container-pad); }
+  .tools-header {
+    text-align: center; margin-bottom: var(--s-2xl);
+    display: flex; flex-direction: column; gap: var(--s-sm); align-items: center;
+  }
+  .tools-title { color: var(--ink); }
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-md);
+    max-width: 960px;
+    margin-inline: auto;
+  }
+  .tool-card-link { text-decoration: none; display: block; }
+  .tool-card-item {
+    background: var(--canvas); border-radius: var(--r-lg);
+    box-shadow: var(--shadow-3); overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: box-shadow .2s, transform .15s; height: 100%;
+  }
+  .tool-card-link:hover .tool-card-item { box-shadow: var(--shadow-4); transform: translateY(-2px); }
+  .tool-card-accent { height: 4px; width: 100%; flex-shrink: 0; }
+  .accent-develop { background: var(--grad-develop); }
+  .accent-preview  { background: var(--grad-preview); }
+  .accent-ship     { background: var(--grad-ship); }
+  .tool-card-body { padding: var(--s-xl); flex: 1; display: flex; flex-direction: column; gap: var(--s-xs); }
+  .tool-card-title { font-size: 20px; font-weight: 600; letter-spacing: -0.6px; color: var(--ink); margin-top: var(--s-xs); }
+  .tool-card-desc { font-size: 14px; color: var(--body-text); line-height: 1.6; }
+  .tool-card-footer { padding: var(--s-md) var(--s-xl); border-top: 1px solid var(--hairline); }
+  .tool-card-cta { font-size: 13px; font-weight: 500; color: var(--body-text); transition: color .15s; }
+  .tool-card-link:hover .tool-card-cta { color: var(--ink); }
+
+  /* Why */
+  .why-section { padding: var(--s-5xl) var(--container-pad); background: var(--canvas-soft); border-top: 1px solid var(--hairline); }
+  .why-header { text-align: center; margin-bottom: var(--s-2xl); display: flex; flex-direction: column; gap: var(--s-sm); align-items: center; }
+  .why-title { color: var(--ink); }
+  .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-md); max-width: 900px; margin-inline: auto; }
+  .why-card { display: flex; flex-direction: column; gap: var(--s-sm); }
+  .why-icon { font-size: 20px; }
+  .why-card-title { font-size: 15px; font-weight: 600; color: var(--ink); letter-spacing: -0.3px; }
+  .why-card-desc { font-size: 14px; color: var(--body-text); line-height: 1.6; }
+
+  /* SEO content */
+  .seo-section {
+    padding: var(--s-5xl) var(--container-pad);
+    background: var(--canvas);
+    border-top: 1px solid var(--hairline);
+  }
+  .seo-inner {
+    max-width: 760px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-lg);
+  }
+  .seo-inner h2 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: var(--s-xs);
+  }
+  .seo-inner h3 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    color: var(--ink);
+    margin-top: var(--s-md);
+    margin-bottom: calc(-1 * var(--s-xs));
+  }
+  .seo-inner p {
+    font-size: 15px;
+    color: var(--body-text);
+    line-height: 1.75;
+  }
+
+  /* FAQ */
+  .faq-home-section {
+    padding: var(--s-5xl) var(--container-pad);
+    background: var(--canvas-soft);
+    border-top: 1px solid var(--hairline);
+  }
+  .faq-home-inner { max-width: 860px; margin-inline: auto; }
+  .faq-home-header {
+    display: flex; flex-direction: column; gap: var(--s-sm);
+    align-items: center; text-align: center;
+    margin-bottom: var(--s-2xl);
+    color: var(--ink);
+  }
+  .faq-home-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-xs);
+  }
+  .faq-home-item {
+    background: var(--canvas);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-2);
+    overflow: hidden;
+  }
+  .faq-home-q {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    padding: var(--s-md) var(--s-lg);
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    padding-right: var(--s-3xl);
+    line-height: 1.4;
+    user-select: none;
+  }
+  .faq-home-q::-webkit-details-marker { display: none; }
+  .faq-home-q::after {
+    content: '+';
+    position: absolute;
+    right: var(--s-md);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--mute);
+    transition: transform .2s;
+  }
+  .faq-home-item[open] .faq-home-q::after {
+    content: '−';
+  }
+  .faq-home-a {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.7;
+    padding: 0 var(--s-lg) var(--s-md);
+  }
+  .faq-home-a a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+
+  @media (max-width: 768px) {
+    .tools-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero { padding-top: var(--s-5xl); }
+    .hero-title { letter-spacing: -2px; }
+    .seo-inner h2 { font-size: 22px; }
+    .faq-home-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .why-grid { grid-template-columns: 1fr; }
+  }
+</style>
