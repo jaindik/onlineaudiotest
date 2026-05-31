@@ -47,10 +47,10 @@ const schema = {
       <div class="perm-card" id="perm-card">
         <div class="perm-icon" aria-hidden="true">
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <rect x="12" y="4" width="8" height="16" rx="4" stroke="#171717" stroke-width="1.5"/>
-            <path d="M7 16a9 9 0 0018 0" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="16" y1="25" x2="16" y2="29" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="11" y1="29" x2="21" y2="29" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+            <rect x="12" y="4" width="8" height="16" rx="4" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M7 16a9 9 0 0018 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="16" y1="25" x2="16" y2="29" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="11" y1="29" x2="21" y2="29" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </div>
         <p class="perm-text">Click <strong>Start Mic Test</strong>, then allow microphone access when your browser asks. Your audio is never sent anywhere - it stays in your browser.</p>
@@ -168,6 +168,14 @@ const schema = {
     const dbLabel     = document.getElementById('db-label')!;
     const waveCanvas  = document.getElementById('waveform') as HTMLCanvasElement;
     const canvasCtx   = waveCanvas.getContext('2d')!;
+
+    function getWaveColors() {
+      const style = getComputedStyle(document.documentElement);
+      return {
+        bg: style.getPropertyValue('--canvas-soft-2').trim(),
+        stroke: style.getPropertyValue('--link').trim(),
+      };
+    }
     const playbackArea = document.getElementById('playback-area')!;
     const playbackAudio = document.getElementById('playback-audio') as HTMLAudioElement;
     const recDuration  = document.getElementById('rec-duration')!;
@@ -210,7 +218,8 @@ const schema = {
       canvasCtx.clearRect(0, 0, W, H);
 
       // Background
-      canvasCtx.fillStyle = '#f5f5f5';
+      const colors = getWaveColors();
+      canvasCtx.fillStyle = colors.bg;
       canvasCtx.fillRect(0, 0, W, H);
 
       // RMS level
@@ -226,7 +235,7 @@ const schema = {
 
       // Waveform line
       canvasCtx.beginPath();
-      canvasCtx.strokeStyle = '#007cf0';
+      canvasCtx.strokeStyle = colors.stroke;
       canvasCtx.lineWidth = 1.5;
       canvasCtx.lineJoin = 'round';
 
@@ -338,6 +347,9 @@ const schema = {
     }
 
     btnStart.addEventListener('click', startMic);
+    window.addEventListener('themechange', () => {
+      if (state === 'recording') drawWaveform();
+    });
   })();
 </script>
 
@@ -361,6 +373,7 @@ const schema = {
     align-items: center;
     justify-content: center;
     box-shadow: var(--shadow-1);
+    color: var(--ink);
   }
   .perm-text { font-size: 14px; color: var(--body-text); line-height: 1.6; max-width: 380px; }
   .perm-text strong { color: var(--ink); font-weight: 500; }

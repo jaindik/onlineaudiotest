@@ -3,11 +3,14 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // Segments that should never appear in the sitemap (redirect stubs & error pages)
 const EXCLUDE_SEGMENTS = ['audio-test', 'headphone-test', '404', '500'];
 
 export default defineConfig({
   site: 'https://onlineaudiotest.com',
+
   integrations: [
     sitemap({
       filter: (page) => !EXCLUDE_SEGMENTS.some((seg) => page.includes(`/${seg}`)),
@@ -32,7 +35,10 @@ export default defineConfig({
       },
     }),
   ],
+
   vite: {
     plugins: [tailwindcss()],
   },
+
+  adapter: cloudflare(),
 });

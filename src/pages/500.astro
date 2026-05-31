@@ -71,15 +71,15 @@ import Layout from '../layouts/Layout.astro';
     min-height: 60vh;
   }
   .error-code-wrap {
-    background: #fff8ed;
-    border: 1px solid rgba(245,166,35,.3);
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
     border-radius: var(--r-md);
     padding: var(--s-xs) var(--s-md);
   }
   .error-code {
     font-size: 13px;
     letter-spacing: .1em;
-    color: #ab570a;
+    color: var(--warning-fg);
   }
   .error-title {
     font-size: clamp(32px, 6vw, 52px);

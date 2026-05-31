@@ -404,14 +404,14 @@ const schema = {
     gap: 5px;
   }
   .freq-chip:hover { border-color: var(--hairline-strong); color: var(--ink); }
-  .freq-chip.active { background: var(--ink); color: var(--on-primary); border-color: var(--ink); }
+  .freq-chip.active { background: var(--invert-bg); color: var(--invert-fg); border-color: var(--invert-bg); }
   .chip-sub { font-size: 10px; opacity: .6; }
   .chip-badge {
     font-size: 10px;
     padding: 1px 6px;
     border-radius: var(--r-full);
   }
-  .freq-chip.active .chip-badge { background: rgba(255,255,255,.15); opacity: .85; }
+  .freq-chip.active .chip-badge { background: var(--chip-active-badge); opacity: .85; }
   .freq-chip:not(.active) .chip-badge {
     background: var(--canvas-soft);
     color: var(--mute);
