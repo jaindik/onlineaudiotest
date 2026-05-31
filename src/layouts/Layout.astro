@@ -1,5 +1,4 @@
 ﻿---
-import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
 
 export interface Props {
@@ -13,23 +12,14 @@ export interface Props {
 }
 
 const { title, description, canonical, schema, pageClass = '', sidebar = false, keywords } = Astro.props;
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const site = 'https://onlineaudiotest.com';
 const canonicalURL = canonical || new URL(Astro.url.pathname, site).href;
-const ogImage = `${site}/ogImage.png`;
+const ogImage = `${site}/ogImage.webp`;
 ---
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KD9890JWZD"></script>
-  <script is:inline>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-KD9890JWZD');
-  </script>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
@@ -69,11 +59,6 @@ const ogImage = `${site}/ogImage.png`;
   <meta name="twitter:image" content={ogImage} />
   <meta name="twitter:image:alt" content={title} />
 
-  <!-- Fonts: Geist (Vercel's typeface, open-sourced) + Geist Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet" />
-
   <!-- Schema.org JSON-LD -->
   {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
 
@@ -96,7 +81,7 @@ const ogImage = `${site}/ogImage.png`;
   <header class="nav" role="banner">
     <div class="nav-inner container">
       <a href="/" class="nav-logo" aria-label="OnlineAudioTest home">
-        <img src="/icon.png" width="22" height="22" alt="" aria-hidden="true" />
+        <img src="/icon.png" width="22" height="22" alt="" aria-hidden="true" decoding="async" />
         <span class="logo-text">onlineaudiotest</span>
       </a>
 
@@ -195,7 +180,7 @@ const ogImage = `${site}/ogImage.png`;
     <div class="container footer-inner">
       <div class="footer-brand">
         <a href="/" class="nav-logo footer-logo">
-          <img src="/icon.png" width="18" height="18" alt="" aria-hidden="true" />
+          <img src="/icon.png" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async" />
           <span>onlineaudiotest</span>
         </a>
         <p class="footer-tagline">Free browser-based audio diagnostics. No download required.</p>
@@ -227,6 +212,15 @@ const ogImage = `${site}/ogImage.png`;
     </div>
   </footer>
 
+  <!-- Analytics — after content so inlined CSS in <head> is not delayed by script parsing -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KD9890JWZD"></script>
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KD9890JWZD');
+  </script>
+
 </body>
 </html>
 
@@ -235,9 +229,9 @@ const ogImage = `${site}/ogImage.png`;
      DESIGN SYSTEM - mirrors DESIGN.md tokens
   ═══════════════════════════════════════════ */
   :root {
-    /* Fonts */
-    --font-sans: 'Geist', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: 'Geist Mono', ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace;
+    /* Fonts — system stack only (no external font requests) */
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', 'Roboto Mono', 'JetBrains Mono', SFMono-Regular, Menlo, Consolas, monospace;
 
     /* Colors */
     --ink:              #171717;

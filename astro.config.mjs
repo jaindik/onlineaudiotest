@@ -11,6 +11,13 @@ const EXCLUDE_SEGMENTS = ['audio-test', 'headphone-test', '404', '500'];
 export default defineConfig({
   site: 'https://onlineaudiotest.com',
 
+  compressHTML: true,
+
+  build: {
+    // Bundle all component CSS into <style> tags — no render-blocking .css fetches
+    inlineStylesheets: 'always',
+  },
+
   integrations: [
     sitemap({
       filter: (page) => !EXCLUDE_SEGMENTS.some((seg) => page.includes(`/${seg}`)),
@@ -22,8 +29,8 @@ export default defineConfig({
           item.priority = 1.0;
           item.changefreq = 'weekly';
         } else if (/\/(mic-test|speaker-test|latency-test)\/?$/.test(u)) {
-          item.priority = 0.9;
-          item.changefreq = 'monthly';
+          item.priority = 1.0;
+          item.changefreq = 'weekly';
         } else if (/\/(about|contact)\/?$/.test(u)) {
           item.priority = 0.6;
           item.changefreq = 'monthly';
