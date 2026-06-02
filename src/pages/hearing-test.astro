@@ -1,0 +1,681 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Online Hearing Test,Check Your Hearing Range",
+      "url": "https://onlineaudiotest.com/hearing-test",
+      "description": "Free online hearing test. A tone rises from 20 Hz to 20,000 Hz,click stop when you can no longer hear it. Instant results with hearing age estimate.",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires Web Audio API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com" },
+        { "@type": "ListItem", "position": 2, "name": "Online Hearing Test", "item": "https://onlineaudiotest.com/hearing-test" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is a frequency hearing test?", "acceptedAnswer": { "@type": "Answer", "text": "A frequency hearing test plays tones at specific frequencies (measured in Hz or kHz) to find the highest pitch you can hear. It estimates your audible frequency range and compares it to average values by age. This free online frequency hearing test sweeps from 20 Hz to 20,000 Hz,you stop the tone when it becomes inaudible." } },
+        { "@type": "Question", "name": "What is a high frequency hearing test?", "acceptedAnswer": { "@type": "Answer", "text": "A high frequency hearing test specifically checks your ability to hear sounds above 8,000 Hz (8 kHz). High-frequency hearing is the first to decline with age and noise exposure. Most adults begin losing sensitivity above 16 kHz by their mid-30s, and above 14 kHz by their 50s." } },
+        { "@type": "Question", "name": "How does an online hearing test work?", "acceptedAnswer": { "@type": "Answer", "text": "This online hearing test uses the Web Audio API to generate a pure sine wave tone that rises gradually from 20 Hz to 20,000 Hz. When the tone becomes inaudible, you press stop. The frequency at that moment is your estimated maximum audible range. No microphone, no upload, and no download is required,it runs entirely in your browser." } },
+        { "@type": "Question", "name": "Is an online hearing test accurate?", "acceptedAnswer": { "@type": "Answer", "text": "An online frequency hearing test is a useful screening tool but not a clinical audiogram. Accuracy depends on your headphone quality, ambient noise levels, and device audio output. Consumer earbuds vary widely in high-frequency reproduction. For the most accurate result, use quality headphones in a quiet room. For a clinical evaluation, see an audiologist." } },
+        { "@type": "Question", "name": "What is the normal hearing range by age?", "acceptedAnswer": { "@type": "Answer", "text": "Normal hearing range by age: children under 18 can typically hear up to 20,000 Hz; adults 18–25 hear up to 17,000–20,000 Hz; adults 26–35 hear up to 16,000–18,000 Hz; adults 36–50 hear up to 14,000–17,000 Hz; adults 50+ typically hear up to 12,000–15,000 Hz. These ranges assume no significant noise-induced hearing loss." } },
+        { "@type": "Question", "name": "What is an age hearing test?", "acceptedAnswer": { "@type": "Answer", "text": "An age hearing test,also called a frequency hearing test by age,estimates your 'hearing age' by comparing your maximum audible frequency to typical values for different age groups. If a 45-year-old can hear up to 18 kHz, their hearing age is estimated at 18–25 years. This test provides that estimate based on your high-frequency hearing threshold." } },
+        { "@type": "Question", "name": "What frequency can children hear that adults cannot?", "acceptedAnswer": { "@type": "Answer", "text": "Children can typically hear frequencies up to 20,000 Hz (20 kHz). Most adults over 25 cannot hear above 18,000 Hz, and adults over 40 often cannot hear above 15,000 Hz. The 'mosquito tone' at 17,400 Hz is a well-known example,most adults over 30 cannot detect it." } }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="Hearing Test Online – Free Frequency Hearing Test | OnlineAudioTest.com"
+  description="Free hearing test online. A tone rises from 20 Hz to 20,000 Hz,stop when you can no longer hear it. Get your high frequency hearing limit, hearing age estimate, and personalized result instantly. No download required."
+  keywords="hearing test online, free hearing test online, hearing test online free, online frequency hearing test, frequency hearing test online, high frequency hearing test online, age hearing test, frequency hearing test age, sound frequency hearing test, low frequency hearing test, hearing range by age, normal hearing range by age, child hearing test online, best hearing test online"
+  canonical="https://onlineaudiotest.com/hearing-test"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>Hearing Test Online,Free Frequency Hearing Test</h1>
+    <p>A free online frequency hearing test that rises from 20 Hz to 20,000 Hz. Stop when you can no longer hear it,get your high-frequency hearing limit and hearing age instantly.</p>
+  </section>
+
+  <!-- TOOL CARD -->
+  <div class="tool-card-wrap">
+    <div class="tool-card" id="ht-card">
+
+      <!-- Status pill -->
+      <div class="status-bar">
+        <div class="status-pill">
+          <span class="dot" id="ht-dot"></span>
+          <span id="ht-status">Ready</span>
+        </div>
+        <span class="eyebrow caption-mono" id="ht-label"></span>
+      </div>
+
+      <!-- ── IDLE ── -->
+      <div id="phase-idle">
+        <p class="phase-desc">Follow these steps for the most accurate result:</p>
+        <ul class="checklist">
+          <li><span class="chk">✓</span>Use headphones,laptop speakers cannot reproduce high frequencies</li>
+          <li><span class="chk">✓</span>Set volume to a comfortable level before starting</li>
+          <li><span class="chk">✓</span>Test in a quiet room</li>
+          <li><span class="chk">✓</span>Results are educational only, not a medical diagnosis</li>
+        </ul>
+        <div class="action-row">
+          <button class="btn btn-primary btn-lg" id="btn-start">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><polygon points="2,1 12,6.5 2,12" fill="currentColor"/></svg>
+            Start Test
+          </button>
+        </div>
+      </div>
+
+      <!-- ── TESTING ── -->
+      <div id="phase-test" hidden>
+        <p class="test-instruction">The tone is rising. Press the button the moment you <strong>can no longer hear it.</strong></p>
+
+        <div class="freq-display" aria-live="polite" aria-label="Current frequency">
+          <span class="freq-num" id="freq-num">20</span>
+          <span class="freq-unit" id="freq-unit">Hz</span>
+        </div>
+
+        <div class="tone-bars" id="tone-bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <div class="sweep-track" role="progressbar" aria-label="Frequency sweep progress">
+          <div class="sweep-fill" id="sweep-fill"></div>
+          <div class="sweep-labels">
+            <span>20 Hz</span><span>1 kHz</span><span>5 kHz</span><span>10 kHz</span><span>20 kHz</span>
+          </div>
+        </div>
+
+        <div class="action-row" style="margin-top:var(--s-lg)">
+          <button class="btn-stop" id="btn-stop" aria-label="Stop,I can no longer hear this tone">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="2" fill="currentColor"/></svg>
+            I Can No Longer Hear It
+          </button>
+        </div>
+        <p class="result-note" style="text-align:center;margin-top:var(--s-sm)">Click as soon as the tone fades out of your hearing.</p>
+      </div>
+
+      <!-- ── RESULTS ── -->
+      <div id="phase-results" hidden>
+        <div class="result-max-wrap">
+          <span class="result-label">Your maximum audible frequency</span>
+          <div class="result-freq-row">
+            <span class="result-freq-num" id="result-num">—</span>
+            <span class="result-freq-unit" id="result-unit">Hz</span>
+          </div>
+        </div>
+
+        <!-- Grade badge -->
+        <div class="result-interp" id="result-interp"></div>
+
+        <!-- Personalized interpretation -->
+        <div class="personalized-block" id="personalized-block"></div>
+
+        <!-- You vs Average -->
+        <div class="comparison-block" id="comparison-block"></div>
+
+        <div class="result-age-box">
+          <div class="age-label">Estimated Hearing Age</div>
+          <div class="age-value" id="age-value">—</div>
+          <p class="age-disc">Approximate educational estimate only,not a medical assessment.</p>
+        </div>
+
+        <!-- Comparison table -->
+        <div class="table-wrap">
+          <div class="table-title">Average Hearing Range by Age</div>
+          <table class="age-table" aria-label="Average hearing range by age group">
+            <thead><tr><th>Age Group</th><th>Typical Range</th></tr></thead>
+            <tbody>
+              <tr><td>👶 Children (&lt; 18 yrs)</td><td>up to 20 kHz</td></tr>
+              <tr><td>🧑 18–25 years</td><td>17–20 kHz</td></tr>
+              <tr><td>👨 26–35 years</td><td>16–18 kHz</td></tr>
+              <tr><td>🧓 36–50 years</td><td>14–17 kHz</td></tr>
+              <tr><td>👴 50+ years</td><td>12–15 kHz</td></tr>
+              <tr class="user-row"><td>🎯 You</td><td id="table-user-freq">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Shareable badge -->
+        <div class="badge-block" id="badge-block"></div>
+
+        <!-- Dynamic SEO section -->
+        <div class="dynamic-seo" id="dynamic-seo"></div>
+
+        <div class="result-disclaimer">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><line x1="8" y1="5" x2="8" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.75" fill="currentColor"/></svg>
+          For educational purposes only. Not a substitute for professional hearing evaluation.
+        </div>
+
+        <div class="action-row" style="margin-top:var(--s-lg)">
+          <button class="btn btn-secondary" id="btn-retake">Take Test Again</button>
+          <button class="btn btn-primary" id="btn-copy-badge">Copy Result</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ EDUCATIONAL CONTENT ═══ -->
+  <div class="edu-section">
+
+    <h2>Free Hearing Test Online – How It Works</h2>
+    <p>This free hearing test online uses a pure sine wave tone that rises gradually from <strong>20 Hz to 20,000 Hz</strong> over 25 seconds. As the frequency climbs, you will hear the pitch rising from a low bass rumble into high-pitched tones beyond everyday speech. When the tone becomes inaudible, press <strong>Stop</strong>,the frequency at that moment is your estimated maximum audible range.</p>
+    <p>No microphone, no upload, no server processing. The entire online frequency hearing test runs in your browser using the Web Audio API. Your audio is never recorded or transmitted anywhere.</p>
+    <p><strong>For best accuracy:</strong> use headphones (not laptop speakers,most cannot reproduce frequencies above 14–15 kHz reliably), set volume to a comfortable level, and test in a quiet environment. Background noise is the most common cause of inaccurate results on any online hearing test.</p>
+
+    <h2>Frequency Hearing Test Online Explained</h2>
+    <p>Frequency,measured in Hertz (Hz) or kilohertz (kHz),describes how many times per second a sound wave vibrates. Lower frequencies produce bass; higher frequencies produce treble and high-pitched tones. This online frequency hearing test spans the complete human auditory range:</p>
+    <table class="hearing-table">
+      <thead><tr><th>Frequency Range</th><th>What You Hear</th><th>Hearing Impact of Loss</th></tr></thead>
+      <tbody>
+        <tr><td>20–100 Hz</td><td>Deep bass, sub-bass, kick drum</td><td>Rare; affects music bass only</td></tr>
+        <tr><td>100–1,000 Hz</td><td>Voice fundamentals, instruments</td><td>Affects voice richness</td></tr>
+        <tr><td>1,000–4,000 Hz</td><td>Speech clarity, consonants</td><td>Major impact on speech understanding</td></tr>
+        <tr><td>4,000–8,000 Hz</td><td>High-pitched consonants (s, f, sh)</td><td>First affected by noise damage</td></tr>
+        <tr><td>8,000–12,000 Hz</td><td>Sibilance, air, brightness in music</td><td>Reduces music clarity</td></tr>
+        <tr><td>12,000–20,000 Hz</td><td>Ultra-high harmonics, "presence"</td><td>First affected by age (presbycusis)</td></tr>
+      </tbody>
+    </table>
+    <p>The sound frequency hearing test specifically targets the <strong>8–20 kHz range</strong>,this is where age-related and noise-related hearing loss first appears, and where most people notice meaningful differences based on age.</p>
+
+    <h2>High Frequency Hearing Test,What Your Result Means</h2>
+    <p>The high frequency hearing test online estimates the upper limit of your audible range,the frequency above which sounds become completely inaudible regardless of volume. This is your <strong>high-frequency threshold</strong>.</p>
+    <p>High frequencies above 8 kHz are not critical for everyday conversation, but they do affect speech clarity in noisy environments, the perceived quality and "air" of music, and your ability to locate sound sources in 3D space. A result in the 14–18 kHz range is completely normal for most adults and does not indicate a hearing problem for daily life.</p>
+    <table class="hearing-table">
+      <thead><tr><th>High Frequency Result</th><th>What It Means</th><th>Typical Age Group</th></tr></thead>
+      <tbody>
+        <tr><td>18,000–20,000 Hz</td><td>Excellent high-frequency hearing</td><td>Children, adults under 25</td></tr>
+        <tr><td>16,000–18,000 Hz</td><td>Above average,strong hearing sensitivity</td><td>26–35 years</td></tr>
+        <tr><td>14,000–16,000 Hz</td><td>Typical adult range,normal age-related decline</td><td>36–50 years</td></tr>
+        <tr><td>12,000–14,000 Hz</td><td>Moderate reduction,common after 50</td><td>51–60 years</td></tr>
+        <tr><td>Below 12,000 Hz</td><td>Significant reduction,consider audiologist</td><td>60+ years or noise exposure</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Hearing Test by Age,Normal Frequency Ranges</h2>
+    <p>The age hearing test compares your result against average values for different age groups. This frequency hearing test by age is sometimes called an "age hearing test" because it can estimate your <strong>hearing age</strong>,whether your hearing is older or younger than your biological age.</p>
+    <table class="hearing-table">
+      <thead><tr><th>Age Group</th><th>Typical Upper Limit</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>👶 Children (&lt; 18)</td><td>Up to 20,000 Hz</td><td>Fully intact hair cells; widest range</td></tr>
+        <tr><td>🧑 18–25 years</td><td>17,000–20,000 Hz</td><td>Peak adult hearing range</td></tr>
+        <tr><td>👨 26–35 years</td><td>16,000–18,000 Hz</td><td>Early presbycusis may begin</td></tr>
+        <tr><td>🧓 36–50 years</td><td>14,000–17,000 Hz</td><td>Moderate high-frequency loss common</td></tr>
+        <tr><td>👴 51–60 years</td><td>12,000–15,000 Hz</td><td>Speech clarity in noise often affected</td></tr>
+        <tr><td>👴 60+ years</td><td>10,000–13,000 Hz</td><td>Significant high-frequency loss</td></tr>
+      </tbody>
+    </table>
+    <p>These ranges assume no significant noise-induced hearing loss. People with a history of loud noise exposure may have results 2,000–4,000 Hz lower than average for their age group. The <strong>age frequency hearing test</strong> on this page accounts for this by showing both your frequency result and an estimated hearing age.</p>
+
+    <h2>Why High Frequencies Are Lost First</h2>
+    <p>High-frequency hearing loss is the earliest and most common form of age-related hearing decline,and understanding why helps explain your frequency hearing test results.</p>
+    <h3>The Cochlea's Architecture</h3>
+    <p>The cochlea is a fluid-filled, snail-shaped structure in the inner ear. It contains approximately <strong>15,000–16,000 hair cells</strong> (stereocilia) arranged like a piano keyboard. Hair cells near the <em>base</em> of the cochlea,the entrance,respond to high frequencies. Hair cells deeper in the spiral respond to low frequencies.</p>
+    <p>Because the base of the cochlea is the first structure sound waves encounter, it receives the most intense mechanical stimulation with every sound. This constant workload, compounded over decades, causes high-frequency hair cells to wear out and die first,a process that begins as early as your mid-20s.</p>
+    <h3>Hair Cells Cannot Regenerate</h3>
+    <p>Unlike most cells in the body, cochlear hair cells <strong>do not regenerate</strong> once damaged. Every loud noise exposure, every year of aging, permanently destroys a small number of cells. Over time, this accumulates into measurable high-frequency hearing loss,which is precisely what the high frequency hearing test online measures.</p>
+    <h3>Presbycusis</h3>
+    <p><strong>Presbycusis</strong> is the clinical term for age-related sensorineural hearing loss. It is the most common cause of hearing loss worldwide. It begins gradually in the mid-20s, primarily affecting frequencies above 2,000 Hz. The 8–20 kHz range is typically the first to go,followed by 4–8 kHz, then 2–4 kHz as the condition progresses further.</p>
+
+    <h2>Low vs High Frequency Hearing Loss</h2>
+    <p>The low frequency hearing test and high frequency hearing test measure different things,and losses in each range have very different impacts on daily life.</p>
+    <h3>High Frequency Hearing Loss (most common)</h3>
+    <p>High-frequency hearing loss (above 2,000 Hz) is the most common type. It is typically caused by aging (presbycusis), noise exposure, or a combination of both. Symptoms include difficulty understanding speech in noisy environments, trouble distinguishing consonants like "s," "f," and "th," and reduced music quality. This is what the online frequency hearing test primarily measures.</p>
+    <h3>Low Frequency Hearing Loss (less common)</h3>
+    <p>Low-frequency hearing loss (below 2,000 Hz) is less common and more often associated with specific conditions such as Meniere's disease, sudden sensorineural hearing loss, or certain medications. People with low-frequency loss may find bass-heavy voices harder to understand, or notice that low rumbles and background noise sound muffled. A comprehensive audiogram from an audiologist is needed to assess this range accurately.</p>
+    <h3>Which Matters More?</h3>
+    <p>For everyday speech, the <strong>1,000–4,000 Hz range</strong> is most critical. High-frequency loss above 8 kHz mainly affects music quality and speech clarity in noise. Low-frequency loss is rarer but tends to have a more immediate impact on understanding normal conversation. Most age-related hearing decline starts with high frequencies,which is why an online high frequency hearing test is a useful early screen.</p>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <p class="faq-q">What is a frequency hearing test?</p>
+      <p class="faq-a">A frequency hearing test plays tones at specific frequencies (measured in Hz or kHz) to find the highest pitch you can hear. This free online frequency hearing test sweeps from 20 Hz to 20,000 Hz,you stop the tone when it becomes inaudible, and the result is your estimated maximum audible frequency range.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What is a high frequency hearing test?</p>
+      <p class="faq-a">A high frequency hearing test checks your ability to hear sounds above 8,000 Hz. High-frequency hearing is the first to decline with age and noise exposure. Most adults lose sensitivity above 16 kHz by their mid-30s, and above 14 kHz by their 50s. This online high frequency hearing test targets exactly that range.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">How does this online hearing test work?</p>
+      <p class="faq-a">The test generates a pure sine wave using the Web Audio API that rises logarithmically from 20 Hz to 20,000 Hz over 25 seconds. When you can no longer hear the tone, press Stop. The frequency at that moment is your result. No microphone, no recording, no server,everything runs locally in your browser.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">Is an online hearing test accurate?</p>
+      <p class="faq-a">It is a useful screening tool, not a clinical audiogram. Accuracy is most affected by headphone quality,consumer earbuds vary widely in how well they reproduce frequencies above 14 kHz. For the most reliable result, use quality over-ear headphones in a quiet room. For a medical evaluation, see a licensed audiologist.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What is the normal hearing range by age?</p>
+      <p class="faq-a">Children under 18 typically hear up to 20,000 Hz. Adults 18–25: up to 17,000–20,000 Hz. Adults 26–35: up to 16,000–18,000 Hz. Adults 36–50: up to 14,000–17,000 Hz. Adults 50+: typically up to 12,000–15,000 Hz. These ranges assume no significant noise-induced hearing loss.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What is an age hearing test?</p>
+      <p class="faq-a">An age hearing test estimates your "hearing age" by comparing your maximum audible frequency against typical values for different age groups. If your result is 17 kHz, your hearing age is estimated at 26–35 years,regardless of your actual age. It is an educational comparison, not a medical metric.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What frequency can children hear that adults cannot?</p>
+      <p class="faq-a">Children can typically hear up to 20,000 Hz. Most adults over 25 cannot hear above 18,000 Hz, and adults over 40 often cannot hear above 15,000 Hz. The "mosquito ringtone" at 17,400 Hz is a well-known example,audible to most teenagers but inaudible to most adults over 30.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  (() => {
+    const START_FREQ  = 20;
+    const END_FREQ    = 20000;
+    const MID_FREQ    = Math.sqrt(START_FREQ * END_FREQ); // ~632 Hz,log midpoint
+    const PHASE1_DUR  = 10;  // 20 Hz → 632 Hz  (was 30s → 3× faster)
+    const PHASE2_DUR  = 15;  // 632 Hz → 20 kHz (was 30s → 2× faster)
+    const DURATION    = PHASE1_DUR + PHASE2_DUR; // 25s total
+
+    let phase: 'idle' | 'testing' | 'results' = 'idle';
+    let audioCtx: AudioContext | null = null;
+    let osc: OscillatorNode | null = null;
+    let gainNode: GainNode | null = null;
+    let rafId = 0;
+    let sweepStartCtxTime = 0;
+    let stoppedFreq = 0;
+
+    const phaseIdle    = document.getElementById('phase-idle')!;
+    const phaseTest    = document.getElementById('phase-test')!;
+    const phaseResults = document.getElementById('phase-results')!;
+    const htDot        = document.getElementById('ht-dot')!;
+    const htStatus     = document.getElementById('ht-status')!;
+    const htLabel      = document.getElementById('ht-label')!;
+    const freqNum      = document.getElementById('freq-num')!;
+    const freqUnit     = document.getElementById('freq-unit')!;
+    const sweepFill    = document.getElementById('sweep-fill')!;
+    const toneBars     = document.getElementById('tone-bars')!;
+    const btnStart     = document.getElementById('btn-start') as HTMLButtonElement;
+    const btnStop      = document.getElementById('btn-stop') as HTMLButtonElement;
+    const btnRetake    = document.getElementById('btn-retake') as HTMLButtonElement;
+    const resultNum        = document.getElementById('result-num')!;
+    const resultUnit       = document.getElementById('result-unit')!;
+    const resultInterp     = document.getElementById('result-interp')!;
+    const personalizedBlock= document.getElementById('personalized-block')!;
+    const comparisonBlock  = document.getElementById('comparison-block')!;
+    const ageValue         = document.getElementById('age-value')!;
+    const tableUserFreq    = document.getElementById('table-user-freq')!;
+    const badgeBlock       = document.getElementById('badge-block')!;
+    const dynamicSeo       = document.getElementById('dynamic-seo')!;
+
+    function audio(): AudioContext {
+      if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function freqAtTime(elapsed: number): number {
+      if (elapsed <= PHASE1_DUR) {
+        const t = elapsed / PHASE1_DUR;
+        return START_FREQ * Math.pow(MID_FREQ / START_FREQ, t);
+      }
+      const t = Math.min((elapsed - PHASE1_DUR) / PHASE2_DUR, 1);
+      return MID_FREQ * Math.pow(END_FREQ / MID_FREQ, t);
+    }
+
+    function formatFreq(hz: number): { num: string; unit: string } {
+      if (hz >= 1000) return { num: (hz / 1000).toFixed(1), unit: 'kHz' };
+      return { num: Math.round(hz).toLocaleString(), unit: 'Hz' };
+    }
+
+    function showPhase(p: typeof phase) {
+      phase = p;
+      phaseIdle.hidden    = p !== 'idle';
+      phaseTest.hidden    = p !== 'testing';
+      phaseResults.hidden = p !== 'results';
+    }
+
+    // ── Start
+    btnStart.addEventListener('click', () => {
+      const ctx = audio();
+      osc = ctx.createOscillator();
+      gainNode = ctx.createGain();
+      osc.type = 'sine';
+
+      // Schedule piecewise logarithmic sweep
+      const t0 = ctx.currentTime + 0.05;
+      osc.frequency.setValueAtTime(START_FREQ, t0);
+      osc.frequency.exponentialRampToValueAtTime(MID_FREQ, t0 + PHASE1_DUR);
+      osc.frequency.exponentialRampToValueAtTime(END_FREQ, t0 + PHASE1_DUR + PHASE2_DUR);
+
+      gainNode.gain.setValueAtTime(0, ctx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.4, t0 + 0.05);
+
+      osc.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + DURATION + 0.1);
+
+      sweepStartCtxTime = t0;
+      showPhase('testing');
+      htDot.className = 'dot active';
+      htStatus.textContent = 'Sweeping';
+      toneBars.classList.add('is-playing');
+
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(tick);
+    });
+
+    function tick() {
+      if (phase !== 'testing') return;
+      const ctx = audio();
+      const elapsed = ctx.currentTime - sweepStartCtxTime;
+      const freq = freqAtTime(elapsed);
+      const t = Math.min(elapsed / DURATION, 1);
+
+      const { num, unit } = formatFreq(freq);
+      freqNum.textContent = num;
+      freqUnit.textContent = unit;
+      sweepFill.style.width = (t * 100).toFixed(2) + '%';
+      htLabel.textContent = num + ' ' + unit;
+
+      if (t >= 1) { stopSweep(); return; }
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function stopSweep() {
+      cancelAnimationFrame(rafId);
+      const ctx = audio();
+      const elapsed = ctx.currentTime - sweepStartCtxTime;
+      stoppedFreq = Math.min(freqAtTime(elapsed), END_FREQ);
+
+      if (gainNode) {
+        gainNode.gain.cancelScheduledValues(ctx.currentTime);
+        gainNode.gain.setValueAtTime(gainNode.gain.value, ctx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.04);
+      }
+      try { osc?.stop(ctx.currentTime + 0.05); } catch {}
+      osc = null; gainNode = null;
+
+      toneBars.classList.remove('is-playing');
+      showResults();
+    }
+
+    btnStop.addEventListener('click', stopSweep);
+
+    // ── Results helpers
+    function getInterp(hz: number): { label: string; text: string; cls: string } {
+      if (hz >= 18000) return { label: 'Excellent',     text: 'Excellent high-frequency hearing. Frequencies above 18 kHz are typically only audible to adults under 25 with no significant noise exposure.', cls: 'grade-excellent' };
+      if (hz >= 16000) return { label: 'Above Average', text: 'Above average hearing, typical of adults in their late 20s and 30s with good hearing health.',                                                  cls: 'grade-good' };
+      if (hz >= 14000) return { label: 'Typical Adult', text: 'Normal adult hearing range. Mild high-frequency decline is very common and expected with age.',                                                cls: 'grade-fair' };
+      if (hz >= 10000) return { label: 'Reduced Range', text: 'Reduced high-frequency perception, common with age-related hearing loss or extended noise exposure.',                                          cls: 'grade-poor' };
+      return                   { label: 'Limited Range', text: 'Significantly reduced high-frequency hearing. Consider consulting an audiologist for a professional evaluation.',                              cls: 'grade-poor' };
+    }
+
+    function getAge(hz: number): string {
+      if (hz >= 18000) return '18–25 years';
+      if (hz >= 16000) return '26–35 years';
+      if (hz >= 14000) return '36–50 years';
+      if (hz >= 12000) return '51–60 years';
+      return '60+ years';
+    }
+
+    function buildPersonalized(hz: number): string {
+      const k = (hz / 1000).toFixed(1);
+      if (hz >= 18000) return `<p><strong>Your result: ${k} kHz</strong></p><p>Most adults between 18 and 25 years old hear between 17 kHz and 20 kHz. Your result places you in this top range, suggesting excellent high-frequency hearing sensitivity.</p><p>Many people over 30 begin losing sensitivity above 16 kHz. Hearing above 18 kHz is typically only possible for younger adults with no significant history of noise exposure.</p>`;
+      if (hz >= 16000) return `<p><strong>Your result: ${k} kHz</strong></p><p>Most adults between 26 and 35 years old hear between 16 kHz and 18 kHz. Your result falls within this range and suggests strong high-frequency hearing sensitivity.</p><p>Many people over 40 struggle to hear frequencies above 15 kHz, while frequencies above 18 kHz are typically heard only by younger adults with excellent hearing.</p>`;
+      if (hz >= 14000) return `<p><strong>Your result: ${k} kHz</strong></p><p>Most adults between 36 and 50 years old hear between 14 kHz and 17 kHz. Your result falls within this typical adult range,mild high-frequency decline is a completely normal part of aging.</p><p>High-frequency hearing above 16 kHz becomes progressively harder after 35. Most adults retain clear hearing in the speech range (1–4 kHz) well into their 60s.</p>`;
+      if (hz >= 12000) return `<p><strong>Your result: ${k} kHz</strong></p><p>Most adults over 50 hear between 12 kHz and 15 kHz. Your result is consistent with moderate high-frequency hearing loss, which is very common at this stage of life.</p><p>While high-frequency sensitivity has declined, the speech frequency range (500 Hz–4 kHz) is typically far less affected. Day-to-day hearing is usually still good.</p>`;
+      return `<p><strong>Your result: ${k} kHz</strong></p><p>Your result suggests significant high-frequency hearing reduction, which can result from natural aging, prolonged noise exposure, or other factors.</p><p>If this is unexpected for your age, it may be worth consulting an audiologist for a comprehensive hearing evaluation.</p>`;
+    }
+
+    function buildComparison(hz: number): string {
+      const k = (hz / 1000).toFixed(1);
+      const rows = [
+        { label: '20-year-old average', range: '18–20 kHz', min: 18000 },
+        { label: '30-year-old average', range: '16–18 kHz', min: 16000 },
+        { label: '50-year-old average', range: '12–15 kHz', min: 12000 },
+      ];
+      const items = rows.map(r => {
+        const above = hz >= r.min;
+        return `<div class="comp-row ${above ? 'comp-above' : 'comp-below'}"><span class="comp-icon" aria-hidden="true">${above ? '✓' : '○'}</span><span><strong>${r.label}:</strong> ${r.range}</span></div>`;
+      }).join('');
+      return `<div class="comp-title">You vs Average</div>${items}<div class="comp-score">Your score: <strong>${k} kHz</strong></div>`;
+    }
+
+    function buildBadge(hz: number): string {
+      const k = (hz / 1000).toFixed(1);
+      const age = getAge(hz);
+      const copyText = `My hearing range: ${k} kHz\nEstimated hearing age: ${age}\nTested at OnlineAudioTest.com`;
+      return `<div class="badge-card"><div class="badge-lines"><div class="badge-line"><span class="badge-key">My hearing range</span><span class="badge-val">${k} kHz</span></div><div class="badge-line"><span class="badge-key">Estimated hearing age</span><span class="badge-val">${age}</span></div><div class="badge-line"><span class="badge-key">Tested at</span><span class="badge-val">OnlineAudioTest.com</span></div></div><button class="btn-copy-inner" data-text="${encodeURIComponent(copyText)}">Copy Result</button></div>`;
+    }
+
+    function buildDynamicSeo(hz: number): string {
+      const k = (hz / 1000).toFixed(1);
+      const hzRounded = Math.round(hz / 1000) * 1000;
+      const quality = hz >= 18000 ? 'excellent' : hz >= 16000 ? 'above-average' : hz >= 14000 ? 'typical adult' : 'reduced';
+      const above = hz >= 16000;
+      return `<div class="dyn-seo-block"><h3>Can You Hear ${hzRounded.toLocaleString()} Hz?</h3><p>A result of ${k} kHz means you can hear frequencies at or above ${hzRounded.toLocaleString()} Hz,${above ? 'considered above-average for most adults' : 'within the typical adult range'}. This places your hearing in the <strong>${quality}</strong> category.</p><p>People often search: <em>can you hear ${hzRounded.toLocaleString()} hz</em>, <em>is ${k} kHz good hearing</em>, <em>what does ${k} kHz mean for hearing</em>. The answer depends on age,for a 20-year-old, ${k} kHz is ${hz >= 18000 ? 'strong but not exceptional' : hz >= 16000 ? 'slightly below peak' : 'below average'}. For a 40-year-old, it is ${hz >= 14000 ? 'completely normal' : 'worth monitoring'}.</p></div>`;
+    }
+
+    function showResults() {
+      const hz = Math.round(stoppedFreq);
+      const { num, unit } = formatFreq(hz);
+      const interp = getInterp(hz);
+
+      resultNum.textContent  = num;
+      resultUnit.textContent = unit;
+      tableUserFreq.textContent = (hz / 1000).toFixed(1) + ' kHz';
+      ageValue.textContent   = getAge(hz);
+
+      resultInterp.innerHTML      = `<div class="interp-row"><span class="grade-badge ${interp.cls}">${interp.label}</span><p class="interp-text">${interp.text}</p></div>`;
+      personalizedBlock.innerHTML = buildPersonalized(hz);
+      comparisonBlock.innerHTML   = buildComparison(hz);
+      badgeBlock.innerHTML        = buildBadge(hz);
+      dynamicSeo.innerHTML        = buildDynamicSeo(hz);
+
+      badgeBlock.querySelector<HTMLButtonElement>('.btn-copy-inner')?.addEventListener('click', async (e) => {
+        const btn = e.currentTarget as HTMLButtonElement;
+        const text = decodeURIComponent(btn.dataset.text || '');
+        try { await navigator.clipboard.writeText(text); } catch {}
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = 'Copy Result'; }, 2000);
+      });
+
+      htDot.className = 'dot';
+      htStatus.textContent = 'Test complete';
+      htLabel.textContent  = (hz / 1000).toFixed(1) + ' kHz max';
+      showPhase('results');
+    }
+
+    btnRetake.addEventListener('click', () => {
+      cancelAnimationFrame(rafId);
+      try { osc?.stop(); } catch {}
+      osc = null; gainNode = null;
+      toneBars.classList.remove('is-playing');
+      htDot.className = 'dot';
+      htStatus.textContent = 'Ready';
+      htLabel.textContent = '';
+      freqNum.textContent = '20';
+      freqUnit.textContent = 'Hz';
+      sweepFill.style.width = '0%';
+      showPhase('idle');
+    });
+  })();
+</script>
+
+<style>
+  /* ── Checklist ── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: var(--s-sm); margin: var(--s-md) 0 var(--s-xl); padding: 0; }
+  .checklist li { display: flex; align-items: flex-start; gap: var(--s-sm); font-size: 14px; color: var(--body-text); line-height: 1.5; }
+  .chk { color: #10b981; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .phase-desc { font-size: 14px; color: var(--body-text); line-height: 1.6; }
+
+  /* ── Test instruction ── */
+  .test-instruction { font-size: 15px; color: var(--body-text); line-height: 1.6; margin-bottom: var(--s-sm); }
+  .test-instruction strong { color: var(--ink); }
+
+  /* ── Frequency display ── */
+  .freq-display { display: flex; align-items: baseline; gap: 8px; justify-content: center; padding: var(--s-lg) 0 var(--s-xs); }
+  .freq-num { font-family: var(--font-mono); font-size: 64px; font-weight: 700; line-height: 1; letter-spacing: -3px; color: var(--ink); }
+  .freq-unit { font-family: var(--font-mono); font-size: 24px; font-weight: 500; color: var(--mute); }
+
+  /* ── Tone bars ── */
+  .tone-bars { display: flex; align-items: flex-end; gap: 4px; height: 32px; justify-content: center; margin-bottom: var(--s-md); }
+  .tone-bars span { width: 5px; border-radius: 3px; background: var(--link); height: 4px; opacity: 0.2; flex-shrink: 0; }
+  .tone-bars.is-playing span { opacity: 0.8; }
+  .tone-bars.is-playing span:nth-child(1) { animation: tb1 0.65s ease-in-out infinite; }
+  .tone-bars.is-playing span:nth-child(2) { animation: tb2 0.65s ease-in-out infinite 0.1s; }
+  .tone-bars.is-playing span:nth-child(3) { animation: tb3 0.65s ease-in-out infinite 0.2s; }
+  .tone-bars.is-playing span:nth-child(4) { animation: tb2 0.65s ease-in-out infinite 0.15s; }
+  .tone-bars.is-playing span:nth-child(5) { animation: tb1 0.65s ease-in-out infinite 0.05s; }
+  @keyframes tb1 { 0%,100% { height: 5px; } 50% { height: 16px; } }
+  @keyframes tb2 { 0%,100% { height: 4px; } 50% { height: 28px; } }
+  @keyframes tb3 { 0%,100% { height: 8px; } 50% { height: 32px; } }
+
+  /* ── Sweep progress bar ── */
+  .sweep-track {
+    position: relative; height: 8px;
+    background: var(--canvas-soft-2); border-radius: var(--r-full);
+    overflow: hidden; box-shadow: var(--shadow-1); margin-bottom: var(--s-xs);
+  }
+  .sweep-fill {
+    height: 100%; width: 0%; border-radius: var(--r-full);
+    background: linear-gradient(to right, #60a5fa, #818cf8, #a78bfa, #f472b6, #fb7185);
+    transition: width 0.1s linear;
+  }
+  .sweep-labels {
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 10px; color: var(--mute);
+    margin-top: 4px; padding: 0 2px;
+  }
+
+  /* ── Stop button ── */
+  .btn-stop {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; max-width: 360px; height: 56px;
+    background: #ef4444; color: #fff;
+    font-family: var(--font-sans); font-size: 17px; font-weight: 700;
+    border: none; border-radius: var(--r-pill); cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(239,68,68,.35);
+    margin-inline: auto; display: flex;
+  }
+  .btn-stop:hover { opacity: 0.9; }
+  .btn-stop:active { transform: scale(0.97); }
+
+  /* ── Results ── */
+  .result-max-wrap { text-align: center; margin-bottom: var(--s-lg); }
+  .result-label { display: block; font-size: 13px; color: var(--mute); margin-bottom: var(--s-xs); }
+  .result-freq-row { display: flex; align-items: baseline; gap: 8px; justify-content: center; }
+  .result-freq-num { font-family: var(--font-mono); font-size: 64px; font-weight: 700; line-height: 1; letter-spacing: -3px; color: var(--ink); }
+  .result-freq-unit { font-family: var(--font-mono); font-size: 24px; font-weight: 500; color: var(--mute); }
+
+  /* ── Interpretation ── */
+  .result-interp { margin-bottom: var(--s-lg); }
+  .interp-row { display: flex; align-items: flex-start; gap: var(--s-md); background: var(--canvas-soft); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: var(--s-md) var(--s-lg); }
+  .interp-text { font-size: 14px; color: var(--body-text); line-height: 1.6; margin: 0; }
+  .grade-badge { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: var(--r-full); white-space: nowrap; flex-shrink: 0; }
+  .grade-excellent { background: var(--grade-excellent-bg); color: var(--grade-excellent-fg); }
+  .grade-good      { background: var(--grade-good-bg);      color: var(--grade-good-fg); }
+  .grade-fair      { background: var(--grade-fair-bg);      color: var(--grade-fair-fg); }
+  .grade-poor      { background: var(--grade-poor-bg);      color: var(--grade-poor-fg); }
+
+  /* ── Hearing age ── */
+  .result-age-box { text-align: center; background: var(--canvas-soft-2); border-radius: var(--r-md); padding: var(--s-md) var(--s-lg); margin-bottom: var(--s-lg); }
+  .age-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--mute); }
+  .age-value { font-size: 28px; font-weight: 600; color: var(--ink); letter-spacing: -0.5px; margin: var(--s-xs) 0; }
+  .age-disc  { font-size: 12px; color: var(--mute); line-height: 1.5; }
+
+  /* ── Age comparison table ── */
+  .table-wrap { margin-bottom: var(--s-lg); }
+  .table-title { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--mute); margin-bottom: var(--s-sm); }
+  .age-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .age-table th { text-align: left; padding: var(--s-xs) var(--s-sm); border-bottom: 2px solid var(--hairline); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--mute); }
+  .age-table td { padding: 10px var(--s-sm); border-bottom: 1px solid var(--hairline); color: var(--body-text); }
+  .age-table tr:last-child td { border-bottom: none; }
+  .age-table tbody tr:hover td { background: var(--canvas-soft); }
+  .age-table .user-row td { background: var(--canvas-soft-2); font-weight: 700; color: var(--ink); font-size: 15px; }
+  .age-table .user-row:hover td { background: var(--canvas-soft-2); }
+
+  /* ── Disclaimer ── */
+  .result-disclaimer { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--mute); line-height: 1.6; background: var(--canvas-soft); border-radius: var(--r-sm); padding: var(--s-sm) var(--s-md); }
+  .result-disclaimer svg { flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Educational ── */
+  .edu-section { max-width: 680px; margin-inline: auto; padding: 0 var(--container-pad); margin-bottom: var(--s-3xl); }
+  .edu-section h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.96px; margin-bottom: var(--s-md); margin-top: var(--s-3xl); color: var(--ink); }
+  .edu-section h2:first-child { margin-top: 0; }
+  .edu-section h3 { font-size: 17px; font-weight: 600; margin-bottom: var(--s-xs); margin-top: var(--s-xl); color: var(--ink); }
+  .edu-section p { font-size: 15px; color: var(--body-text); line-height: 1.75; margin-bottom: var(--s-md); }
+  .edu-section strong { color: var(--ink); font-weight: 500; }
+  .hearing-table { width: 100%; border-collapse: collapse; margin-bottom: var(--s-lg); font-size: 14px; }
+  .hearing-table th { text-align: left; padding: var(--s-xs) var(--s-sm); border-bottom: 2px solid var(--hairline); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--mute); }
+  .hearing-table td { padding: var(--s-xs) var(--s-sm); border-bottom: 1px solid var(--hairline); color: var(--body-text); }
+  .hearing-table tr:last-child td { border-bottom: none; }
+  .hearing-table tbody tr:hover td { background: var(--canvas-soft); }
+
+  /* ── Personalized block ── */
+  .personalized-block { margin-bottom: var(--s-lg); padding: var(--s-md) var(--s-lg); background: var(--canvas-soft); border-radius: var(--r-md); border: 1px solid var(--hairline); }
+  .personalized-block p { font-size: 14px; color: var(--body-text); line-height: 1.7; margin-bottom: var(--s-sm); }
+  .personalized-block p:last-child { margin-bottom: 0; }
+  .personalized-block strong { color: var(--ink); }
+
+  /* ── You vs Average ── */
+  .comparison-block { margin-bottom: var(--s-lg); padding: var(--s-md) var(--s-lg); background: var(--canvas-soft-2); border-radius: var(--r-md); }
+  .comp-title { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--mute); margin-bottom: var(--s-sm); }
+  .comp-row { display: flex; align-items: center; gap: var(--s-sm); font-size: 14px; color: var(--body-text); padding: 5px 0; }
+  .comp-row strong { color: var(--ink); }
+  .comp-icon { font-size: 13px; width: 18px; flex-shrink: 0; }
+  .comp-above .comp-icon { color: #10b981; }
+  .comp-below .comp-icon { color: var(--mute); }
+  .comp-score { margin-top: var(--s-sm); padding-top: var(--s-sm); border-top: 1px solid var(--hairline); font-size: 14px; color: var(--body-text); }
+  .comp-score strong { color: var(--ink); font-size: 16px; }
+
+  /* ── Shareable badge ── */
+  .badge-card { background: var(--canvas); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: var(--s-md) var(--s-lg); margin-bottom: var(--s-lg); box-shadow: var(--shadow-2); }
+  .badge-lines { display: flex; flex-direction: column; gap: var(--s-xs); margin-bottom: var(--s-md); }
+  .badge-line { display: flex; justify-content: space-between; align-items: center; gap: var(--s-sm); }
+  .badge-key { font-size: 12px; color: var(--mute); font-family: var(--font-mono); }
+  .badge-val { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .btn-copy-inner { width: 100%; height: 36px; background: var(--canvas-soft-2); color: var(--ink); font-size: 13px; font-weight: 500; border: 1px solid var(--hairline); border-radius: var(--r-pill); cursor: pointer; font-family: inherit; transition: background .15s; }
+  .btn-copy-inner:hover { background: var(--hairline); }
+
+  /* ── Dynamic SEO block ── */
+  .dyn-seo-block { margin-bottom: var(--s-lg); padding: var(--s-md) var(--s-lg); border-left: 3px solid var(--link); background: var(--canvas-soft); border-radius: 0 var(--r-md) var(--r-md) 0; }
+  .dyn-seo-block h3 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: var(--s-xs); }
+  .dyn-seo-block p { font-size: 13px; color: var(--body-text); line-height: 1.7; margin-bottom: var(--s-xs); }
+  .dyn-seo-block p:last-child { margin-bottom: 0; }
+  .dyn-seo-block strong { color: var(--ink); }
+  .dyn-seo-block em { color: var(--mute); font-style: normal; }
+
+  /* ── Mobile ── */
+  @media (max-width: 480px) {
+    .freq-num { font-size: 48px; }
+    .result-freq-num { font-size: 48px; }
+    .age-value { font-size: 22px; }
+    .btn-stop { font-size: 15px; height: 50px; }
+    .interp-row { flex-direction: column; gap: var(--s-xs); }
+    .sweep-labels span:nth-child(2), .sweep-labels span:nth-child(4) { display: none; }
+  }
+</style>

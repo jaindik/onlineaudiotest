@@ -1,0 +1,3 @@
+# www → non-www redirect must be configured in Cloudflare Dashboard
+# under Websites → your domain → Redirect Rules (Bulk Redirects)
+# Source: https://www.onlineaudiotest.com/*  →  https://onlineaudiotest.com/:splat  301

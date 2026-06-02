@@ -27,7 +27,8 @@ const schema = {
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "url": "https://onlineaudiotest.com/mic-test",     "name": "Mic Check Online — Free Microphone & Earphone Mic Test" },
         { "@type": "ListItem", "position": 2, "url": "https://onlineaudiotest.com/speaker-test", "name": "Left Right Audio Test — Stereo & Headphone Check" },
-        { "@type": "ListItem", "position": 3, "url": "https://onlineaudiotest.com/latency-test", "name": "Audio Latency Test — Bluetooth & AirPods Delay" }
+        { "@type": "ListItem", "position": 3, "url": "https://onlineaudiotest.com/latency-test", "name": "Audio Latency Test — Bluetooth & AirPods Delay" },
+        { "@type": "ListItem", "position": 4, "url": "https://onlineaudiotest.com/hearing-test", "name": "Online Hearing Test — Check Your Hearing Range & Frequency Limit" }
       ]
     },
   ]
@@ -58,12 +59,20 @@ const tools = [
     gradClass: 'ship',
     cta: 'Measure latency →',
   },
+  {
+    href: '/hearing-test',
+    eyebrow: 'Hearing Range & Age Test',
+    title: 'Hearing Test',
+    desc: 'Online hearing test that estimates the highest frequency you can hear and your hearing age. Pure tone sweep using the Web Audio API — no download required.',
+    gradClass: 'develop',
+    cta: 'Test my hearing →',
+  },
 ];
 ---
 
 <Layout
-  title="Audio Test - Free Online Mic Check, Left Right Audio & Headphone Test"
-  description="Free audio test online. Mic check, left right audio test, stereo audio test, headphone test, earphone mic test, and audio latency test — all in your browser. No download."
+  title="Online Audio Test - Mic Check, Speaker & Latency Test"
+  description="Free online audio test. Mic check, left right audio test, headphone test, and audio latency checker — all browser-based. No download required."
   keywords="audio test, left right audio test, stereo audio test, mic check, mic check online, headphone test, left right headphone test, headphone check, earphone mic test, earphone test left right, audio latency test, bluetooth audio test, airpods test, playback audio test, lossless audio test"
   schema={schema}
 >
