@@ -7,7 +7,7 @@ const schema = {
     {
       "@type": "WebSite",
       "name": "OnlineAudioTest.com",
-      "url": "https://onlineaudiotest.com",
+      "url": "https://onlineaudiotest.com/",
       "description": "Free browser-based audio test tools. Mic check online, left right audio test, stereo audio test, headphone test, and audio latency test — no download required.",
       "potentialAction": {
         "@type": "SearchAction",
@@ -18,17 +18,17 @@ const schema = {
     {
       "@type": "Organization",
       "name": "OnlineAudioTest.com",
-      "url": "https://onlineaudiotest.com",
+      "url": "https://onlineaudiotest.com/",
       "logo": "https://onlineaudiotest.com/icon.png"
     },
     {
       "@type": "ItemList",
       "name": "Free Online Audio Test Tools",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "url": "https://onlineaudiotest.com/mic-test",     "name": "Mic Check Online — Free Microphone & Earphone Mic Test" },
-        { "@type": "ListItem", "position": 2, "url": "https://onlineaudiotest.com/speaker-test", "name": "Left Right Audio Test — Stereo & Headphone Check" },
-        { "@type": "ListItem", "position": 3, "url": "https://onlineaudiotest.com/latency-test", "name": "Audio Latency Test — Bluetooth & AirPods Delay" },
-        { "@type": "ListItem", "position": 4, "url": "https://onlineaudiotest.com/hearing-test", "name": "Online Hearing Test — Check Your Hearing Range & Frequency Limit" }
+        { "@type": "ListItem", "position": 1, "url": "https://onlineaudiotest.com/mic-test/",     "name": "Mic Check Online — Free Microphone & Earphone Mic Test" },
+        { "@type": "ListItem", "position": 2, "url": "https://onlineaudiotest.com/speaker-test/", "name": "Left Right Audio Test — Stereo & Headphone Check" },
+        { "@type": "ListItem", "position": 3, "url": "https://onlineaudiotest.com/latency-test/", "name": "Audio Latency Test — Bluetooth & AirPods Delay" },
+        { "@type": "ListItem", "position": 4, "url": "https://onlineaudiotest.com/hearing-test/", "name": "Online Hearing Test — Check Your Hearing Range & Frequency Limit" }
       ]
     },
   ]
@@ -36,7 +36,7 @@ const schema = {
 
 const tools = [
   {
-    href: '/mic-test',
+    href: '/mic-test/',
     eyebrow: 'Mic Check Online',
     title: 'Mic Test',
     desc: 'Mic check online in seconds. Detect your microphone, monitor real-time input levels, run an earphone mic test, and play back your recording instantly.',
@@ -44,7 +44,7 @@ const tools = [
     cta: 'Test my microphone →',
   },
   {
-    href: '/speaker-test',
+    href: '/speaker-test/',
     eyebrow: 'Left Right Audio Test',
     title: 'Speaker & Headphone Test',
     desc: 'Stereo audio test for speakers, headphones, and earphones. Left right audio test, headphone check, pink noise lossless audio test, and playback audio test.',
@@ -52,7 +52,7 @@ const tools = [
     cta: 'Run stereo test →',
   },
   {
-    href: '/latency-test',
+    href: '/latency-test/',
     eyebrow: 'Bluetooth & System Delay',
     title: 'Latency Test',
     desc: 'Audio latency test in milliseconds. Measure Bluetooth audio delay, AirPods lag, Zoom sync issues, and gaming latency — instantly in your browser.',
@@ -60,7 +60,7 @@ const tools = [
     cta: 'Measure latency →',
   },
   {
-    href: '/hearing-test',
+    href: '/hearing-test/',
     eyebrow: 'Hearing Range & Age Test',
     title: 'Hearing Test',
     desc: 'Online hearing test that estimates the highest frequency you can hear and your hearing age. Pure tone sweep using the Web Audio API — no download required.',
@@ -94,7 +94,7 @@ const tools = [
         Mic check, left right audio test, headphone test, stereo audio test, and Bluetooth latency - all free, all in your browser, zero friction.
       </p>
       <div class="hero-actions">
-        <a href="/mic-test" class="btn btn-primary btn-lg">
+        <a href="/mic-test/" class="btn btn-primary btn-lg">
           <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <rect x="7" y="2" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.5"/>
             <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -103,7 +103,7 @@ const tools = [
           </svg>
           Mic Check Online
         </a>
-        <a href="/speaker-test" class="btn btn-secondary btn-lg">
+        <a href="/speaker-test/" class="btn btn-secondary btn-lg">
           <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
             <path d="M14 7a4 4 0 010 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -309,17 +309,17 @@ const tools = [
 
         <details class="faq-home-item">
           <summary class="faq-home-q">Why is audio only playing in one headphone?</summary>
-          <p class="faq-home-a">Single-ear audio usually means a broken wire near the plug, a damaged driver on one side, or a balance setting shifted fully to one channel. Check System Settings → Sound → Balance first. Then run the <a href="/speaker-test">left right audio test</a> to confirm which channel is silent, and test on a second device to rule out software.</p>
+          <p class="faq-home-a">Single-ear audio usually means a broken wire near the plug, a damaged driver on one side, or a balance setting shifted fully to one channel. Check System Settings → Sound → Balance first. Then run the <a href="/speaker-test/">left right audio test</a> to confirm which channel is silent, and test on a second device to rule out software.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">Why does my headphone audio sound muffled?</summary>
-          <p class="faq-home-a">Muffled audio usually means a degraded tweeter/driver, a blocked ear pad, or an EQ preset cutting treble. Check your device EQ first. If no EQ is applied, run a <a href="/speaker-test">headphone test with pink noise</a> — if one ear sounds darker than the other, that driver is damaged. Dirty grilles on in-ear models are another common cause.</p>
+          <p class="faq-home-a">Muffled audio usually means a degraded tweeter/driver, a blocked ear pad, or an EQ preset cutting treble. Check your device EQ first. If no EQ is applied, run a <a href="/speaker-test/">headphone test with pink noise</a> — if one ear sounds darker than the other, that driver is damaged. Dirty grilles on in-ear models are another common cause.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">How do I test audio latency?</summary>
-          <p class="faq-home-a">Open the <a href="/latency-test">Audio Latency Test</a> — no microphone or extra hardware required. The tool measures your output delay in milliseconds using the Web Audio API. Wired connections typically show under 10 ms. Bluetooth ranges from ~40 ms (aptX Low Latency) to over 200 ms (SBC codec).</p>
+          <p class="faq-home-a">Open the <a href="/latency-test/">Audio Latency Test</a> — no microphone or extra hardware required. The tool measures your output delay in milliseconds using the Web Audio API. Wired connections typically show under 10 ms. Bluetooth ranges from ~40 ms (aptX Low Latency) to over 200 ms (SBC codec).</p>
         </details>
 
         <details class="faq-home-item">
@@ -329,27 +329,27 @@ const tools = [
 
         <details class="faq-home-item">
           <summary class="faq-home-q">What is low latency audio?</summary>
-          <p class="faq-home-a">Low latency audio means a signal path with minimal delay — under 20 ms for professional use, under 40 ms for consumer listening. Wired audio achieves 5–10 ms. Bluetooth depends on the codec: SBC can exceed 200 ms, aptX Low Latency targets under 40 ms, and Bluetooth LE Audio (LC3) is designed for below 40 ms. Measure your exact delay with the <a href="/latency-test">Latency Test</a>.</p>
+          <p class="faq-home-a">Low latency audio means a signal path with minimal delay — under 20 ms for professional use, under 40 ms for consumer listening. Wired audio achieves 5–10 ms. Bluetooth depends on the codec: SBC can exceed 200 ms, aptX Low Latency targets under 40 ms, and Bluetooth LE Audio (LC3) is designed for below 40 ms. Measure your exact delay with the <a href="/latency-test/">Latency Test</a>.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">How do I check if my mic is working?</summary>
-          <p class="faq-home-a">Open the <a href="/mic-test">Mic Check</a> and click "Test My Microphone." Allow browser access. If the waveform and level meter respond to your voice, your mic is working. If nothing moves, verify the correct input device is selected in OS settings (Windows: Settings → Sound → Input; Mac: System Settings → Sound → Input) and no other app has exclusive mic access.</p>
+          <p class="faq-home-a">Open the <a href="/mic-test/">Mic Check</a> and click "Test My Microphone." Allow browser access. If the waveform and level meter respond to your voice, your mic is working. If nothing moves, verify the correct input device is selected in OS settings (Windows: Settings → Sound → Input; Mac: System Settings → Sound → Input) and no other app has exclusive mic access.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">How do I do a left right audio test?</summary>
-          <p class="faq-home-a">Open the <a href="/speaker-test">Speaker Test</a> and click "Left only" — you should hear sound only from your left speaker or left ear. Then "Right only." If audio plays from the wrong side, your channels are swapped. If one side is silent, that channel or driver is faulty. Works for headphones, earphones, AirPods, and desktop speakers.</p>
+          <p class="faq-home-a">Open the <a href="/speaker-test/">Speaker Test</a> and click "Left only" — you should hear sound only from your left speaker or left ear. Then "Right only." If audio plays from the wrong side, your channels are swapped. If one side is silent, that channel or driver is faulty. Works for headphones, earphones, AirPods, and desktop speakers.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">What is a stereo audio test?</summary>
-          <p class="faq-home-a">A stereo audio test verifies that the left and right channels of your audio output work independently and at equal volume. It plays audio through each channel in isolation to confirm correct stereo imaging, detect dead channels, and identify reversed wiring. Our <a href="/speaker-test">stereo test</a> includes sine tones and full-spectrum pink noise.</p>
+          <p class="faq-home-a">A stereo audio test verifies that the left and right channels of your audio output work independently and at equal volume. It plays audio through each channel in isolation to confirm correct stereo imaging, detect dead channels, and identify reversed wiring. Our <a href="/speaker-test/">stereo test</a> includes sine tones and full-spectrum pink noise.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">Why does my microphone have echo or sound distorted?</summary>
-          <p class="faq-home-a">Echo means your speakers are feeding back into your open mic — wear headphones while recording to break that loop. Distortion means input gain is too high — lower the microphone sensitivity in OS settings (Windows: Recording Devices → Properties → Levels; Mac: System Settings → Sound → Input volume). Monitor your live signal with the <a href="/mic-test">Mic Test</a>.</p>
+          <p class="faq-home-a">Echo means your speakers are feeding back into your open mic — wear headphones while recording to break that loop. Distortion means input gain is too high — lower the microphone sensitivity in OS settings (Windows: Recording Devices → Properties → Levels; Mac: System Settings → Sound → Input volume). Monitor your live signal with the <a href="/mic-test/">Mic Test</a>.</p>
         </details>
 
       </div>

@@ -4,19 +4,20 @@ import Layout from '../layouts/Layout.astro';
 const schema = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
-  "url": "https://onlineaudiotest.com/about",
+  "url": "https://onlineaudiotest.com/about/",
   "name": "About OnlineAudioTest.com",
   "description": "OnlineAudioTest.com is a free, privacy-first suite of browser-based audio diagnostic tools. No download, no signup — just instant mic check, stereo audio test, and latency test.",
   "inLanguage": "en-US",
-  "isPartOf": { "@type": "WebSite", "url": "https://onlineaudiotest.com", "name": "OnlineAudioTest.com" },
-  "publisher": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com", "logo": "https://onlineaudiotest.com/icon.png" }
+  "isPartOf": { "@type": "WebSite", "url": "https://onlineaudiotest.com/", "name": "OnlineAudioTest.com" },
+  "publisher": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/", "logo": "https://onlineaudiotest.com/icon.png" },
+  "author": { "@type": "Person", "name": "Dik Jain", "jobTitle": "Software Engineer", "url": "https://onlineaudiotest.com/about/" }
 };
 ---
 
 <Layout
   title="About Us — OnlineAudioTest.com"
   description="OnlineAudioTest.com is a free, privacy-first suite of browser-based audio diagnostic tools. No download, no signup — just instant mic check, stereo audio test, and latency test."
-  canonical="https://onlineaudiotest.com/about"
+  canonical="https://onlineaudiotest.com/about/"
   schema={schema}
 >
 
@@ -27,13 +28,22 @@ const schema = {
         <span class="eyebrow">About</span>
         <h1>Built for anyone who just needs their audio to work.</h1>
         <p class="about-lead">OnlineAudioTest.com is a free collection of browser-based audio diagnostic tools. No download. No account. No friction.</p>
+
+        <div class="author-card">
+          <div class="author-avatar" aria-hidden="true">DJ</div>
+          <div class="author-info">
+            <span class="author-name">Dik Jain</span>
+            <span class="author-role">Software Engineer · Builder of OnlineAudioTest.com</span>
+            <span class="author-note">Built this as a fast, honest, free alternative to bloated audio test apps. Questions or feedback? <a href="/contact/">Get in touch.</a></span>
+          </div>
+        </div>
       </header>
 
       <div class="about-grid">
 
         <div class="about-block">
           <h2>What we do</h2>
-          <p>We provide three focused audio testing tools — a <a href="/mic-test">mic check</a>, a <a href="/speaker-test">left right audio test</a> for speakers and headphones, and an <a href="/latency-test">audio latency test</a> for Bluetooth and system delay. Each tool does exactly one job, gives you clear feedback, and gets out of your way.</p>
+          <p>We provide three focused audio testing tools — a <a href="/mic-test/">mic check</a>, a <a href="/speaker-test/">left right audio test</a> for speakers and headphones, and an <a href="/latency-test/">audio latency test</a> for Bluetooth and system delay. Each tool does exactly one job, gives you clear feedback, and gets out of your way.</p>
           <p>Every test runs entirely inside your browser using the Web Audio API. Nothing is downloaded, installed, or uploaded. Your mic audio never leaves your device.</p>
         </div>
 
@@ -61,9 +71,9 @@ const schema = {
       </div>
 
       <div class="about-cta-row">
-        <a href="/mic-test" class="btn btn-primary btn-lg">Mic Check Online</a>
-        <a href="/speaker-test" class="btn btn-secondary btn-lg">Left Right Audio Test</a>
-        <a href="/latency-test" class="btn btn-secondary btn-lg">Audio Latency Test</a>
+        <a href="/mic-test/" class="btn btn-primary btn-lg">Mic Check Online</a>
+        <a href="/speaker-test/" class="btn btn-secondary btn-lg">Left Right Audio Test</a>
+        <a href="/latency-test/" class="btn btn-secondary btn-lg">Audio Latency Test</a>
       </div>
 
     </div>
@@ -140,6 +150,53 @@ const schema = {
   }
   .about-block a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
   strong { color: var(--ink); font-weight: 500; }
+  .author-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-md);
+    padding: var(--s-lg);
+    background: var(--canvas);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-2);
+    max-width: 540px;
+  }
+  .author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--grad-develop);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--on-gradient);
+    flex-shrink: 0;
+  }
+  .author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .author-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .author-role {
+    font-size: 12px;
+    color: var(--mute);
+    font-family: var(--font-mono);
+  }
+  .author-note {
+    font-size: 13px;
+    color: var(--body-text);
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+  .author-note a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+
   .about-cta-row {
     display: flex;
     gap: var(--s-sm);

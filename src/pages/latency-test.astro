@@ -5,14 +5,14 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Audio Latency Test - Bluetooth & AirPods Delay Checker",
-  "url": "https://onlineaudiotest.com/latency-test",
+  "url": "https://onlineaudiotest.com/latency-test/",
   "description": "Free audio latency test online. Measure Bluetooth audio delay, AirPods latency, and system output lag in milliseconds. Bluetooth audio test and AirPods test — instant, no download.",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
   "browserRequirements": "Requires Web Audio API support",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "featureList": ["Audio latency test", "Bluetooth audio test", "AirPods latency test", "System output lag measurement", "Round-trip loopback test", "Output & base latency breakdown"],
-  "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com" }
+  "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
 };
 ---
 
@@ -105,7 +105,7 @@ const schema = {
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <p class="faq-q">Why does my audio sound delayed on Bluetooth?</p>
-      <p class="faq-a">Bluetooth audio codecs compress audio before transmitting it wirelessly. The default codec (SBC) introduces 150–250 ms of delay. Upgrading to aptX, aptX Low Latency, or LDAC reduces this to 40–80 ms. Some headphones also advertise "game mode" which bypasses extra codec processing.</p>
+      <p class="faq-a">Bluetooth audio codecs compress audio before transmitting it wirelessly. The default codec (SBC) introduces 150–250 ms of delay. Upgrading codecs reduces this significantly — <a href="https://www.qualcomm.com/products/features/aptx" target="_blank" rel="noopener noreferrer">according to Qualcomm</a>, aptX Low Latency achieves latency below 40 ms, compared to SBC's 150–250 ms. LDAC (Sony) and LC3 (Bluetooth LE Audio) also offer lower latency than SBC. Some headphones also advertise a "game mode" which bypasses extra codec processing.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">What is base latency vs output latency?</p>

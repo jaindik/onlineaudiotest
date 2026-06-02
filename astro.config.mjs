@@ -10,6 +10,7 @@ const EXCLUDE_SEGMENTS = ['audio-test', 'headphone-test', '404', '500'];
 
 export default defineConfig({
   site: 'https://onlineaudiotest.com',
+  trailingSlash: 'always',
 
   compressHTML: true,
 
