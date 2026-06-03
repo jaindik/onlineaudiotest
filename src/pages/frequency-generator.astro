@@ -54,6 +54,36 @@ const schema = {
           "@type": "Question",
           "name": "Is this frequency generator free?",
           "acceptedAnswer": { "@type": "Answer", "text": "Yes - completely free, no account, no download, no subscription. Runs entirely in your browser. You can also export tones as WAV files for offline use, calibration, or import into video and audio editors." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a tone generator?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A tone generator is a tool that produces a steady audio tone at a specific frequency. Online tone generators use the Web Audio API to synthesize these tones directly in your browser with no download or installation. They are widely used for hearing tests, speaker and headphone testing, musical instrument tuning, and audio equipment calibration." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this frequency generator accurate?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. This generator uses the Web Audio API's OscillatorNode, which produces sample-accurate tones based on your device's audio sample rate (typically 44,100 Hz or 48,000 Hz). Frequency accuracy is within fractions of a cent at standard sample rates. For critical laboratory calibration a dedicated hardware signal generator offers tighter tolerances, but for speaker testing, hearing checks, and musical applications this tool is more than sufficient." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I test my speakers with a frequency generator?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Start at 1,000 Hz as a reference and confirm the tone is clean. Then step down through 500 Hz, 200 Hz, 100 Hz, 60 Hz, 40 Hz, and 20 Hz to test bass extension - listen for buzzing, rattling, or sudden drops that indicate resonance or rolloff. Then step up through 5 kHz, 10 kHz, and 14 kHz to test treble response. Use Sweep mode for a continuous sweep from low to high to hear the full response in one pass." }
+        },
+        {
+          "@type": "Question",
+          "name": "What frequency is best for subwoofer testing?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Use 20 Hz, 40 Hz, 60 Hz, and 80 Hz to test subwoofer performance. 20 Hz is the absolute low limit and stresses the driver at maximum excursion. 40-60 Hz is where most subwoofers are tuned - bass should be strong and clean here. 80 Hz is the typical crossover point between a subwoofer and the main speakers. If tones below 40 Hz are inaudible, your subwoofer has limited extension or the room is absorbing those frequencies." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I download generated tones?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes - click Download WAV to export any tone or sweep as a WAV file. Choose from 1, 5, 10, 30, or 60 second durations. The file is rendered offline inside your browser using the Web Audio API's OfflineAudioContext - no audio is ever sent to a server. Downloaded WAV files can be imported into DAWs, video editors, and audio analysis tools." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a frequency sweep?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A frequency sweep (also called a sine sweep or chirp) plays a tone that changes continuously from a start frequency to an end frequency over a set duration. Sweeps are used to test speaker frequency response, identify resonances in rooms and enclosures, and find the exact rolloff point of a driver or amplifier. Switch to Sweep mode on this generator to run a sweep over any frequency range from 20 Hz to 20,000 Hz." }
         }
       ]
     }
@@ -342,9 +372,25 @@ const schema = {
 
     <h2>Wave Types Explained</h2>
     <p><strong>Sine wave</strong> - A pure tone containing only the fundamental frequency with no harmonics. Smooth, clean, and used for precise acoustic measurements. Sounds like a tuning fork or flute.</p>
-    <p><strong>Square wave</strong> - Jumps abruptly between extremes, containing the fundamental plus all odd harmonics (decaying at 1/n). Sounds buzzy and hollow - similar to a clarinet or vintage synthesizer. Useful for testing amplifier transient response.</p>
+    <p><strong>Square wave</strong> - Jumps abruptly between extremes, containing the fundamental plus all odd harmonics (decaying at 1/n). Sounds buzzy and hollow - similar to a clarinet or vintage synthesizer. Useful for testing <a href="/speaker-test/">speaker and amplifier</a> transient response.</p>
     <p><strong>Sawtooth wave</strong> - Contains all harmonics (odd and even, decaying at 1/n). The brightest, most harmonically rich waveform. The starting point for subtractive synthesis in analog synthesizers.</p>
     <p><strong>Triangle wave</strong> - Contains only odd harmonics, but they decay faster than a square wave (at 1/n²). Softer and flute-like - more character than a sine, less buzz than a square.</p>
+
+    <h2>Common Frequency Uses</h2>
+    <p>Each part of the audible spectrum has distinct characteristics. The table below covers the most searched frequencies - useful for speaker testing, subwoofer calibration, tuning, and <a href="/hearing-test/">hearing checks</a>.</p>
+    <table class="freq-table">
+      <thead><tr><th>Frequency</th><th>Common Name</th><th>Typical Uses</th></tr></thead>
+      <tbody>
+        <tr><td>20 Hz</td><td>Sub-bass threshold</td><td>Lower limit of human hearing; felt as vibration more than sound; stress-tests subwoofers and ported enclosures</td></tr>
+        <tr><td>40 Hz</td><td>Deep bass</td><td>Kick drum sub-frequency, bass guitar fundamentals; common subwoofer tuning and alignment point</td></tr>
+        <tr><td>60 Hz</td><td>Mains hum (US/CA)</td><td>Electrical interference reference in North America (50 Hz in Europe); hum and buzz troubleshooting</td></tr>
+        <tr><td>100 Hz</td><td>Upper bass</td><td>Bass EQ reference point; <a href="/speaker-test/">speaker</a> low-end rolloff test; room resonance identification</td></tr>
+        <tr><td>440 Hz</td><td>Concert A (A4)</td><td>International tuning standard (ISO 16); used to tune every orchestral instrument worldwide</td></tr>
+        <tr><td>1,000 Hz</td><td>Reference tone (1 kHz)</td><td>Universal audio calibration standard; SPL meters are referenced at 1 kHz; loudness sensitivity peak</td></tr>
+        <tr><td>10,000 Hz</td><td>High treble</td><td>Cymbal and string "air"; treble clarity test; <a href="/headphone-test/">headphone</a> and tweeter quality check</td></tr>
+        <tr><td>20,000 Hz</td><td>Upper hearing limit</td><td>Maximum of the audible range; tweeter stress test; most adults over 30 cannot perceive this frequency</td></tr>
+      </tbody>
+    </table>
 
   </div>
 
@@ -380,6 +426,36 @@ const schema = {
     <div class="faq-item">
       <p class="faq-q">Is this frequency generator free?</p>
       <p class="faq-a">Yes - completely free, no account, no download, no subscription. Runs entirely in your browser. WAV export is also free - tones are rendered offline locally and never sent to any server.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What is a tone generator?</p>
+      <p class="faq-a">A tone generator is a tool that produces a steady audio tone at a specific frequency. Online tone generators use the Web Audio API to synthesize tones directly in your browser with no installation required. They are used for hearing tests, <a href="/speaker-test/">speaker testing</a>, musical instrument tuning, and audio calibration.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">Is this frequency generator accurate?</p>
+      <p class="faq-a">Yes. This generator uses the Web Audio API's OscillatorNode, which is sample-accurate at your device's audio sample rate (typically 44,100 Hz or 48,000 Hz). Frequency accuracy is within fractions of a cent. For laboratory-grade calibration a hardware signal generator is more appropriate, but for speaker testing, hearing checks, and musical applications this tool is more than sufficient.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">How do I test my speakers with a frequency generator?</p>
+      <p class="faq-a">Start at 1,000 Hz as a reference and confirm the tone is clean. Step down through 500 Hz, 200 Hz, 100 Hz, 60 Hz, 40 Hz, and 20 Hz to test bass extension - listen for buzzing, rattling, or sudden volume drops that indicate resonance or rolloff. Then step up through 5 kHz, 10 kHz, and 14 kHz to test treble. Use Sweep mode for a continuous pass across the full range. For a dedicated left/right channel check, visit the <a href="/speaker-test/">speaker test</a> page.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What frequency is best for subwoofer testing?</p>
+      <p class="faq-a">Use 20 Hz, 40 Hz, 60 Hz, and 80 Hz. At 20 Hz the driver is at maximum excursion - if you hear distortion or feel the cone bottoming out, back off the volume. 40-60 Hz is where most subwoofers are tuned and should sound strong and clean. 80 Hz is the standard crossover point. Use the Bass presets in the tone generator to step through each frequency quickly.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">Can I download generated tones?</p>
+      <p class="faq-a">Yes - click Download WAV to export any tone or sweep as a WAV file in 1, 5, 10, 30, or 60 second lengths. The audio is rendered offline inside your browser using the Web Audio API's OfflineAudioContext and is never sent to any server. Downloaded files can be imported into DAWs, video editors, and audio analysis tools.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What is a frequency sweep?</p>
+      <p class="faq-a">A frequency sweep (also called a sine sweep or chirp) plays a tone that changes continuously from a start frequency to an end frequency over a set duration. Sweeps reveal speaker frequency response, identify resonances in rooms and enclosures, and locate rolloff points in drivers or amplifiers. Switch to Sweep mode and set your frequency range and duration, then press Play Sweep.</p>
     </div>
   </div>
 
