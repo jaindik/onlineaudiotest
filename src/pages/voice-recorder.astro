@@ -1,0 +1,1651 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://onlineaudiotest.com/voice-recorder/#tool",
+      "name": "Online Voice Recorder",
+      "url": "https://onlineaudiotest.com/voice-recorder/",
+      "description": "Free browser-based voice recorder. Record, pause, trim, normalize, and download audio as WAV or WebM — entirely in your browser with no uploads.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires getUserMedia and MediaRecorder API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Start, pause, resume, and stop recording",
+        "Live waveform visualization",
+        "Real-time level meter with clipping detection",
+        "Post-recording waveform with trim handles",
+        "Playback with speed control (0.5×–2×)",
+        "Skip forward and backward 5 seconds",
+        "Normalize, fade in, fade out",
+        "Recording quality analytics and score",
+        "WAV (lossless) and WebM download",
+        "Filename customization",
+        "Keyboard shortcuts",
+        "Dark mode support"
+      ],
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Online Voice Recorder", "item": "https://onlineaudiotest.com/voice-recorder/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I record audio online?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Click Start Recording, grant microphone access in your browser prompt, then speak. Click Stop when done and download as WAV or WebM." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my recorded audio uploaded anywhere?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. All recording and processing happens in your browser using the MediaRecorder API. Nothing is sent to any server." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I download recordings as MP3?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Browsers cannot encode MP3 natively. WAV (lossless) and WebM/Opus (compressed) are available — both play on all modern devices." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the maximum recording length?",
+          "acceptedAnswer": { "@type": "Answer", "text": "10 minutes per session. The recorder stops automatically at the limit. Start a new recording to continue." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this voice recorder work on mobile?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes, on modern iOS (Safari) and Android (Chrome) devices. Both support the required MediaRecorder API." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I record podcasts with this?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Record in a quiet room, position the mic 6–12 inches from your mouth, and download WAV for editing in any DAW or audio editor." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does my recording sound quiet?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Your microphone gain may be too low. Increase input volume in system sound settings or move closer to the microphone. The level meter shows your input level in real time." }
+        },
+        {
+          "@type": "Question",
+          "name": "Which microphone gives the best results?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A USB condenser microphone in a quiet room gives excellent results. USB mics like the Blue Yeti or HyperX QuadCast work without drivers on most systems." }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="Online Voice Recorder – Free Browser Audio Recorder"
+  description="Record audio directly in your browser. Free online voice recorder with pause, resume, waveform trim, normalize, and WAV download. No uploads required."
+  keywords="online voice recorder, voice recorder online, free voice recorder, browser voice recorder, record audio online, record microphone online"
+  canonical="https://onlineaudiotest.com/voice-recorder/"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>Online Voice Recorder</h1>
+    <p>Record, pause, trim, and download audio directly in your browser. No account. No uploads. Nothing leaves your device.</p>
+  </section>
+
+  <!-- TOOL -->
+  <div class="tool-card-wrap" style="max-width:760px">
+    <div class="tool-card" id="recorder-tool">
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <div class="status-pill" id="status-pill">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Ready to record</span>
+        </div>
+        <div class="timer-wrap" id="timer-wrap" hidden>
+          <span class="timer-val" id="timer-val">00:00</span>
+          <span class="eyebrow timer-max">/ 10:00</span>
+        </div>
+      </div>
+
+      <!-- Device selector (idle) -->
+      <div class="device-section" id="device-section" hidden>
+        <label class="eyebrow device-label" for="device-select">Microphone</label>
+        <select class="device-select" id="device-select" aria-label="Select microphone"></select>
+      </div>
+
+      <!-- Permission card (idle) -->
+      <div class="perm-card" id="perm-card">
+        <div class="perm-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <rect x="11" y="2" width="10" height="17" rx="5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M7 16a9 9 0 0018 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="16" y1="25" x2="16" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="11" y1="30" x2="21" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="perm-text">Click <strong>Start Recording</strong> and allow microphone access when prompted. Your audio never leaves your browser.</p>
+      </div>
+
+      <!-- Live panel (recording/paused) -->
+      <div class="live-panel" id="live-panel" hidden>
+        <canvas id="live-canvas" width="680" height="80"
+          aria-label="Live audio waveform — amplitude over time"></canvas>
+
+        <!-- Level meter -->
+        <div class="rec-meter">
+          <div class="rec-meter-track">
+            <div class="rec-meter-fill" id="rec-meter-fill"></div>
+            <div class="rec-peak-line" id="rec-peak-line"></div>
+          </div>
+          <div class="rec-meter-marks">
+            <span>-60</span><span>-40</span><span>-20</span><span>-6</span><span>0 dB</span>
+          </div>
+        </div>
+
+        <!-- Live stats chips -->
+        <div class="live-stats">
+          <div class="live-stat">
+            <span class="eyebrow">Level</span>
+            <span class="live-stat-val" id="ls-level">-- dB</span>
+          </div>
+          <span class="stat-sep"></span>
+          <div class="live-stat">
+            <span class="eyebrow">Peak</span>
+            <span class="live-stat-val" id="ls-peak">-- dB</span>
+          </div>
+          <span class="stat-sep"></span>
+          <div class="live-stat">
+            <span class="eyebrow">Clips</span>
+            <span class="live-stat-val" id="ls-clips">0</span>
+          </div>
+          <span class="stat-sep"></span>
+          <div class="live-stat">
+            <span class="eyebrow">Quality</span>
+            <span class="live-stat-val" id="ls-quality">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review panel (after recording) -->
+      <div class="review-panel" id="review-panel" hidden>
+        <!-- Waveform with trim handles -->
+        <div class="review-canvas-wrap">
+          <canvas id="review-canvas" width="680" height="120"
+            aria-label="Recorded waveform — drag trim handles to set start and end points"></canvas>
+        </div>
+
+        <!-- Playback controls -->
+        <div class="playback-row">
+          <button class="btn btn-ghost btn-sm pb-skip" id="btn-skip-back" title="Skip back 5 s" aria-label="Skip back 5 seconds">−5s</button>
+          <button class="btn btn-primary pb-play" id="btn-play-pause" aria-label="Play">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 2l9 5-9 5V2z" fill="currentColor"/></svg>
+          </button>
+          <button class="btn btn-ghost btn-sm pb-skip" id="btn-skip-fwd" title="Skip forward 5 s" aria-label="Skip forward 5 seconds">+5s</button>
+          <div class="speed-wrap">
+            <label class="eyebrow" for="speed-select" style="white-space:nowrap">Speed</label>
+            <select class="speed-select" id="speed-select">
+              <option value="0.5">0.5×</option>
+              <option value="0.75">0.75×</option>
+              <option value="1" selected>1×</option>
+              <option value="1.25">1.25×</option>
+              <option value="1.5">1.5×</option>
+              <option value="2">2×</option>
+            </select>
+          </div>
+          <span class="playback-time eyebrow" id="playback-time">0.0s / 0.0s</span>
+        </div>
+
+        <!-- Trim row -->
+        <div class="trim-row">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;color:var(--mute)">
+            <path d="M2 2l5 5M2 14l5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="14" cy="4" r="2" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="14" cy="12" r="2" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span class="eyebrow">Trim</span>
+          <span class="trim-info" id="trim-info">Full recording</span>
+          <button class="btn btn-ghost btn-sm" id="btn-reset-trim" style="margin-left:auto">Reset</button>
+        </div>
+
+        <!-- Edit buttons -->
+        <div class="edit-row">
+          <button class="btn btn-secondary btn-sm" id="btn-normalize">Normalize</button>
+          <button class="btn btn-secondary btn-sm" id="btn-fade-in">Fade In</button>
+          <button class="btn btn-secondary btn-sm" id="btn-fade-out">Fade Out</button>
+        </div>
+
+        <!-- Analytics panel -->
+        <div class="analytics-panel" id="analytics-panel"></div>
+
+        <!-- Export -->
+        <div class="export-panel">
+          <div class="export-filename-row">
+            <label class="eyebrow" for="filename-input">Filename</label>
+            <input class="filename-input" id="filename-input" type="text" value="recording" maxlength="64" spellcheck="false" aria-label="Download filename"/>
+          </div>
+          <div class="export-btn-row">
+            <button class="btn btn-secondary" id="btn-dl-wav">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              WAV
+            </button>
+            <button class="btn btn-secondary" id="btn-dl-webm">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              WebM
+            </button>
+            <span class="export-size eyebrow" id="export-size"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action row -->
+      <div class="action-row" id="action-row">
+        <button class="btn btn-primary btn-lg" id="btn-start" style="min-width:200px">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="currentColor"/></svg>
+          Start Recording
+        </button>
+      </div>
+
+      <p class="result-note" id="result-note">Your audio is processed locally and never uploaded. Press <kbd>Space</kbd> to start.</p>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <h2>How the voice recorder works</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Select your microphone</strong> if multiple are detected, then click <strong>Start Recording</strong> and allow browser permission.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Speak clearly.</strong> The live waveform and level meter update in real time. Click <strong>Pause</strong> to hold, <strong>Resume</strong> to continue.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Click Stop.</strong> The recording is decoded and displayed as an interactive waveform. Drag the trim handles to set start and end points.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Play back, edit, and download.</strong> Apply normalize or fades, then download as WAV (lossless) or WebM. The quality score shows your recording conditions.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO CONTENT -->
+  <div class="seo-section">
+    <div class="seo-inner">
+
+      <div class="privacy-block">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M10 2L4 5v5c0 4 2.7 7.5 6 8.5C13.3 17.5 16 14 16 10V5L10 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <strong>All recording happens locally in your browser.</strong> No audio is uploaded or stored on any server. Your microphone data never leaves your device. The tool uses the Web Audio API and MediaRecorder — both are native browser APIs that require no external services.
+        </div>
+      </div>
+
+      <h2>WAV vs WebM — which format should I download?</h2>
+      <div class="format-table-wrap">
+        <table class="format-table">
+          <thead>
+            <tr><th>Feature</th><th>WAV</th><th>WebM / Opus</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Quality</td><td>Lossless (PCM 16-bit)</td><td>Compressed (lossy)</td></tr>
+            <tr><td>File size</td><td>Large (~10 MB/min)</td><td>Small (~1 MB/min)</td></tr>
+            <tr><td>Compatibility</td><td>Universal</td><td>Modern browsers &amp; apps</td></tr>
+            <tr><td>Editing</td><td>Trim applied on download</td><td>Raw recording (full length)</td></tr>
+            <tr><td>Best for</td><td>DAW editing, archives, voiceovers</td><td>Sharing, quick clips</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Recording tips for better audio quality</h2>
+      <ul class="seo-list">
+        <li><strong>Position correctly:</strong> Stay 6–12 inches from the microphone. Too close causes plosives; too far creates a thin, distant sound.</li>
+        <li><strong>Check your level:</strong> Aim for the meter to peak between -18 dB and -6 dB during speech. The quality meter will warn you if you're too loud or too quiet.</li>
+        <li><strong>Quiet the room:</strong> Close windows, turn off fans, and reduce HVAC noise. Even small background sounds are audible in recordings.</li>
+        <li><strong>Record first, edit later:</strong> Use the Normalize button after recording to bring the level up if you recorded too quietly. Fade In/Out smooth the start and end.</li>
+        <li><strong>Trim silence:</strong> Drag the trim handles to remove dead air at the start and end before downloading.</li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">How do I record audio online for free?</p>
+      <p class="faq-a">Click Start Recording, allow microphone access when prompted, and speak. Click Stop when finished, then download your recording as WAV or WebM. No account or installation needed.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Is my audio uploaded to a server?</p>
+      <p class="faq-a">No. The recorder uses your browser's built-in MediaRecorder API. All audio stays on your device and is never transmitted anywhere.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Can I download the recording as MP3?</p>
+      <p class="faq-a">Browsers cannot encode MP3 natively without a library. WAV provides lossless quality suitable for all editing software. WebM/Opus is a small, high-quality alternative. Both can be converted to MP3 using free tools like Audacity or FFmpeg.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is the maximum recording length?</p>
+      <p class="faq-a">10 minutes per session. The recorder stops automatically at the limit to prevent the browser tab from running out of memory. Start a new recording to continue.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Does this work on mobile devices?</p>
+      <p class="faq-a">Yes. Safari on iOS and Chrome on Android both support the MediaRecorder API required for recording. The interface is touch-friendly and the waveform trim works with touch drag.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Can I use this to record podcasts?</p>
+      <p class="faq-a">Yes for solo episodes. Record in a quiet room, position the mic correctly, apply normalize, trim silence, and download WAV for editing in Audacity, GarageBand, or any DAW.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why does my recording sound quiet?</p>
+      <p class="faq-a">The microphone gain in your system settings may be too low. Increase it in System Preferences (macOS) or Sound Settings (Windows), or move closer to the microphone. Use the Normalize button after recording to boost the level.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Which microphone works best for online recording?</p>
+      <p class="faq-a">A USB condenser microphone gives the best results — models like the Blue Yeti, HyperX QuadCast, or Rode NT-USB are popular choices. They work without additional drivers and provide significantly better quality than built-in laptop microphones.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  (() => {
+    type State = 'idle' | 'requesting' | 'recording' | 'paused' | 'reviewing';
+
+    /* ── State ── */
+    let state: State = 'idle';
+    let stream: MediaStream | null = null;
+    let audioCtx: AudioContext | null = null;
+    let analyser: AnalyserNode | null = null;
+    let mediaRecorder: MediaRecorder | null = null;
+    let chunks: Blob[] = [];
+    let rawBlob: Blob | null = null;
+    let editBuffer: AudioBuffer | null = null;
+    let waveCache: { min: Float32Array; max: Float32Array } | null = null;
+    let animFrame = 0;
+    let clipCount = 0;
+    let peakHoldDb = -100;
+    let peakHoldFrames = 0;
+    let liveWave = new Float32Array(680); // one amp value per pixel column
+    let liveWavePos = 0;
+
+    /* Playback */
+    let sourceNode: AudioBufferSourceNode | null = null;
+    let isPlaying = false;
+    let playbackOffset = 0;
+    let playbackStartCtxTime = 0;
+    let playbackSpeed = 1;
+    let pbAnimFrame = 0;
+
+    /* Trim */
+    let trimStart = 0;
+    let trimEnd = 0;
+    let draggingTrim: 'start' | 'end' | null = null;
+
+    /* Timer */
+    let timerInterval: ReturnType<typeof setInterval> | null = null;
+    let recStartTime = 0;
+    let recPausedMs = 0;
+    let recPauseStart = 0;
+
+    /* ── DOM refs ── */
+    const statusDot    = document.getElementById('status-dot')!;
+    const statusText   = document.getElementById('status-text')!;
+    const timerWrap    = document.getElementById('timer-wrap') as HTMLElement;
+    const timerVal     = document.getElementById('timer-val')!;
+    const deviceSec    = document.getElementById('device-section') as HTMLElement;
+    const deviceSelect = document.getElementById('device-select') as HTMLSelectElement;
+    const permCard     = document.getElementById('perm-card') as HTMLElement;
+    const livePanel    = document.getElementById('live-panel') as HTMLElement;
+    const liveCanvas   = document.getElementById('live-canvas') as HTMLCanvasElement;
+    const liveCtx2d    = liveCanvas.getContext('2d')!;
+    const meterFill    = document.getElementById('rec-meter-fill') as HTMLElement;
+    const peakLine     = document.getElementById('rec-peak-line') as HTMLElement;
+    const lsLevel      = document.getElementById('ls-level')!;
+    const lsPeak       = document.getElementById('ls-peak')!;
+    const lsClips      = document.getElementById('ls-clips')!;
+    const lsQuality    = document.getElementById('ls-quality')!;
+    const reviewPanel  = document.getElementById('review-panel') as HTMLElement;
+    const reviewCanvas = document.getElementById('review-canvas') as HTMLCanvasElement;
+    const revCtx       = reviewCanvas.getContext('2d')!;
+    const btnPlayPause = document.getElementById('btn-play-pause') as HTMLButtonElement;
+    const btnSkipBack  = document.getElementById('btn-skip-back') as HTMLButtonElement;
+    const btnSkipFwd   = document.getElementById('btn-skip-fwd') as HTMLButtonElement;
+    const speedSelect  = document.getElementById('speed-select') as HTMLSelectElement;
+    const pbTime       = document.getElementById('playback-time')!;
+    const trimInfo     = document.getElementById('trim-info')!;
+    const btnResetTrim = document.getElementById('btn-reset-trim') as HTMLButtonElement;
+    const btnNorm      = document.getElementById('btn-normalize') as HTMLButtonElement;
+    const btnFadeIn    = document.getElementById('btn-fade-in') as HTMLButtonElement;
+    const btnFadeOut   = document.getElementById('btn-fade-out') as HTMLButtonElement;
+    const analyticsEl  = document.getElementById('analytics-panel') as HTMLElement;
+    const filenameInput = document.getElementById('filename-input') as HTMLInputElement;
+    const btnDlWav     = document.getElementById('btn-dl-wav') as HTMLButtonElement;
+    const btnDlWebm    = document.getElementById('btn-dl-webm') as HTMLButtonElement;
+    const exportSize   = document.getElementById('export-size')!;
+    const actionRow    = document.getElementById('action-row')!;
+    const resultNote   = document.getElementById('result-note')!;
+
+    const W = liveCanvas.width;   // 680
+    const H = liveCanvas.height;  // 80
+    const WR = reviewCanvas.width;  // 680
+    const HR = reviewCanvas.height; // 120
+
+    /* ── Colors ── */
+    function css(v: string, fallback: string): string {
+      return getComputedStyle(document.documentElement).getPropertyValue(v).trim() || fallback;
+    }
+    function getColors() {
+      return {
+        bg:       css('--canvas-soft-2', '#f5f5f5'),
+        wave:     css('--link',          '#0070f3'),
+        waveMute: css('--hairline-strong','#a1a1a1'),
+        hairline: css('--hairline',       '#ebebeb'),
+        ink:      css('--ink',            '#171717'),
+        mute:     css('--mute',           '#888'),
+        link:     css('--link',           '#0070f3'),
+      };
+    }
+
+    /* ── Device enumeration ── */
+    async function populateDevices() {
+      try {
+        const devs = await navigator.mediaDevices.enumerateDevices();
+        const mics = devs.filter(d => d.kind === 'audioinput');
+        if (mics.length <= 1) { deviceSec.hidden = true; return; }
+        deviceSelect.innerHTML = '';
+        mics.forEach((m, i) => {
+          const o = document.createElement('option');
+          o.value = m.deviceId;
+          o.textContent = m.label || `Microphone ${i + 1}`;
+          deviceSelect.appendChild(o);
+        });
+        deviceSec.hidden = false;
+      } catch { deviceSec.hidden = true; }
+    }
+    populateDevices();
+
+    /* ── Timer ── */
+    function startTimer() {
+      recStartTime = Date.now(); recPausedMs = 0;
+      timerWrap.hidden = false;
+      timerInterval = setInterval(tickTimer, 250);
+    }
+    function pauseTimer() {
+      recPauseStart = Date.now();
+      if (timerInterval) clearInterval(timerInterval);
+    }
+    function resumeTimer() {
+      recPausedMs += Date.now() - recPauseStart;
+      timerInterval = setInterval(tickTimer, 250);
+    }
+    function stopTimer() {
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    }
+    function tickTimer() {
+      const ms = Date.now() - recStartTime - recPausedMs;
+      const s = Math.floor(ms / 1000);
+      const mm = String(Math.floor(s / 60)).padStart(2, '0');
+      const ss = String(s % 60).padStart(2, '0');
+      timerVal.textContent = `${mm}:${ss}`;
+      if (s >= 600) stopRecording(); // 10-min limit
+    }
+
+    /* ── Status ── */
+    function setStatus(s: State, msg: string) {
+      statusText.textContent = msg;
+      statusDot.className = 'dot';
+      if (s === 'recording') statusDot.classList.add('rec');
+      if (s === 'requesting' || s === 'paused') statusDot.classList.add('warning');
+    }
+
+    /* ── Format helpers ── */
+    function fmtSec(s: number): string {
+      if (s < 60) return `${s.toFixed(1)}s`;
+      return `${Math.floor(s / 60)}:${String((s % 60 | 0)).padStart(2, '0')}`;
+    }
+    function fmtBytes(b: number): string {
+      if (b < 1024) return `${b} B`;
+      if (b < 1048576) return `${(b / 1024).toFixed(0)} KB`;
+      return `${(b / 1048576).toFixed(1)} MB`;
+    }
+
+    /* ── Live draw loop ── */
+    function drawLiveFrame() {
+      if (state !== 'recording') return;
+      animFrame = requestAnimationFrame(drawLiveFrame);
+      if (!analyser) return;
+
+      const td = new Float32Array(analyser.fftSize);
+      analyser.getFloatTimeDomainData(td);
+
+      // RMS + peak
+      let rmsSum = 0, pk = 0, clipped = false;
+      for (const s of td) {
+        rmsSum += s * s;
+        const a = Math.abs(s);
+        if (a > pk) pk = a;
+        if (a >= 0.995) clipped = true;
+      }
+      if (clipped) clipCount++;
+      const rms = Math.sqrt(rmsSum / td.length);
+      const db  = 20 * Math.log10(Math.max(rms, 1e-10));
+      const pkDb = 20 * Math.log10(Math.max(pk, 1e-10));
+
+      // Peak hold
+      if (pkDb > peakHoldDb) { peakHoldDb = pkDb; peakHoldFrames = 80; }
+      else if (peakHoldFrames > 0) peakHoldFrames--;
+      else peakHoldDb = Math.max(peakHoldDb - 0.5, -100);
+
+      // Meter
+      const fillPct = Math.max(0, Math.min(100, (db + 60) / 60 * 100));
+      const peakPct = Math.max(0, Math.min(100, (peakHoldDb + 60) / 60 * 100));
+      meterFill.style.width = `${fillPct}%`;
+      meterFill.style.background = db > -6 ? '#ee0000' : db > -18 ? '#f5a623' : '';
+      peakLine.style.left = `${peakPct}%`;
+
+      // Live stats
+      lsLevel.textContent   = db > -60 ? `${db.toFixed(1)} dB` : '< −60';
+      lsPeak.textContent    = peakHoldDb > -60 ? `${peakHoldDb.toFixed(1)} dB` : '< −60';
+      lsClips.textContent   = String(clipCount);
+      lsQuality.textContent = clipCount > 10 ? 'Clipping' : db < -50 ? 'Too quiet' : db > -6 ? 'Too loud' : 'Good';
+
+      // Scrolling waveform: append current peak to ring buffer
+      liveWave[liveWavePos % W] = pk;
+      liveWavePos++;
+
+      const col = getColors();
+      liveCtx2d.fillStyle = col.bg;
+      liveCtx2d.fillRect(0, 0, W, H);
+
+      // Center line
+      liveCtx2d.strokeStyle = col.hairline;
+      liveCtx2d.lineWidth = 0.5;
+      liveCtx2d.beginPath();
+      liveCtx2d.moveTo(0, H / 2); liveCtx2d.lineTo(W, H / 2);
+      liveCtx2d.stroke();
+
+      // Waveform bars
+      const bufLen = Math.min(liveWavePos, W);
+      for (let i = 0; i < W; i++) {
+        const idx = ((liveWavePos - W + i) % W + W) % W;
+        const amp = liveWave[idx] ?? 0;
+        const barH = amp * (H * 0.44);
+        liveCtx2d.fillStyle = i < W - bufLen ? col.hairline : col.wave;
+        liveCtx2d.fillRect(i, H / 2 - barH, 1, barH * 2 || 1);
+      }
+    }
+
+    /* ── Review waveform ── */
+    function buildWaveCache(buffer: AudioBuffer) {
+      const data = buffer.getChannelData(0);
+      const spx = data.length / WR;
+      const minArr = new Float32Array(WR);
+      const maxArr = new Float32Array(WR);
+      for (let x = 0; x < WR; x++) {
+        const s = Math.floor(x * spx);
+        const e = Math.floor((x + 1) * spx);
+        let mn = 0, mx = 0;
+        for (let i = s; i < e; i++) {
+          if (data[i] < mn) mn = data[i];
+          if (data[i] > mx) mx = data[i];
+        }
+        minArr[x] = mn; maxArr[x] = mx;
+      }
+      waveCache = { min: minArr, max: maxArr };
+    }
+
+    function drawReview(playhead?: number) {
+      if (!editBuffer || !waveCache) return;
+      const dur = editBuffer.duration;
+      const te = Math.min(trimEnd, dur);
+      const col = getColors();
+      const tsX = (trimStart / dur) * WR;
+      const teX = (te / dur) * WR;
+      const mid = HR / 2;
+      const scale = mid - 6;
+
+      revCtx.fillStyle = col.bg;
+      revCtx.fillRect(0, 0, WR, HR);
+
+      // Dim outside trim
+      revCtx.fillStyle = 'rgba(128,128,128,0.12)';
+      revCtx.fillRect(0, 0, tsX, HR);
+      revCtx.fillRect(teX, 0, WR - teX, HR);
+
+      // Center line
+      revCtx.strokeStyle = col.hairline;
+      revCtx.lineWidth = 0.5;
+      revCtx.beginPath(); revCtx.moveTo(0, mid); revCtx.lineTo(WR, mid); revCtx.stroke();
+
+      // Waveform
+      for (let x = 0; x < WR; x++) {
+        const inTrim = x >= tsX && x <= teX;
+        const barTop    = mid - waveCache.max[x] * scale;
+        const barBottom = mid - waveCache.min[x] * scale;
+        const barH = Math.max(1, barBottom - barTop);
+        revCtx.fillStyle = inTrim ? col.wave : col.waveMute;
+        revCtx.globalAlpha = inTrim ? 1 : 0.4;
+        revCtx.fillRect(x, barTop, 1, barH);
+      }
+      revCtx.globalAlpha = 1;
+
+      // Trim handle lines
+      revCtx.strokeStyle = col.ink;
+      revCtx.lineWidth = 2;
+      [[tsX, true], [teX, false]].forEach(([x, isStart]) => {
+        const xn = x as number;
+        revCtx.beginPath(); revCtx.moveTo(xn, 0); revCtx.lineTo(xn, HR); revCtx.stroke();
+        // grip tab
+        revCtx.fillStyle = col.ink;
+        revCtx.beginPath();
+        revCtx.roundRect(isStart ? xn : xn - 10, 4, 10, 16, 2);
+        revCtx.fill();
+      });
+
+      // Playhead
+      if (playhead !== undefined && playhead >= 0) {
+        const px = (playhead / dur) * WR;
+        revCtx.strokeStyle = col.link;
+        revCtx.lineWidth = 1.5;
+        revCtx.beginPath(); revCtx.moveTo(px, 0); revCtx.lineTo(px, HR); revCtx.stroke();
+      }
+
+      // Time label at trim points
+      revCtx.fillStyle = col.mute;
+      revCtx.font = '10px ui-monospace,monospace';
+      revCtx.textBaseline = 'bottom';
+      revCtx.textAlign = 'left';
+      revCtx.fillText(fmtSec(trimStart), Math.min(tsX + 3, WR - 50), HR - 2);
+      revCtx.textAlign = 'right';
+      revCtx.fillText(fmtSec(te), Math.max(teX - 3, 50), HR - 2);
+
+      // Update trim info text
+      const dur2 = te - trimStart;
+      trimInfo.textContent = `${fmtSec(trimStart)} – ${fmtSec(te)} · ${fmtSec(dur2)}`;
+    }
+
+    /* ── Playback ── */
+    function getCurrentPbTime(): number {
+      if (!audioCtx) return playbackOffset;
+      return playbackOffset + (audioCtx.currentTime - playbackStartCtxTime) * playbackSpeed;
+    }
+
+    function pbTick() {
+      if (!isPlaying || !editBuffer) return;
+      const t = getCurrentPbTime();
+      const te = Math.min(trimEnd, editBuffer.duration);
+      if (t >= te) { stopPlayback(); return; }
+      drawReview(t);
+      const ts = fmtSec(t);
+      const td = fmtSec(te - trimStart);
+      pbTime.textContent = `${ts} / ${td}`;
+      pbAnimFrame = requestAnimationFrame(pbTick);
+    }
+
+    function startPlayback(offset?: number) {
+      if (!editBuffer || !audioCtx) return;
+      if (sourceNode) { try { sourceNode.stop(); } catch {} sourceNode = null; }
+      const te = Math.min(trimEnd, editBuffer.duration);
+      const from = offset ?? Math.max(trimStart, Math.min(playbackOffset, te - 0.01));
+      sourceNode = audioCtx.createBufferSource();
+      sourceNode.buffer = editBuffer;
+      sourceNode.playbackRate.value = playbackSpeed;
+      sourceNode.connect(audioCtx.destination);
+      sourceNode.start(0, from, te - from);
+      sourceNode.onended = () => { if (isPlaying) stopPlayback(); };
+      playbackOffset = from;
+      playbackStartCtxTime = audioCtx.currentTime;
+      isPlaying = true;
+      btnPlayPause.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2" y="1" width="4" height="12" rx="1" fill="currentColor"/><rect x="8" y="1" width="4" height="12" rx="1" fill="currentColor"/></svg>`;
+      pbAnimFrame = requestAnimationFrame(pbTick);
+    }
+
+    function pausePlayback() {
+      if (!isPlaying || !audioCtx) return;
+      playbackOffset = Math.min(getCurrentPbTime(), editBuffer?.duration ?? 0);
+      if (sourceNode) { try { sourceNode.stop(); } catch {} sourceNode = null; }
+      cancelAnimationFrame(pbAnimFrame);
+      isPlaying = false;
+      btnPlayPause.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 2l9 5-9 5V2z" fill="currentColor"/></svg>`;
+    }
+
+    function stopPlayback() {
+      if (sourceNode) { try { sourceNode.stop(); } catch {} sourceNode = null; }
+      cancelAnimationFrame(pbAnimFrame);
+      isPlaying = false;
+      playbackOffset = trimStart;
+      btnPlayPause.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 2l9 5-9 5V2z" fill="currentColor"/></svg>`;
+      drawReview();
+    }
+
+    /* ── Waveform interactions ── */
+    function xRatioFromEvent(e: MouseEvent | Touch): number {
+      const r = reviewCanvas.getBoundingClientRect();
+      return Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    }
+
+    function nearHandle(xRatio: number): 'start' | 'end' | null {
+      if (!editBuffer) return null;
+      const dur = editBuffer.duration;
+      const te = Math.min(trimEnd, dur);
+      if (Math.abs(xRatio - trimStart / dur) < 0.025) return 'start';
+      if (Math.abs(xRatio - te / dur) < 0.025) return 'end';
+      return null;
+    }
+
+    reviewCanvas.addEventListener('mousedown', (e) => {
+      if (!editBuffer) return;
+      const xr = xRatioFromEvent(e);
+      const h = nearHandle(xr);
+      if (h) { draggingTrim = h; return; }
+      // seek
+      if (isPlaying) pausePlayback();
+      playbackOffset = xr * editBuffer.duration;
+      drawReview(playbackOffset);
+    });
+
+    reviewCanvas.addEventListener('mousemove', (e) => {
+      if (!editBuffer) return;
+      const xr = xRatioFromEvent(e);
+      reviewCanvas.style.cursor = nearHandle(xr) ? 'col-resize' : 'pointer';
+      if (!draggingTrim) return;
+      const dur = editBuffer.duration;
+      const t = xr * dur;
+      if (draggingTrim === 'start') trimStart = Math.max(0, Math.min(t, trimEnd - 0.05));
+      else trimEnd = Math.min(dur, Math.max(t, trimStart + 0.05));
+      drawReview(isPlaying ? undefined : playbackOffset);
+    });
+
+    window.addEventListener('mouseup', () => { draggingTrim = null; });
+
+    // Touch support for trim handles
+    reviewCanvas.addEventListener('touchstart', (e) => {
+      if (!editBuffer) return;
+      const xr = xRatioFromEvent(e.touches[0]);
+      draggingTrim = nearHandle(xr);
+      if (!draggingTrim) {
+        if (isPlaying) pausePlayback();
+        playbackOffset = xr * editBuffer.duration;
+        drawReview(playbackOffset);
+      }
+    }, { passive: true });
+    reviewCanvas.addEventListener('touchmove', (e) => {
+      if (!draggingTrim || !editBuffer) return;
+      e.preventDefault();
+      const xr = xRatioFromEvent(e.touches[0]);
+      const dur = editBuffer.duration;
+      const t = xr * dur;
+      if (draggingTrim === 'start') trimStart = Math.max(0, Math.min(t, trimEnd - 0.05));
+      else trimEnd = Math.min(dur, Math.max(t, trimStart + 0.05));
+      drawReview();
+    }, { passive: false });
+    window.addEventListener('touchend', () => { draggingTrim = null; });
+
+    /* ── Analytics ── */
+    interface Analytics {
+      noiseFloor: number; avgDb: number; peakDb: number;
+      snr: number; dynRange: number; clips: number; silencePct: number;
+    }
+
+    function calcAnalytics(buf: AudioBuffer): Analytics {
+      const data = buf.getChannelData(0);
+      const sr = buf.sampleRate;
+      const frame = Math.floor(sr * 0.05); // 50ms frames
+      const numF = Math.floor(data.length / frame);
+      const rmsF: number[] = [];
+      let peakSample = 0, clips = 0, totalRms = 0;
+
+      for (let f = 0; f < numF; f++) {
+        let s2 = 0;
+        for (let i = f * frame; i < (f + 1) * frame; i++) {
+          const a = Math.abs(data[i]);
+          if (a > peakSample) peakSample = a;
+          if (a >= 0.995) clips++;
+          s2 += data[i] * data[i];
+        }
+        const r = Math.sqrt(s2 / frame);
+        rmsF.push(r); totalRms += r;
+      }
+
+      const sorted = [...rmsF].sort((a, b) => a - b);
+      const quietN = Math.max(1, Math.floor(sorted.length * 0.15));
+      const noiseRms = sorted.slice(0, quietN).reduce((a, b) => a + b, 0) / quietN;
+      const noiseFloor = 20 * Math.log10(Math.max(noiseRms, 1e-10));
+      const avgRms = totalRms / numF;
+      const avgDb = 20 * Math.log10(Math.max(avgRms, 1e-10));
+      const peakDb = 20 * Math.log10(Math.max(peakSample, 1e-10));
+      const snr = Math.max(0, avgDb - noiseFloor);
+      const dynRange = peakDb - noiseFloor;
+      const thresh = noiseRms * 2;
+      const silencePct = rmsF.filter(r => r < thresh).length / numF;
+
+      return { noiseFloor, avgDb, peakDb, snr, dynRange, clips, silencePct };
+    }
+
+    function scoreAnalytics(a: Analytics): number {
+      const nf  = Math.max(0, Math.min(30, (-a.noiseFloor - 40) / 35 * 30));
+      const snr = Math.max(0, Math.min(25, (a.snr - 15) / 30 * 25));
+      const cl  = Math.max(0, 20 - a.clips * 2);
+      const lvl = a.avgDb > -6 ? 5 : a.avgDb < -50 ? 0 : Math.max(0, (a.avgDb + 50) / 44 * 15);
+      const dr  = Math.max(0, Math.min(10, a.dynRange / 20 * 10));
+      return Math.round(Math.min(100, nf + snr + cl + lvl + dr));
+    }
+
+    function renderAnalytics(a: Analytics) {
+      const score = scoreAnalytics(a);
+      const grade = score >= 90 ? 'Excellent' : score >= 75 ? 'Good' : score >= 50 ? 'Fair' : 'Poor';
+      const gc    = grade.toLowerCase();
+      const nfGrade = a.noiseFloor < -65 ? 'excellent' : a.noiseFloor < -55 ? 'good' : a.noiseFloor < -45 ? 'fair' : 'poor';
+      const snrGrade = a.snr > 45 ? 'excellent' : a.snr > 35 ? 'good' : a.snr > 25 ? 'fair' : 'poor';
+      const lvlLabel = a.avgDb > -6 ? 'Too loud' : a.avgDb < -50 ? 'Too quiet' : a.avgDb < -30 ? 'Moderate' : 'Strong';
+
+      const recs: string[] = [];
+      if (a.clips > 5) recs.push('Reduce microphone gain — clipping distortion detected.');
+      else if (a.avgDb < -50) recs.push('Increase mic volume or move closer to the microphone.');
+      if (a.noiseFloor > -50) recs.push('High background noise detected. Try a quieter environment.');
+      if (a.snr < 25) recs.push('Low signal-to-noise ratio. Use a directional mic or reduce room noise.');
+      if (!recs.length) recs.push('Good recording conditions — no major issues detected.');
+
+      analyticsEl.innerHTML = `
+        <div class="score-row">
+          <div class="score-ring ${gc}">
+            <span class="score-num">${score}</span>
+            <span class="score-denom">/100</span>
+          </div>
+          <div class="score-meta">
+            <span class="score-grade ${gc}">${grade}</span>
+            <span class="eyebrow">Recording Quality</span>
+            <span class="score-dur eyebrow">${fmtSec(editBuffer!.duration)} total</span>
+          </div>
+        </div>
+        <div class="metrics-grid">
+          <div class="metric-cell">
+            <span class="eyebrow">Noise Floor</span>
+            <span class="metric-val">${a.noiseFloor.toFixed(1)} dB</span>
+            <span class="metric-badge ${nfGrade}">${nfGrade.charAt(0).toUpperCase() + nfGrade.slice(1)}</span>
+          </div>
+          <div class="metric-cell">
+            <span class="eyebrow">Signal-to-Noise</span>
+            <span class="metric-val">${a.snr.toFixed(1)} dB</span>
+            <span class="metric-badge ${snrGrade}">${snrGrade.charAt(0).toUpperCase() + snrGrade.slice(1)}</span>
+          </div>
+          <div class="metric-cell">
+            <span class="eyebrow">Peak Level</span>
+            <span class="metric-val">${a.peakDb.toFixed(1)} dB</span>
+            <span class="metric-badge ${a.clips > 0 ? 'poor' : 'excellent'}">${a.clips > 0 ? `${a.clips} clips` : 'No clips'}</span>
+          </div>
+          <div class="metric-cell">
+            <span class="eyebrow">Input Level</span>
+            <span class="metric-val">${a.avgDb.toFixed(1)} dB</span>
+            <span class="metric-badge">${lvlLabel}</span>
+          </div>
+          <div class="metric-cell">
+            <span class="eyebrow">Dynamic Range</span>
+            <span class="metric-val">${a.dynRange.toFixed(1)} dB</span>
+          </div>
+          <div class="metric-cell">
+            <span class="eyebrow">Silence</span>
+            <span class="metric-val">${(a.silencePct * 100).toFixed(0)}%</span>
+          </div>
+        </div>
+        <div class="recs-block">
+          <span class="eyebrow">Recommendations</span>
+          <ul class="recs-list">${recs.map(r => `<li>${r}</li>`).join('')}</ul>
+        </div>`;
+    }
+
+    /* ── WAV encoder ── */
+    function encodeWAV(buf: AudioBuffer): Blob {
+      const nc = buf.numberOfChannels, sr = buf.sampleRate, len = buf.length;
+      const ba = nc * 2, br = sr * ba, dl = len * ba;
+      const ab = new ArrayBuffer(44 + dl);
+      const v = new DataView(ab);
+      const ws = (o: number, s: string) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+      ws(0, 'RIFF'); v.setUint32(4, 36 + dl, true); ws(8, 'WAVE');
+      ws(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true);
+      v.setUint16(22, nc, true); v.setUint32(24, sr, true); v.setUint32(28, br, true);
+      v.setUint16(32, ba, true); v.setUint16(34, 16, true);
+      ws(36, 'data'); v.setUint32(40, dl, true);
+      let off = 44;
+      for (let i = 0; i < len; i++) {
+        for (let c = 0; c < nc; c++) {
+          const s = Math.max(-1, Math.min(1, buf.getChannelData(c)[i]));
+          v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+          off += 2;
+        }
+      }
+      return new Blob([ab], { type: 'audio/wav' });
+    }
+
+    function getTrimmedBuffer(): AudioBuffer | null {
+      if (!editBuffer || !audioCtx) return editBuffer;
+      const sr = editBuffer.sampleRate;
+      const te = Math.min(trimEnd, editBuffer.duration);
+      const ss = Math.floor(trimStart * sr);
+      const es = Math.floor(te * sr);
+      const len = Math.max(1, es - ss);
+      const out = audioCtx.createBuffer(editBuffer.numberOfChannels, len, sr);
+      for (let c = 0; c < editBuffer.numberOfChannels; c++) {
+        out.copyToChannel(editBuffer.getChannelData(c).subarray(ss, es), c);
+      }
+      return out;
+    }
+
+    function dlBlob(blob: Blob, name: string) {
+      const u = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = u; a.download = name; a.click();
+      setTimeout(() => URL.revokeObjectURL(u), 15000);
+    }
+
+    /* ── Editing ── */
+    function normalize() {
+      if (!editBuffer) return;
+      let peak = 0;
+      for (let c = 0; c < editBuffer.numberOfChannels; c++) {
+        for (const s of editBuffer.getChannelData(c)) if (Math.abs(s) > peak) peak = Math.abs(s);
+      }
+      if (peak < 0.01) return;
+      const gain = 0.95 / peak;
+      for (let c = 0; c < editBuffer.numberOfChannels; c++) {
+        const d = editBuffer.getChannelData(c);
+        for (let i = 0; i < d.length; i++) d[i] *= gain;
+      }
+      buildWaveCache(editBuffer); drawReview();
+    }
+
+    function fade(type: 'in' | 'out') {
+      if (!editBuffer) return;
+      const fadeSamples = Math.min(Math.floor(editBuffer.sampleRate * 1.5), Math.floor(editBuffer.length / 4));
+      for (let c = 0; c < editBuffer.numberOfChannels; c++) {
+        const d = editBuffer.getChannelData(c);
+        if (type === 'in') {
+          for (let i = 0; i < fadeSamples; i++) d[i] *= i / fadeSamples;
+        } else {
+          const start = d.length - fadeSamples;
+          for (let i = 0; i < fadeSamples; i++) d[start + i] *= (fadeSamples - i) / fadeSamples;
+        }
+      }
+      buildWaveCache(editBuffer); drawReview();
+    }
+
+    /* ── Recording flow ── */
+    async function startRecording() {
+      state = 'requesting';
+      setStatus('requesting', 'Requesting mic…');
+      (document.getElementById('btn-start') as HTMLButtonElement).disabled = true;
+
+      try {
+        const constraints = {
+          audio: deviceSelect.value ? { deviceId: { exact: deviceSelect.value } } : true,
+          video: false,
+        };
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch {
+        setStatus('idle', 'Permission denied');
+        resultNote.textContent = 'Microphone access was denied. Allow it in browser settings and try again.';
+        resultNote.className = 'result-note error';
+        state = 'idle';
+        (document.getElementById('btn-start') as HTMLButtonElement).disabled = false;
+        return;
+      }
+
+      // Re-enumerate with labels now available
+      populateDevices();
+
+      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const src = audioCtx.createMediaStreamSource(stream);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.25;
+      src.connect(analyser);
+
+      chunks = []; clipCount = 0; peakHoldDb = -100; liveWavePos = 0;
+      liveWave = new Float32Array(W);
+
+      const mime = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', '']
+        .find(m => !m || MediaRecorder.isTypeSupported(m)) ?? '';
+      mediaRecorder = new MediaRecorder(stream, mime ? { mimeType: mime } : {});
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+      mediaRecorder.onstop = onRecStop;
+      mediaRecorder.start(100);
+
+      state = 'recording';
+      setStatus('recording', 'Recording…');
+      permCard.hidden = true;
+      deviceSec.hidden = true;
+      livePanel.hidden = false;
+      timerWrap.hidden = false;
+      startTimer();
+      drawLiveFrame();
+
+      resultNote.textContent = 'Recording — speak clearly. Press Space to pause.';
+      resultNote.className = 'result-note success';
+      actionRow.innerHTML = renderRecBtns(); bindRecBtns();
+    }
+
+    async function onRecStop() {
+      stopTimer();
+      cancelAnimationFrame(animFrame);
+      stream?.getTracks().forEach(t => t.stop());
+      stream = null;
+
+      rawBlob = new Blob(chunks, { type: mediaRecorder?.mimeType || 'audio/webm' });
+      setStatus('reviewing', 'Processing…');
+      resultNote.textContent = 'Decoding recording…';
+
+      try {
+        const ab = await rawBlob.arrayBuffer();
+        const decoded = await audioCtx!.decodeAudioData(ab);
+        editBuffer = decoded;
+        trimStart = 0;
+        trimEnd = decoded.duration;
+        playbackOffset = 0;
+        buildWaveCache(decoded);
+
+        livePanel.hidden = true;
+        reviewPanel.hidden = false;
+        drawReview();
+        renderAnalytics(calcAnalytics(decoded));
+
+        // WAV size estimate
+        const sr = decoded.sampleRate;
+        const wavBytes = decoded.numberOfChannels * decoded.length * 2 + 44;
+        exportSize.textContent = `WAV ~${fmtBytes(wavBytes)} · WebM ${fmtBytes(rawBlob.size)}`;
+
+        const dur = fmtSec(decoded.duration);
+        timerVal.textContent = dur.replace('s', '');
+        pbTime.textContent = `0.0s / ${dur}`;
+
+        state = 'reviewing';
+        setStatus('reviewing', 'Review recording');
+        resultNote.textContent = `Recorded ${dur} — trim, edit, and download below.`;
+        resultNote.className = 'result-note success';
+        actionRow.innerHTML = renderReviewBtns(); bindReviewBtns();
+      } catch {
+        resultNote.textContent = 'Error decoding recording. Try again.';
+        resultNote.className = 'result-note error';
+        resetToIdle();
+      }
+    }
+
+    function pauseRecording() {
+      if (!mediaRecorder || state !== 'recording') return;
+      mediaRecorder.pause();
+      cancelAnimationFrame(animFrame);
+      pauseTimer();
+      state = 'paused';
+      setStatus('paused', 'Paused');
+      resultNote.textContent = 'Paused — click Resume to continue.';
+      actionRow.innerHTML = renderPausedBtns(); bindPausedBtns();
+    }
+
+    function resumeRecording() {
+      if (!mediaRecorder || state !== 'paused') return;
+      mediaRecorder.resume();
+      resumeTimer();
+      state = 'recording';
+      setStatus('recording', 'Recording…');
+      resultNote.textContent = 'Recording resumed.';
+      drawLiveFrame();
+      actionRow.innerHTML = renderRecBtns(); bindRecBtns();
+    }
+
+    function stopRecording() {
+      if (!mediaRecorder || mediaRecorder.state === 'inactive') return;
+      mediaRecorder.stop();
+    }
+
+    function resetToIdle() {
+      stopPlayback();
+      if (sourceNode) { try { sourceNode.stop(); } catch {} sourceNode = null; }
+      cancelAnimationFrame(animFrame); cancelAnimationFrame(pbAnimFrame);
+      stream?.getTracks().forEach(t => t.stop());
+      audioCtx?.close();
+      stream = null; audioCtx = null; analyser = null; mediaRecorder = null;
+      chunks = []; rawBlob = null; editBuffer = null; waveCache = null;
+      stopTimer();
+      state = 'idle';
+      setStatus('idle', 'Ready to record');
+      permCard.hidden = false;
+      livePanel.hidden = true;
+      reviewPanel.hidden = true;
+      timerWrap.hidden = true;
+      timerVal.textContent = '00:00';
+      resultNote.textContent = 'Your audio is processed locally and never uploaded. Press Space to start.';
+      resultNote.className = 'result-note';
+      actionRow.innerHTML = renderIdleBtns(); bindIdleBtns();
+      // re-check if device selector still needed
+      populateDevices();
+    }
+
+    /* ── Action row builders ── */
+    const R = `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"/></svg>`;
+    const SQ = `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x="1" y="1" width="8" height="8" rx="1.5" fill="currentColor"/></svg>`;
+    const PA = `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1" width="3.5" height="10" rx="1" fill="currentColor"/><rect x="7" y="1" width="3.5" height="10" rx="1" fill="currentColor"/></svg>`;
+    const PL = `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1.5l9 4.5-9 4.5V1.5z" fill="currentColor"/></svg>`;
+
+    const renderIdleBtns = () =>
+      `<button class="btn btn-primary btn-lg" id="btn-start" style="min-width:200px">${R} Start Recording</button>`;
+    const renderRecBtns = () =>
+      `<button class="btn btn-secondary btn-sm" id="btn-pause" style="min-width:88px">${PA} Pause</button>
+       <button class="btn btn-primary btn-lg" id="btn-stop" style="min-width:120px">${SQ} Stop</button>`;
+    const renderPausedBtns = () =>
+      `<button class="btn btn-primary btn-sm" id="btn-resume" style="min-width:100px">${PL} Resume</button>
+       <button class="btn btn-secondary btn-sm" id="btn-stop" style="min-width:88px">${SQ} Stop</button>`;
+    const renderReviewBtns = () =>
+      `<button class="btn btn-secondary btn-lg" id="btn-new" style="min-width:180px">${R} New Recording</button>`;
+
+    const bindIdleBtns = () => document.getElementById('btn-start')?.addEventListener('click', startRecording);
+    const bindRecBtns = () => {
+      document.getElementById('btn-pause')?.addEventListener('click', pauseRecording);
+      document.getElementById('btn-stop')?.addEventListener('click', stopRecording);
+    };
+    const bindPausedBtns = () => {
+      document.getElementById('btn-resume')?.addEventListener('click', resumeRecording);
+      document.getElementById('btn-stop')?.addEventListener('click', stopRecording);
+    };
+    const bindReviewBtns = () => document.getElementById('btn-new')?.addEventListener('click', resetToIdle);
+
+    /* ── Playback controls ── */
+    btnPlayPause.addEventListener('click', () => { isPlaying ? pausePlayback() : startPlayback(); });
+    btnSkipBack.addEventListener('click', () => {
+      if (isPlaying) pausePlayback();
+      playbackOffset = Math.max(trimStart, playbackOffset - 5);
+      drawReview(playbackOffset);
+    });
+    btnSkipFwd.addEventListener('click', () => {
+      const te = Math.min(trimEnd, editBuffer?.duration ?? 0);
+      if (isPlaying) pausePlayback();
+      playbackOffset = Math.min(te, playbackOffset + 5);
+      drawReview(playbackOffset);
+    });
+    speedSelect.addEventListener('change', () => {
+      playbackSpeed = parseFloat(speedSelect.value);
+      if (isPlaying) { pausePlayback(); startPlayback(); }
+    });
+
+    /* ── Edit controls ── */
+    btnResetTrim.addEventListener('click', () => {
+      if (!editBuffer) return;
+      trimStart = 0; trimEnd = editBuffer.duration;
+      drawReview(isPlaying ? undefined : playbackOffset);
+    });
+    btnNorm.addEventListener('click', normalize);
+    btnFadeIn.addEventListener('click', () => fade('in'));
+    btnFadeOut.addEventListener('click', () => fade('out'));
+
+    /* ── Export ── */
+    btnDlWav.addEventListener('click', () => {
+      const tb = getTrimmedBuffer();
+      if (!tb) return;
+      const name = filenameInput.value.trim().replace(/[^\w-]/g, '_') || 'recording';
+      dlBlob(encodeWAV(tb), `${name}.wav`);
+    });
+    btnDlWebm.addEventListener('click', () => {
+      if (!rawBlob) return;
+      const name = filenameInput.value.trim().replace(/[^\w-]/g, '_') || 'recording';
+      dlBlob(rawBlob, `${name}.webm`);
+    });
+
+    /* ── Keyboard shortcuts ── */
+    document.addEventListener('keydown', (e) => {
+      if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'SELECT') return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (state === 'idle') startRecording();
+        else if (state === 'recording') pauseRecording();
+        else if (state === 'paused') resumeRecording();
+        else if (state === 'reviewing') { isPlaying ? pausePlayback() : startPlayback(); }
+      }
+      if (e.code === 'KeyS' && state === 'recording') stopRecording();
+    });
+
+    /* ── Init ── */
+    bindIdleBtns();
+  })();
+</script>
+
+<style>
+  /* ── Timer ── */
+  .timer-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .timer-val {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+  .timer-max { font-size: 11px; }
+
+  /* ── Device selector ── */
+  .device-section {
+    display: flex;
+    align-items: center;
+    gap: var(--s-sm);
+  }
+  .device-label { flex-shrink: 0; }
+  .device-select {
+    flex: 1;
+    background: var(--canvas-soft);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-sm);
+    padding: 6px 10px;
+    font-size: 14px;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    cursor: pointer;
+    outline: none;
+    max-width: 320px;
+  }
+  .device-select:focus { border-color: var(--link); }
+
+  /* ── Live panel ── */
+  .live-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  #live-canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--r-sm);
+    background: var(--canvas-soft-2);
+    box-shadow: var(--shadow-1);
+  }
+
+  /* ── Level meter ── */
+  .rec-meter {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .rec-meter-track {
+    position: relative;
+    height: 8px;
+    background: var(--canvas-soft-2);
+    border-radius: var(--r-full);
+    box-shadow: var(--shadow-1);
+    overflow: visible;
+  }
+  .rec-meter-fill {
+    height: 100%;
+    border-radius: var(--r-full);
+    background: var(--grad-develop);
+    width: 0%;
+    transition: width .07s linear, background .1s;
+  }
+  .rec-peak-line {
+    position: absolute;
+    top: -2px;
+    left: 0%;
+    width: 2px;
+    height: calc(100% + 4px);
+    background: var(--ink);
+    border-radius: 1px;
+    transition: left .05s;
+  }
+  .rec-meter-marks {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--mute);
+  }
+
+  /* ── Live stats ── */
+  .live-stats {
+    display: flex;
+    align-items: center;
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    padding: var(--s-sm) var(--s-md);
+    box-shadow: var(--shadow-1);
+  }
+  .live-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    text-align: center;
+  }
+  .live-stat-val {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .stat-sep {
+    width: 1px;
+    height: 32px;
+    background: var(--hairline);
+    flex-shrink: 0;
+  }
+
+  /* ── Rec dot ── */
+  .dot.rec {
+    background: #ee0000;
+    box-shadow: 0 0 0 3px rgba(238,0,0,.2);
+    animation: pulse-rec 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse-rec {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(238,0,0,.2); }
+    50%       { box-shadow: 0 0 0 5px rgba(238,0,0,.08); }
+  }
+
+  /* ── Review canvas ── */
+  .review-canvas-wrap {
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow-1);
+    line-height: 0;
+  }
+  #review-canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: pointer;
+  }
+
+  /* ── Playback row ── */
+  .playback-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-sm);
+    flex-wrap: wrap;
+  }
+  .pb-play {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .pb-skip {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: -0.3px;
+    padding: 0 10px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+  .speed-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+  }
+  .speed-select {
+    background: var(--canvas-soft);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-sm);
+    padding: 4px 8px;
+    font-size: 13px;
+    color: var(--ink);
+    font-family: var(--font-mono);
+    cursor: pointer;
+    outline: none;
+  }
+  .speed-select:focus { border-color: var(--link); }
+  .playback-time { margin-left: var(--s-xs); color: var(--mute); }
+
+  /* ── Trim row ── */
+  .trim-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--body-text);
+  }
+  .trim-info {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+  }
+
+  /* ── Edit row ── */
+  .edit-row {
+    display: flex;
+    gap: var(--s-xs);
+    flex-wrap: wrap;
+  }
+
+  /* ── Analytics panel ── */
+  .analytics-panel {
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    padding: var(--s-md);
+    box-shadow: var(--shadow-1);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-md);
+  }
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-lg);
+  }
+  .score-ring {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    border: 3px solid currentColor;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .score-ring.excellent { color: #00b894; }
+  .score-ring.good      { color: var(--link); }
+  .score-ring.fair      { color: #f5a623; }
+  .score-ring.poor      { color: var(--error); }
+  .score-num { font-size: 24px; font-weight: 700; font-family: var(--font-mono); color: var(--ink); line-height: 1; }
+  .score-denom { font-size: 11px; color: var(--mute); font-family: var(--font-mono); }
+  .score-meta { display: flex; flex-direction: column; gap: 4px; }
+  .score-grade {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+  }
+  .score-grade.excellent { color: #00b894; }
+  .score-grade.good      { color: var(--link); }
+  .score-grade.fair      { color: #f5a623; }
+  .score-grade.poor      { color: var(--error); }
+  .score-dur { margin-top: 2px; }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-xs);
+  }
+  .metric-cell {
+    background: var(--canvas);
+    border-radius: var(--r-sm);
+    padding: var(--s-xs) var(--s-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    box-shadow: var(--shadow-1);
+  }
+  .metric-val {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .metric-badge {
+    font-size: 11px;
+    color: var(--mute);
+  }
+  .metric-badge.excellent { color: #00b894; }
+  .metric-badge.good      { color: var(--link); }
+  .metric-badge.fair      { color: #f5a623; }
+  .metric-badge.poor      { color: var(--error); }
+
+  .recs-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+  }
+  .recs-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .recs-list li {
+    font-size: 13px;
+    color: var(--body-text);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .recs-list li::before { content: '→'; position: absolute; left: 0; color: var(--mute); }
+
+  /* ── Export panel ── */
+  .export-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+    padding-top: var(--s-xs);
+    border-top: 1px solid var(--hairline);
+  }
+  .export-filename-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-sm);
+  }
+  .filename-input {
+    flex: 1;
+    max-width: 220px;
+    background: var(--canvas-soft);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-sm);
+    padding: 6px 10px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--ink);
+    outline: none;
+  }
+  .filename-input:focus { border-color: var(--link); }
+  .export-btn-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-xs);
+    flex-wrap: wrap;
+  }
+  .export-size { color: var(--mute); }
+
+  /* ── Privacy block ── */
+  .privacy-block {
+    display: flex;
+    gap: var(--s-sm);
+    align-items: flex-start;
+    background: var(--success-bg);
+    border: 1px solid var(--success-border);
+    border-radius: var(--r-md);
+    padding: var(--s-md);
+    color: var(--success-fg);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .privacy-block svg { flex-shrink: 0; margin-top: 2px; }
+
+  /* ── SEO section ── */
+  .seo-section {
+    max-width: 680px;
+    margin-inline: auto;
+    padding: 0 var(--container-pad);
+    margin-bottom: var(--s-3xl);
+  }
+  .seo-inner { display: flex; flex-direction: column; gap: var(--s-lg); }
+  .seo-inner h2 {
+    font-size: 22px; font-weight: 600;
+    letter-spacing: -0.7px; color: var(--ink);
+    margin-top: var(--s-sm);
+  }
+
+  /* WAV/WebM table */
+  .format-table-wrap { overflow-x: auto; }
+  .format-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  .format-table th {
+    font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: .04em;
+    color: var(--mute); font-weight: 400; text-align: left;
+    padding: 6px 16px 6px 0; border-bottom: 1px solid var(--hairline);
+  }
+  .format-table td {
+    padding: 8px 16px 8px 0; border-bottom: 1px solid var(--hairline);
+    color: var(--body-text); vertical-align: top; line-height: 1.5;
+  }
+  .format-table tr:last-child td { border-bottom: none; }
+  .format-table td:first-child { color: var(--ink); font-weight: 500; white-space: nowrap; }
+
+  .seo-list {
+    list-style: none; padding: 0;
+    display: flex; flex-direction: column; gap: var(--s-sm);
+  }
+  .seo-list li {
+    font-size: 14px; color: var(--body-text); line-height: 1.6;
+    padding-left: var(--s-lg); position: relative;
+  }
+  .seo-list li::before { content: '–'; position: absolute; left: 0; color: var(--mute); }
+  .seo-list strong { color: var(--ink); font-weight: 500; }
+
+  /* ── kbd style ── */
+  kbd {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: var(--canvas-soft-2);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: var(--mute);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 560px) {
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .live-stats { padding: var(--s-xs) var(--s-sm); }
+    .live-stat-val { font-size: 13px; }
+    .playback-row { gap: var(--s-xs); }
+    .speed-wrap { margin-left: 0; }
+  }
+  @media (max-width: 400px) {
+    .metrics-grid { grid-template-columns: 1fr 1fr; }
+    .score-ring { width: 64px; height: 64px; }
+    .score-num { font-size: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dot.rec { animation: none; }
+    .rec-meter-fill { transition: none; }
+  }
+</style>

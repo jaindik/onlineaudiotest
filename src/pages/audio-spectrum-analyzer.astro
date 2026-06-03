@@ -1,0 +1,1019 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://onlineaudiotest.com/audio-spectrum-analyzer/#tool",
+      "name": "Audio Spectrum Analyzer Online",
+      "url": "https://onlineaudiotest.com/audio-spectrum-analyzer/",
+      "image": "https://onlineaudiotest.com/og/spectrum-analyzer.png",
+      "description": "Free real-time audio spectrum analyzer. Visualize microphone frequencies with FFT, peak hold, dominant frequency detection, musical note display, and hover cursor — all in your browser.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires getUserMedia and Web Audio API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Real-time FFT spectrum visualization",
+        "Logarithmic frequency scale 20 Hz – 20 kHz",
+        "Hover cursor with frequency, dB, and note",
+        "Peak hold display",
+        "Top-5 peak frequency table",
+        "Dominant frequency and musical note detection",
+        "dB level metering",
+        "Freeze frame with PNG download",
+        "Generate test tone at detected frequency",
+        "Dark mode support"
+      ],
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Audio Spectrum Analyzer", "item": "https://onlineaudiotest.com/audio-spectrum-analyzer/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is an audio spectrum analyzer?",
+          "acceptedAnswer": { "@type": "Answer", "text": "An audio spectrum analyzer shows which frequencies are present in a sound and how loud each one is, in real time. This tool uses the Web Audio API's FFT to render your microphone input as a live bar graph from 20 Hz to 20 kHz." }
+        },
+        {
+          "@type": "Question",
+          "name": "What does FFT mean?",
+          "acceptedAnswer": { "@type": "Answer", "text": "FFT stands for Fast Fourier Transform — an algorithm that converts a time-domain audio signal into its frequency components, showing how much energy exists at each frequency. This analyzer uses a 4096-point FFT giving 2048 frequency bins across the audible range." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the dominant frequency?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The dominant frequency is the frequency bin with the highest amplitude in the current frame. The analyzer displays it in Hz and as a musical note name (e.g., A4 for 440 Hz)." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use this to tune my guitar or other instrument?",
+          "acceptedAnswer": { "@type": "Answer", "text": "You can use it as a rough pitch reference — play a string and read the dominant frequency and Top Peaks table. For precise cent-level tuning a dedicated chromatic tuner is more accurate." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is peak hold on a spectrum analyzer?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Peak hold displays a thin line above each frequency bar marking its recent maximum amplitude, which decays slowly over time. This helps you spot brief transients that flash by too quickly to read in the live bars." }
+        },
+        {
+          "@type": "Question",
+          "name": "What does the Freeze button do?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Freeze pauses the spectrum at the current frame so you can hover to read exact frequency and dB values, or click Download PNG to save the image. Click Unfreeze to resume live analysis." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does my voice show multiple peaks on the spectrum?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Your voice has a fundamental frequency plus harmonics at integer multiples — speaking at 150 Hz also produces peaks at 300, 450, 600 Hz, and so on. The Top Peaks table lists these automatically." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my audio stored or sent to any server?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. All processing happens in your browser via the Web Audio API. No audio data, frequency data, or microphone recordings are ever transmitted anywhere." }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="Audio Spectrum Analyzer Online – Free Real-Time FFT Microphone Analyzer"
+  description="Free real-time audio spectrum analyzer. Visualize microphone frequencies with FFT analysis, peak hold, hover cursor, dominant frequency, and musical note detection — all in your browser."
+  keywords="audio spectrum analyzer, real-time FFT analyzer, online frequency visualizer, microphone spectrum analyzer, sound frequency analyzer"
+  canonical="https://onlineaudiotest.com/audio-spectrum-analyzer/"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>Audio Spectrum Analyzer</h1>
+    <p>See every frequency your microphone picks up — in real time. FFT spectrum with peak hold, hover cursor, top-peak table, and musical note detection. Nothing uploaded.</p>
+  </section>
+
+  <!-- TOOL -->
+  <div class="tool-card-wrap" style="max-width: 720px">
+    <div class="tool-card" id="spectrum-tool">
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <div class="status-pill" id="status-pill">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Click to start</span>
+        </div>
+        <span class="eyebrow caption-mono" id="status-right"></span>
+      </div>
+
+      <!-- Permission card -->
+      <div class="perm-card" id="perm-card">
+        <div class="perm-icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect x="2" y="19" width="5" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="9.5" y="13" width="5" height="17" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="17" y="7" width="5" height="23" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="24.5" y="15" width="5" height="15" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <p class="perm-text">Click <strong>Start Analyzer</strong>, then allow microphone access when your browser asks. Your audio never leaves your browser.</p>
+      </div>
+
+      <!-- Analyzer visuals (hidden until mic active) -->
+      <div class="analyzer-wrap" id="analyzer-wrap" hidden>
+
+        <!-- Canvas + hover cursor overlay -->
+        <div class="canvas-container" id="canvas-container">
+          <canvas
+            id="spectrum-canvas"
+            width="640"
+            height="220"
+            aria-label="Real-time audio spectrum — horizontal axis is frequency 20 Hz to 20 kHz, vertical axis is amplitude"
+          ></canvas>
+          <!-- Hover cursor overlay (pointer-events:none so it doesn't block canvas events) -->
+          <div class="freq-cursor" id="freq-cursor" hidden aria-hidden="true">
+            <div class="cursor-line" id="cursor-line"></div>
+            <div class="cursor-tip" id="cursor-tip">
+              <span class="cursor-row" id="cursor-freq-text">440 Hz</span>
+              <span class="cursor-row cursor-db" id="cursor-db-text">-42 dB</span>
+              <span class="cursor-row cursor-note" id="cursor-note-text">A4</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-row">
+          <div class="stat-block">
+            <span class="eyebrow">Dominant Freq</span>
+            <span class="stat-value" id="dominant-freq">-- Hz</span>
+          </div>
+          <span class="stat-sep" aria-hidden="true"></span>
+          <div class="stat-block">
+            <span class="eyebrow">Musical Note</span>
+            <span class="stat-value" id="musical-note">--</span>
+          </div>
+          <span class="stat-sep" aria-hidden="true"></span>
+          <div class="stat-block">
+            <span class="eyebrow">Level</span>
+            <span class="stat-value" id="db-level">-- dB</span>
+          </div>
+        </div>
+
+        <!-- Generate test tone link (shown when dominant freq detected) -->
+        <div class="tone-link-row" id="tone-link-row" hidden>
+          <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true" style="flex-shrink:0">
+            <path d="M1 10 Q4 3 7 10 Q10 17 13 10 Q16 3 19 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <a href="/frequency-generator/" id="tone-link" class="tone-link-a">
+            Generate <strong id="tone-link-freq">440 Hz</strong> in Frequency Generator →
+          </a>
+        </div>
+
+        <!-- Top peaks table -->
+        <div class="peak-wrap">
+          <span class="eyebrow peak-label">Top Peaks</span>
+          <div class="peak-table-scroll">
+            <table class="peak-table" aria-label="Top frequency peaks">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Frequency</th>
+                  <th>Note</th>
+                </tr>
+              </thead>
+              <tbody id="peak-tbody">
+                {[1,2,3,4,5].map(n => (
+                  <tr id={`peak-row-${n-1}`} class="peak-row-empty">
+                    <td class="peak-rank">{n}</td>
+                    <td id={`peak-freq-${n-1}`} class="peak-freq-cell">--</td>
+                    <td id={`peak-note-${n-1}`} class="peak-note-cell">--</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Actions -->
+      <div class="action-row" id="action-row">
+        <button class="btn btn-primary btn-lg" id="btn-start" style="min-width:180px">
+          <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="2" y="12" width="3.5" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="7.5" y="7" width="3.5" height="12" rx="1" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="13" y="4" width="3.5" height="15" rx="1" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          Start Analyzer
+        </button>
+      </div>
+
+      <p class="result-note" id="result-note">Your audio is processed locally and never uploaded.</p>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <h2>How the spectrum analyzer works</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Click "Start Analyzer"</strong> and allow microphone access. Your browser will prompt for permission — click Allow to begin.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Make some noise.</strong> Speak, play music, or play an instrument. The spectrum updates at up to 60 frames per second using a 4096-point FFT.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Hover over the spectrum</strong> to read the exact frequency, amplitude in dB, and musical note at any point. The Top Peaks table lists the five loudest distinct frequencies detected.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Click Freeze</strong> to lock the display, then hover to inspect values or click <strong>Download PNG</strong> to save the spectrum as an image. Click Unfreeze to resume.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO CONTENT -->
+  <div class="seo-section">
+    <div class="seo-inner">
+
+      <h2>Frequency ranges explained</h2>
+      <p>Every sound sits somewhere in the frequency spectrum. Understanding where your audio energy falls helps you identify problem frequencies in a room, check the tonal balance of a recording, or verify that a speaker or headphone is reproducing the full range it claims.</p>
+
+      <div class="freq-range-table-wrap">
+        <table class="freq-range-table">
+          <thead>
+            <tr>
+              <th>Range</th>
+              <th>Name</th>
+              <th>What lives here</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>20–60 Hz</td><td>Sub-bass</td><td>Kick drum thud, bass synth, room rumble</td></tr>
+            <tr><td>60–250 Hz</td><td>Bass</td><td>Bass guitar, cello, male voice body, kick punch</td></tr>
+            <tr><td>250–500 Hz</td><td>Low mids</td><td>Warmth of instruments, muddy resonances</td></tr>
+            <tr><td>500 Hz–2 kHz</td><td>Midrange</td><td>Most speech intelligibility, snare crack, piano</td></tr>
+            <tr><td>2–4 kHz</td><td>Presence</td><td>Attack, definition, consonants, ear fatigue zone</td></tr>
+            <tr><td>4–6 kHz</td><td>Clarity / Bite</td><td>Sibilance (s, t), electric guitar pick, vocal detail</td></tr>
+            <tr><td>6–20 kHz</td><td>Treble / Air</td><td>Cymbals, shimmer, breath, hi-hats, room air</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>What you can learn from your audio spectrum</h2>
+      <p>A real-time audio spectrum turns invisible sound into a visual map of frequency energy. Speak into your microphone and you'll typically see a cluster of peaks in the 100–500 Hz range (your vocal fundamental and lower harmonics) with smaller peaks extending into the 1–4 kHz range where speech intelligibility lives. Play a bass guitar and energy concentrates in 40–200 Hz. A hissing "s" consonant shows up above 4 kHz. Room resonances appear as persistent peaks that remain even when the room is quiet.</p>
+      <p>The hover cursor lets you identify any peak's exact frequency, amplitude, and musical note. The Top Peaks table ranks the five loudest distinct components automatically — useful for spotting the harmonic series of an instrument or the dominant resonant modes of a room. When a dominant pitch is detected, use the <strong>Generate in Frequency Generator</strong> link to play back that exact frequency through your speakers and verify what you're hearing.</p>
+
+      <h2>Common uses for an online spectrum analyzer</h2>
+      <ul class="seo-list">
+        <li><strong>Microphone check:</strong> Confirm your mic is capturing a full-range signal without missing frequency bands, which can indicate hardware damage or a wrong sample rate.</li>
+        <li><strong>Room acoustics:</strong> Identify room resonances (modes) that cause certain bass frequencies to boom or midrange frequencies to ring.</li>
+        <li><strong>Speaker and headphone testing:</strong> Play a <a href="/frequency-generator/">frequency sweep</a> and watch the spectrum to see how your speaker responds at each frequency.</li>
+        <li><strong>Instrument pitch reference:</strong> Play a note and verify the dominant frequency matches the expected Hz value — useful for rough tuning or checking tuning fork accuracy.</li>
+        <li><strong>Background noise analysis:</strong> Identify the dominant frequency of ambient noise — HVAC hum (50/60 Hz harmonics), fan whine (500–2000 Hz), or electrical interference.</li>
+        <li><strong>Audio equipment testing:</strong> Check a mixer, preamp, or audio interface for added coloration or noise at unexpected frequencies.</li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">What is an audio spectrum analyzer?</p>
+      <p class="faq-a">An audio spectrum analyzer displays the frequency content of a sound signal in real time. This tool uses the Web Audio API's 4096-point FFT to break your microphone input into 2048 frequency bins and render them as a live bar graph from 20 Hz (deep bass) to 20 kHz (treble).</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What does FFT mean?</p>
+      <p class="faq-a">FFT stands for Fast Fourier Transform — an algorithm that converts a time-domain audio signal (a waveform) into its frequency components. Instead of showing amplitude over time, the FFT reveals how much energy is present at each frequency. A 4096-point FFT gives 2048 frequency bins and high resolution across the audible range.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is the hover cursor on the spectrum?</p>
+      <p class="faq-a">Hovering over the spectrum canvas shows a vertical cursor line with a tooltip displaying the exact frequency at that horizontal position, the amplitude in dBFS, and the nearest musical note. It works both during live analysis and while frozen, so you can examine a paused frame in detail.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Can I use this to tune my guitar or other instrument?</p>
+      <p class="faq-a">You can use it as a rough pitch reference — play a string and watch the dominant frequency readout and Top Peaks table. For precise cent-level tuning a dedicated chromatic tuner is more accurate. The spectrum analyzer is better for visualizing the full frequency profile than for precision tuning.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is peak hold?</p>
+      <p class="faq-a">Peak hold displays a thin line above each frequency bar marking the recent maximum amplitude. The peak slowly decays over time. This makes it easier to spot brief transients that flash by too quickly to read — useful for room resonances, noise spikes, or the highest level an instrument reaches during a phrase.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why does my voice show multiple peaks on the spectrum?</p>
+      <p class="faq-a">Your voice has a fundamental frequency plus harmonics at integer multiples of that frequency. If you speak at 150 Hz, you'll also see peaks at 300 Hz, 450 Hz, 600 Hz, and so on. The Top Peaks table will list these. The pattern of harmonics gives your voice its unique timbre.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do I download the spectrum as an image?</p>
+      <p class="faq-a">Click Freeze to pause the spectrum, then click Download PNG in the action row. The PNG captures the canvas exactly as displayed — frequency bars, peak lines, and axis labels — but without any UI chrome. Works on all modern browsers including mobile.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Is my audio stored or sent to any server?</p>
+      <p class="faq-a">No. All audio processing happens entirely in your browser using the Web Audio API and getUserMedia. No audio data, frequency data, or microphone recordings are ever transmitted anywhere. Everything is processed locally and discarded immediately.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  (() => {
+    type State = 'idle' | 'requesting' | 'running' | 'frozen';
+
+    /* ── State ─────────────────────────────────────── */
+    let state: State   = 'idle';
+    let stream: MediaStream | null       = null;
+    let audioCtx: AudioContext | null    = null;
+    let analyser: AnalyserNode | null    = null;
+    let animFrame = 0;
+    let frozen    = false;
+    let peaks: Float32Array | null       = null;   // peak-hold per canvas column
+    let freqCache: Uint8Array | null     = null;   // last FFT frame (used by cursor when frozen)
+    let nyquistCache    = 24000;                   // updated each frame
+    let lastTableUpdate = 0;                       // timestamp for DOM throttle
+
+    /* ── DOM refs ──────────────────────────────────── */
+    const canvas      = document.getElementById('spectrum-canvas')   as HTMLCanvasElement;
+    const ctx2d       = canvas.getContext('2d')!;
+    const W           = canvas.width;   // 640
+    const H           = canvas.height;  // 220
+
+    const statusDot    = document.getElementById('status-dot')!;
+    const statusText   = document.getElementById('status-text')!;
+    const statusRight  = document.getElementById('status-right')!;
+    const permCard     = document.getElementById('perm-card')!;
+    const analyzerWrap = document.getElementById('analyzer-wrap')!;
+    const actionRow    = document.getElementById('action-row')!;
+    const resultNote   = document.getElementById('result-note')!;
+
+    const domFreqEl  = document.getElementById('dominant-freq')!;
+    const musNoteEl  = document.getElementById('musical-note')!;
+    const dbLevelEl  = document.getElementById('db-level')!;
+
+    const toneLinkRow  = document.getElementById('tone-link-row')   as HTMLElement;
+    const toneLinkEl   = document.getElementById('tone-link')        as HTMLAnchorElement;
+    const toneLinkFreq = document.getElementById('tone-link-freq')!;
+
+    const freqCursorEl  = document.getElementById('freq-cursor')   as HTMLElement;
+    const cursorLineEl  = document.getElementById('cursor-line')   as HTMLElement;
+    const cursorTipEl   = document.getElementById('cursor-tip')    as HTMLElement;
+    const cursorFreqEl  = document.getElementById('cursor-freq-text')!;
+    const cursorDbEl    = document.getElementById('cursor-db-text')!;
+    const cursorNoteEl  = document.getElementById('cursor-note-text')!;
+
+    /* ── Constants ─────────────────────────────────── */
+    const NOTE_NAMES   = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+    const FREQ_MARKERS = [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000];
+    const LOG_BASE     = Math.log10(1000); // log10(20000/20)
+    const BAR_H        = H - 24;          // 196px for bars, 24px for axis labels
+
+    /* ── Utilities ─────────────────────────────────── */
+    function freqToX(freq: number): number {
+      return W * Math.log10(freq / 20) / LOG_BASE;
+    }
+
+    function freqToNote(freq: number): string {
+      if (freq < 20 || freq > 20000) return '--';
+      const midi     = Math.round(69 + 12 * Math.log2(freq / 440));
+      const noteIdx  = ((midi % 12) + 12) % 12;
+      const octave   = Math.floor(midi / 12) - 1;
+      return `${NOTE_NAMES[noteIdx]}${octave}`;
+    }
+
+    function formatFreq(freq: number): string {
+      if (freq >= 1000) {
+        const k = freq / 1000;
+        return `${(freq >= 10000 ? k.toFixed(1) : k.toFixed(2)).replace(/\.?0+$/, '')} kHz`;
+      }
+      return `${Math.round(freq)} Hz`;
+    }
+
+    function barColor(ratio: number): string {
+      const hue   = Math.round(240 - ratio * 240); // blue (240) → red (0)
+      const light = Math.round(45 + ratio * 15);   // 45% → 60%
+      return `hsl(${hue},88%,${light}%)`;
+    }
+
+    function getColors() {
+      const s = getComputedStyle(document.documentElement);
+      return {
+        bg:       s.getPropertyValue('--canvas-soft-2').trim() || '#f5f5f5',
+        mute:     s.getPropertyValue('--mute').trim()          || '#888',
+        hairline: s.getPropertyValue('--hairline').trim()      || '#ebebeb',
+        ink:      s.getPropertyValue('--ink').trim()           || '#171717',
+      };
+    }
+
+    /* ── Cursor hover ──────────────────────────────── */
+    function showCursor(cssX: number, cssWidth: number) {
+      if (!freqCache || !analyser) return;
+
+      const ratio   = cssX / cssWidth;
+      const canvasX = Math.max(0, Math.min(W - 1, Math.round(ratio * W)));
+      const freq    = 20 * Math.pow(1000, canvasX / W);
+      const binIdx  = Math.min(freqCache.length - 1, Math.round(freq / nyquistCache * freqCache.length));
+      const amp     = freqCache[binIdx];
+      const db      = analyser.minDecibels + (amp / 255) * (analyser.maxDecibels - analyser.minDecibels);
+
+      cursorFreqEl.textContent = formatFreq(freq);
+      cursorDbEl.textContent   = amp > 0 ? `${db.toFixed(1)} dB` : '< min';
+      cursorNoteEl.textContent = freqToNote(freq);
+
+      // Position cursor line
+      const pct = ratio * 100;
+      cursorLineEl.style.left = `${pct}%`;
+
+      // Flip tip to other side at 60% to avoid going off edge
+      const onRight = pct > 60;
+      cursorTipEl.style.left  = onRight ? 'auto' : `calc(${pct}% + 8px)`;
+      cursorTipEl.style.right = onRight ? `calc(${100 - pct}% + 8px)` : 'auto';
+
+      freqCursorEl.hidden = false;
+    }
+
+    function hideCursor() {
+      freqCursorEl.hidden = true;
+    }
+
+    canvas.addEventListener('mousemove', (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      showCursor(e.clientX - rect.left, rect.width);
+    });
+    canvas.addEventListener('mouseleave', hideCursor);
+
+    // Touch: tap-and-hold to show cursor on mobile
+    canvas.addEventListener('touchmove', (e: TouchEvent) => {
+      e.preventDefault();
+      const rect  = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      showCursor(touch.clientX - rect.left, rect.width);
+    }, { passive: false });
+    canvas.addEventListener('touchend', hideCursor);
+
+    /* ── Peak detection ────────────────────────────── */
+    interface Peak { freq: number; note: string }
+
+    function detectPeaks(data: Uint8Array, nyquist: number): Peak[] {
+      const numBins   = data.length;
+      const minBin    = Math.max(2, Math.round(60 / nyquist * numBins));
+      const threshold = 40;
+      const minSepHz  = 40;
+
+      const candidates: Array<{freq: number; amp: number}> = [];
+      for (let b = minBin; b < numBins - 1; b++) {
+        if (data[b] > data[b - 1] && data[b] > data[b + 1] && data[b] >= threshold) {
+          candidates.push({ freq: b * nyquist / numBins, amp: data[b] });
+        }
+      }
+      candidates.sort((a, b) => b.amp - a.amp);
+
+      const result: Peak[] = [];
+      for (const c of candidates) {
+        if (result.length >= 5) break;
+        if (!result.some(r => Math.abs(r.freq - c.freq) < minSepHz)) {
+          result.push({ freq: c.freq, note: freqToNote(c.freq) });
+        }
+      }
+      return result;
+    }
+
+    function updatePeakTable(peakList: Peak[]) {
+      for (let i = 0; i < 5; i++) {
+        const p      = peakList[i];
+        const row    = document.getElementById(`peak-row-${i}`)!;
+        const freqEl = document.getElementById(`peak-freq-${i}`)!;
+        const noteEl = document.getElementById(`peak-note-${i}`)!;
+        if (p) {
+          freqEl.textContent = formatFreq(p.freq);
+          noteEl.textContent = p.note;
+          row.classList.remove('peak-row-empty');
+        } else {
+          freqEl.textContent = '--';
+          noteEl.textContent = '--';
+          row.classList.add('peak-row-empty');
+        }
+      }
+    }
+
+    function updateToneLink(domFreq: number) {
+      if (domFreq > 0) {
+        const rounded           = Math.round(domFreq);
+        toneLinkFreq.textContent = formatFreq(domFreq);
+        toneLinkEl.href          = `/frequency-generator/?freq=${rounded}`;
+        toneLinkRow.hidden       = false;
+      } else {
+        toneLinkRow.hidden = true;
+      }
+    }
+
+    /* ── PNG download ──────────────────────────────── */
+    function downloadPNG() {
+      const link      = document.createElement('a');
+      link.download   = `spectrum-${Date.now()}.png`;
+      link.href       = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    /* ── Core draw loop ────────────────────────────── */
+    function drawSpectrum() {
+      if (!analyser || !audioCtx || !peaks) return;
+      if (!frozen) animFrame = requestAnimationFrame(drawSpectrum);
+
+      const numBins = analyser.frequencyBinCount;
+      if (!freqCache || freqCache.length !== numBins) freqCache = new Uint8Array(numBins);
+
+      const timeData = new Uint8Array(numBins);
+      analyser.getByteFrequencyData(freqCache);
+      analyser.getByteTimeDomainData(timeData);
+
+      const nyquist   = audioCtx.sampleRate / 2;
+      nyquistCache    = nyquist;
+      const colors    = getColors();
+
+      /* Background */
+      ctx2d.fillStyle = colors.bg;
+      ctx2d.fillRect(0, 0, W, H);
+
+      /* Gridlines */
+      ctx2d.strokeStyle = colors.hairline;
+      ctx2d.lineWidth   = 0.5;
+      FREQ_MARKERS.forEach(f => {
+        const x = freqToX(f);
+        ctx2d.beginPath();
+        ctx2d.moveTo(x, 0);
+        ctx2d.lineTo(x, BAR_H);
+        ctx2d.stroke();
+      });
+
+      /* Axis labels */
+      ctx2d.fillStyle    = colors.mute;
+      ctx2d.font         = '10px ui-monospace,monospace';
+      ctx2d.textBaseline = 'bottom';
+      FREQ_MARKERS.forEach((f, i) => {
+        const x     = freqToX(f);
+        const label = f >= 1000 ? `${f / 1000}k` : `${f}`;
+        ctx2d.textAlign = i === 0 ? 'left' : i === FREQ_MARKERS.length - 1 ? 'right' : 'center';
+        ctx2d.fillText(label, x, H - 2);
+      });
+
+      /* Dominant frequency bin */
+      const minBin = Math.max(1, Math.round(60 / nyquist * numBins));
+      let dominantBin = -1, dominantAmp = 0;
+      for (let b = minBin; b < numBins; b++) {
+        if (freqCache[b] > dominantAmp) { dominantAmp = freqCache[b]; dominantBin = b; }
+      }
+
+      /* Bars + peak hold */
+      for (let x = 0; x < W; x++) {
+        const freq   = 20 * Math.pow(1000, x / W);
+        const binIdx = Math.min(numBins - 1, Math.round(freq / nyquist * numBins));
+        const amp    = freqCache[binIdx];
+        const ratio  = amp / 255;
+        const barH   = ratio * BAR_H;
+
+        peaks[x] = barH > peaks[x] ? barH : Math.max(0, peaks[x] - 0.8);
+
+        if (barH >= 1) {
+          ctx2d.fillStyle = barColor(ratio);
+          ctx2d.fillRect(x, BAR_H - barH, 1, barH);
+        }
+        if (peaks[x] >= 2) {
+          ctx2d.fillStyle = colors.ink;
+          ctx2d.fillRect(x, BAR_H - peaks[x], 1, 2);
+        }
+      }
+
+      /* Stats — dominant frequency */
+      const now = performance.now();
+      const tickTable = now - lastTableUpdate > 300;
+      if (dominantAmp > 50 && dominantBin >= 0) {
+        const domFreq = dominantBin * nyquist / numBins;
+        domFreqEl.textContent = formatFreq(domFreq);
+        musNoteEl.textContent = freqToNote(domFreq);
+        if (tickTable) {
+          updatePeakTable(detectPeaks(freqCache, nyquist));
+          updateToneLink(domFreq);
+          lastTableUpdate = now;
+        }
+      } else {
+        domFreqEl.textContent = '-- Hz';
+        musNoteEl.textContent = '--';
+        if (tickTable) {
+          updatePeakTable([]);
+          updateToneLink(0);
+          lastTableUpdate = now;
+        }
+      }
+
+      /* Stats — RMS dB from time domain */
+      let rmsSum = 0;
+      for (let i = 0; i < timeData.length; i++) {
+        const v = (timeData[i] / 128) - 1;
+        rmsSum += v * v;
+      }
+      const rms = Math.sqrt(rmsSum / timeData.length);
+      const db  = 20 * Math.log10(Math.max(rms, 1e-10));
+      dbLevelEl.textContent = rms > 0.001 ? `${db.toFixed(1)} dB` : '-- dB';
+    }
+
+    /* ── Status helpers ────────────────────────────── */
+    function setStatus(s: State, msg: string) {
+      statusText.textContent = msg;
+      statusDot.className    = 'dot';
+      if (s === 'running')    statusDot.classList.add('active');
+      if (s === 'requesting') statusDot.classList.add('warning');
+      if (s === 'frozen')     statusDot.classList.add('warning');
+    }
+
+    /* ── Action row HTML builders ──────────────────── */
+    const STOP_SVG = `<svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true"><rect x="1.5" y="1.5" width="8" height="8" rx="1.5" fill="currentColor"/></svg>`;
+    const PNG_SVG  = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+    const START_SVG = `<svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="2" y="12" width="3.5" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="7.5" y="7" width="3.5" height="12" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="13" y="4" width="3.5" height="15" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>`;
+
+    function renderStartBtn() {
+      return `<button class="btn btn-primary btn-lg" id="btn-start" style="min-width:180px">${START_SVG} Start Analyzer</button>`;
+    }
+
+    function renderRunningBtns(isFrozen: boolean) {
+      const freezeClass = isFrozen ? 'btn-outline' : 'btn-secondary';
+      const freezeLabel = isFrozen ? 'Unfreeze' : 'Freeze';
+      return `
+        <button class="btn ${freezeClass} btn-sm" id="btn-freeze" style="min-width:88px">${freezeLabel}</button>
+        <button class="btn btn-secondary btn-sm" id="btn-png" title="Download spectrum as PNG">${PNG_SVG} PNG</button>
+        <button class="btn btn-primary btn-lg" id="btn-stop" style="min-width:130px">${STOP_SVG} Stop</button>`;
+    }
+
+    function bindRunningBtns() {
+      document.getElementById('btn-freeze')?.addEventListener('click', toggleFreeze);
+      document.getElementById('btn-png')?.addEventListener('click', downloadPNG);
+      document.getElementById('btn-stop')?.addEventListener('click', stopAnalyzer);
+    }
+
+    /* ── Freeze / stop ─────────────────────────────── */
+    function toggleFreeze() {
+      frozen = !frozen;
+      if (frozen) {
+        cancelAnimationFrame(animFrame);
+        state = 'frozen';
+        setStatus('frozen', 'Frozen');
+        statusRight.textContent = 'paused';
+        resultNote.textContent  = 'Spectrum frozen — hover to inspect, or download PNG.';
+        resultNote.className    = 'result-note';
+      } else {
+        state = 'running';
+        setStatus('running', 'Analyzing…');
+        statusRight.textContent = 'live';
+        resultNote.textContent  = 'Microphone active — spectrum updating in real time.';
+        resultNote.className    = 'result-note success';
+        drawSpectrum();
+      }
+      actionRow.innerHTML = renderRunningBtns(frozen);
+      bindRunningBtns();
+    }
+
+    function stopAnalyzer() {
+      cancelAnimationFrame(animFrame);
+      frozen = false;
+      stream?.getTracks().forEach(t => t.stop());
+      audioCtx?.close();
+      stream = null; audioCtx = null; analyser = null; peaks = null; freqCache = null;
+      state = 'idle';
+      setStatus('idle', 'Stopped');
+      statusRight.textContent = '';
+      domFreqEl.textContent   = '-- Hz';
+      musNoteEl.textContent   = '--';
+      dbLevelEl.textContent   = '-- dB';
+      analyzerWrap.hidden     = true;
+      permCard.hidden         = false;
+      toneLinkRow.hidden      = true;
+      hideCursor();
+      updatePeakTable([]);
+      resultNote.textContent  = 'Analysis stopped. Click Start Analyzer to run another test.';
+      resultNote.className    = 'result-note';
+      actionRow.innerHTML     = renderStartBtn();
+      document.getElementById('btn-start')?.addEventListener('click', startAnalyzer);
+    }
+
+    /* ── Start ─────────────────────────────────────── */
+    async function startAnalyzer() {
+      state = 'requesting';
+      setStatus('requesting', 'Requesting mic access…');
+      const startBtn = document.getElementById('btn-start') as HTMLButtonElement | null;
+      if (startBtn) startBtn.disabled = true;
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      } catch {
+        setStatus('idle', 'Permission denied');
+        resultNote.textContent = 'Microphone access was denied. Allow it in your browser settings and try again.';
+        resultNote.className   = 'result-note error';
+        if (startBtn) startBtn.disabled = false;
+        state = 'idle';
+        return;
+      }
+
+      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const src = audioCtx.createMediaStreamSource(stream);
+      analyser  = audioCtx.createAnalyser();
+      analyser.fftSize               = 4096;
+      analyser.smoothingTimeConstant = 0.8;
+      analyser.minDecibels           = -90;
+      analyser.maxDecibels           = -10;
+      src.connect(analyser);
+
+      peaks           = new Float32Array(W);
+      freqCache       = new Uint8Array(analyser.frequencyBinCount);
+      lastTableUpdate = 0;
+      frozen          = false;
+
+      permCard.hidden     = true;
+      analyzerWrap.hidden = false;
+      state               = 'running';
+      setStatus('running', 'Analyzing…');
+      statusRight.textContent = 'live';
+      resultNote.textContent  = 'Microphone active — spectrum updating in real time.';
+      resultNote.className    = 'result-note success';
+
+      actionRow.innerHTML = renderRunningBtns(false);
+      bindRunningBtns();
+
+      drawSpectrum();
+    }
+
+    /* ── Keyboard shortcut ─────────────────────────── */
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.code !== 'Space' || e.target !== document.body) return;
+      e.preventDefault();
+      if (state === 'idle') startAnalyzer();
+      else if (state === 'running' || state === 'frozen') toggleFreeze();
+    });
+
+    /* ── Init ──────────────────────────────────────── */
+    document.getElementById('btn-start')?.addEventListener('click', startAnalyzer);
+  })();
+</script>
+
+<style>
+  /* ── Analyzer wrap ─────────────── */
+  .analyzer-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-md);
+  }
+
+  /* ── Canvas + cursor ───────────── */
+  .canvas-container {
+    position: relative;
+    border-radius: var(--r-sm);
+    background: var(--canvas-soft-2);
+    box-shadow: var(--shadow-1);
+    line-height: 0;
+    cursor: crosshair;
+  }
+  .canvas-container canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* clip-path instead of overflow:hidden on parent so the tooltip overlay can extend freely */
+    clip-path: inset(0 round var(--r-sm));
+  }
+
+  .freq-cursor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .cursor-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--ink);
+    opacity: 0.25;
+  }
+  .cursor-tip {
+    position: absolute;
+    top: 8px;
+    background: var(--canvas);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-sm);
+    padding: 6px 10px;
+    box-shadow: var(--shadow-3);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    white-space: nowrap;
+  }
+  .cursor-row {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .cursor-db   { color: var(--mute); font-weight: 400; }
+  .cursor-note { color: var(--link); }
+
+  /* ── Stats row ─────────────────── */
+  .stats-row {
+    display: flex;
+    align-items: center;
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    padding: var(--s-md);
+    box-shadow: var(--shadow-1);
+  }
+  .stat-block {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+  }
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+  .stat-sep {
+    width: 1px;
+    height: 36px;
+    background: var(--hairline);
+    flex-shrink: 0;
+  }
+
+  /* ── Generate tone link ────────── */
+  .tone-link-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+    color: var(--mute);
+  }
+  .tone-link-a {
+    font-size: 13px;
+    color: var(--body-text);
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .tone-link-a:hover { color: var(--link); }
+  .tone-link-a strong { color: var(--ink); font-weight: 500; }
+
+  /* ── Peak table ────────────────── */
+  .peak-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+  }
+  .peak-label { display: block; }
+  .peak-table-scroll { overflow-x: auto; }
+  .peak-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .peak-table th {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--mute);
+    font-weight: 400;
+    text-align: left;
+    padding: 4px 12px 4px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .peak-table th:first-child { width: 28px; }
+  .peak-table td {
+    padding: 7px 12px 7px 0;
+    border-bottom: 1px solid var(--hairline);
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  .peak-table tr:last-child td { border-bottom: none; }
+  .peak-rank { font-family: var(--font-mono); font-size: 11px; color: var(--mute); }
+  .peak-freq-cell { font-family: var(--font-mono); font-weight: 500; }
+  .peak-note-cell { font-family: var(--font-mono); color: var(--link); }
+  .peak-row-empty td { color: var(--mute); }
+
+  /* ── Permission card ───────────── */
+  .perm-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-md);
+    padding: var(--s-xl);
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    text-align: center;
+  }
+  .perm-icon {
+    width: 56px; height: 56px;
+    background: var(--canvas-soft-2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-1);
+    color: var(--ink);
+  }
+  .perm-text { font-size: 14px; color: var(--body-text); line-height: 1.6; max-width: 380px; }
+  .perm-text strong { color: var(--ink); font-weight: 500; }
+
+  /* ── Outline button variant ────── */
+  .btn-outline {
+    background: transparent;
+    color: var(--link);
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: var(--r-pill);
+    padding: 0 var(--s-xs);
+    height: 32px;
+    box-shadow: inset 0 0 0 1.5px currentColor;
+    font-weight: 500;
+  }
+  .btn-outline:hover { background: rgba(0,112,243,.08); }
+
+  /* ── SEO section ───────────────── */
+  .seo-section {
+    max-width: 680px;
+    margin-inline: auto;
+    padding: 0 var(--container-pad);
+    margin-bottom: var(--s-3xl);
+  }
+  .seo-inner { display: flex; flex-direction: column; gap: var(--s-lg); }
+  .seo-inner h2 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.7px;
+    color: var(--ink);
+    margin-top: var(--s-md);
+  }
+  .seo-inner h2:first-child { margin-top: 0; }
+  .seo-inner p { font-size: 14px; color: var(--body-text); line-height: 1.7; }
+
+  /* Frequency range table */
+  .freq-range-table-wrap { overflow-x: auto; }
+  .freq-range-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .freq-range-table th {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--mute);
+    font-weight: 400;
+    text-align: left;
+    padding: 6px 16px 6px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .freq-range-table td {
+    padding: 8px 16px 8px 0;
+    border-bottom: 1px solid var(--hairline);
+    color: var(--body-text);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  .freq-range-table tr:last-child td { border-bottom: none; }
+  .freq-range-table td:first-child { font-family: var(--font-mono); color: var(--ink); font-weight: 500; white-space: nowrap; }
+  .freq-range-table td:nth-child(2) { color: var(--ink); white-space: nowrap; }
+
+  .seo-list {
+    list-style: none; padding: 0;
+    display: flex; flex-direction: column; gap: var(--s-sm);
+  }
+  .seo-list li {
+    font-size: 14px; color: var(--body-text); line-height: 1.6;
+    padding-left: var(--s-lg); position: relative;
+  }
+  .seo-list li::before { content: '–'; position: absolute; left: 0; color: var(--mute); }
+  .seo-list strong { color: var(--ink); font-weight: 500; }
+  .seo-list a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+
+  /* ── Responsive ────────────────── */
+  @media (max-width: 480px) {
+    .stat-value { font-size: 15px; }
+    .stats-row  { padding: var(--s-sm); gap: 0; }
+    .cursor-tip { font-size: 10px; padding: 5px 8px; }
+  }
+
+  /* ── Reduced motion ─────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-line { transition: none; }
+    .cursor-tip  { transition: none; }
+  }
+</style>

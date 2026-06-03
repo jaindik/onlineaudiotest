@@ -29,8 +29,8 @@ export default defineConfig({
         if (u === 'https://onlineaudiotest.com/') {
           item.priority = 1.0;
           item.changefreq = 'weekly';
-        } else if (/\/(mic-test|speaker-test|latency-test)\/?$/.test(u)) {
-          item.priority = 1.0;
+        } else if (/\/(mic-test|speaker-test|latency-test|hearing-test|frequency-generator|audio-spectrum-analyzer|voice-recorder|mic-quality-test)\/?$/.test(u)) {
+          item.priority = 0.9;
           item.changefreq = 'weekly';
         } else if (/\/(about|contact)\/?$/.test(u)) {
           item.priority = 0.6;

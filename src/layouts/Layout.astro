@@ -79,53 +79,85 @@ const ogImage = `${site}/ogImage.webp`;
 
   <!-- ───── NAV ───── -->
   <header class="nav" role="banner">
-    <div class="nav-inner container">
-      <a href="/" class="nav-logo" aria-label="OnlineAudioTest home">
-        <img src="/icon.png" width="22" height="22" alt="" aria-hidden="true" decoding="async" />
-        <span class="logo-text">onlineaudiotest</span>
-      </a>
 
-      <div class="nav-right">
-        <nav class="nav-links" aria-label="Main navigation">
-          <a href="/mic-test/" class:list={['nav-link', { 'nav-active': currentPath === '/mic-test' }]}>
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <rect x="7" y="2" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="7" y1="19" x2="13" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <span class="nav-link-text">Mic Test</span>
-          </a>
-          <a href="/speaker-test/" class:list={['nav-link', { 'nav-active': currentPath === '/speaker-test' }]}>
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-              <path d="M14 7a4 4 0 010 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <span class="nav-link-text">Speaker Test</span>
-          </a>
-          <a href="/latency-test/" class:list={['nav-link', { 'nav-active': currentPath === '/latency-test' }]}>
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M10 6v4.5l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="nav-link-text">Latency Test</span>
-          </a>
-          <a href="/hearing-test/" class:list={['nav-link', { 'nav-active': currentPath === '/hearing-test' }]}>
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path d="M2 10h2.5l2-5 3 10 2-7 2 5 1.5-3H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="nav-link-text">Hearing Test</span>
-          </a>
-          <a href="/frequency-generator/" class:list={['nav-link', { 'nav-active': currentPath === '/frequency-generator' }]}>
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path d="M1 10 Q4 3 7 10 Q10 17 13 10 Q16 3 19 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="nav-link-text">Frequency Generator</span>
-          </a>
-        </nav>
+    <!-- Row 1: brand + theme toggle only -->
+    <div class="nav-top">
+      <div class="nav-top-inner container">
+        <a href="/" class="nav-logo" aria-label="OnlineAudioTest home">
+          <img src="/icon.png" width="22" height="22" alt="" aria-hidden="true" decoding="async" />
+          <span class="logo-text">onlineaudiotest</span>
+        </a>
         <ThemeToggle />
       </div>
     </div>
+
+    <!-- Row 2: tools strip -->
+    <div class="nav-tools-bar" role="navigation" aria-label="Audio tools">
+      <div class="nav-tools-inner container">
+        <a href="/mic-test/" class:list={['nav-tool', { 'nav-active': currentPath === '/mic-test' }]}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="7" y="2" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="7" y1="19" x2="13" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Mic Test
+        </a>
+        <a href="/speaker-test/" class:list={['nav-tool', { 'nav-active': currentPath === '/speaker-test' }]}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M14 7a4 4 0 010 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Speaker Test
+        </a>
+        <a href="/latency-test/" class:list={['nav-tool', { 'nav-active': currentPath === '/latency-test' }]}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 6v4.5l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Latency Test
+        </a>
+        <a href="/hearing-test/" class:list={['nav-tool', { 'nav-active': currentPath === '/hearing-test' }]}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M2 10h2.5l2-5 3 10 2-7 2 5 1.5-3H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Hearing Test
+        </a>
+        <a href="/frequency-generator/" class:list={['nav-tool', { 'nav-active': currentPath === '/frequency-generator' }]}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M1 10 Q4 3 7 10 Q10 17 13 10 Q16 3 19 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Frequency Generator
+        </a>
+        <a href="/audio-spectrum-analyzer/" class:list={['nav-tool', { 'nav-active': currentPath === '/audio-spectrum-analyzer' }]}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="1" y="12" width="3" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="6" y="7" width="3" height="12" rx="1" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="11" y="4" width="3" height="15" rx="1" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="16" y="9" width="3" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          Spectrum Analyzer
+        </a>
+        <a href="/voice-recorder/" class:list={['nav-tool', { 'nav-active': currentPath === '/voice-recorder' }]}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="7" y="2" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="16" cy="4" r="2.5" fill="#ee0000"/>
+          </svg>
+          Voice Recorder
+        </a>
+        <a href="/mic-quality-test/" class:list={['nav-tool', { 'nav-active': currentPath === '/mic-quality-test' }]}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="7" y="2" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M13 6l4-3M13 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Mic Quality
+        </a>
+      </div>
+    </div>
+
   </header>
 
   <!-- ───── CONTENT ───── -->
@@ -202,6 +234,49 @@ const ogImage = `${site}/ogImage.webp`;
             </div>
           </a>
 
+          <a href="/audio-spectrum-analyzer/" class:list={['sidebar-item', { active: currentPath === '/audio-spectrum-analyzer' }]}>
+            <div class="sidebar-icon">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <rect x="1" y="12" width="3" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="6" y="7" width="3" height="12" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="11" y="4" width="3" height="15" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="16" y="9" width="3" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="sidebar-text">
+              <span class="sidebar-item-title">Spectrum Analyzer</span>
+              <span class="sidebar-item-desc">Real-time FFT frequency analysis</span>
+            </div>
+          </a>
+
+          <a href="/voice-recorder/" class:list={['sidebar-item', { active: currentPath === '/voice-recorder' }]}>
+            <div class="sidebar-icon">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <rect x="7" y="2" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="sidebar-text">
+              <span class="sidebar-item-title">Voice Recorder</span>
+              <span class="sidebar-item-desc">Record, trim &amp; download audio</span>
+            </div>
+          </a>
+
+          <a href="/mic-quality-test/" class:list={['sidebar-item', { active: currentPath === '/mic-quality-test' }]}>
+            <div class="sidebar-icon">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <rect x="7" y="2" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M13 6l4-3M13 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="sidebar-text">
+              <span class="sidebar-item-title">Mic Quality Test</span>
+              <span class="sidebar-item-desc">SNR, noise floor &amp; quality score</span>
+            </div>
+          </a>
+
         </div>
       </aside>
     </div>
@@ -231,6 +306,9 @@ const ogImage = `${site}/ogImage.webp`;
           <a href="/latency-test/" class="footer-link">Audio Latency Test</a>
           <a href="/hearing-test/" class="footer-link">Hearing Test</a>
           <a href="/frequency-generator/" class="footer-link">Frequency Generator</a>
+          <a href="/audio-spectrum-analyzer/" class="footer-link">Audio Spectrum Analyzer</a>
+          <a href="/voice-recorder/" class="footer-link">Online Voice Recorder</a>
+          <a href="/mic-quality-test/" class="footer-link">Microphone Quality Test</a>
         </div>
         <div class="footer-col">
           <span class="footer-col-label">Company</span>
@@ -349,7 +427,9 @@ const ogImage = `${site}/ogImage.webp`;
     --shadow-4: 0 2px 2px rgba(0,0,0,.04),0 8px 16px -4px rgba(0,0,0,.04), inset 0 0 0 1px rgba(0,0,0,.08);
 
     /* Nav */
-    --nav-height: 64px;
+    --nav-top-height: 52px;
+    --nav-tools-height: 38px;
+    --nav-height: 90px;
     --container-max: 1200px;
     --container-pad: var(--s-lg);
   }
@@ -570,20 +650,18 @@ const ogImage = `${site}/ogImage.webp`;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--hairline);
-    height: var(--nav-height);
   }
-  .nav-inner {
+
+  /* Row 1 — brand + theme toggle */
+  .nav-top {
+    height: var(--nav-top-height);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .nav-top-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: var(--nav-height);
-    gap: var(--s-lg);
-  }
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: var(--s-xxs);
-    flex-shrink: 0;
+    height: 100%;
   }
   .nav-logo {
     display: flex;
@@ -596,26 +674,44 @@ const ogImage = `${site}/ogImage.webp`;
     flex-shrink: 0;
     text-decoration: none;
   }
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: var(--s-xxs);
+
+  /* Row 2 — scrollable tools strip */
+  .nav-tools-bar {
+    height: var(--nav-tools-height);
   }
-  .nav-link {
+  .nav-tools-inner {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 14px;
+    justify-content: center;
+    height: 100%;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 2px;
+  }
+  .nav-tools-inner::-webkit-scrollbar { display: none; }
+  .nav-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
     color: var(--body-text);
-    padding: var(--s-xs) var(--s-sm);
+    padding: 0 10px;
+    height: 28px;
     border-radius: var(--r-full);
-    transition: color .15s, background .15s;
     white-space: nowrap;
     text-decoration: none;
+    transition: color .15s, background .15s;
+    flex-shrink: 0;
   }
-  .nav-link:hover  { color: var(--ink); background: var(--canvas-soft-2); }
-  .nav-link.nav-active { color: var(--ink); font-weight: 500; background: var(--canvas-soft-2); }
-  .nav-link svg { flex-shrink: 0; }
+  .nav-tool:hover { color: var(--ink); background: var(--canvas-soft-2); }
+  .nav-tool.nav-active {
+    color: var(--ink);
+    font-weight: 500;
+    background: var(--canvas-soft-2);
+  }
+  .nav-tool svg { flex-shrink: 0; }
 
   /* Theme toggle */
   .theme-toggle {
@@ -658,10 +754,9 @@ const ogImage = `${site}/ogImage.webp`;
     transform: rotate(-30deg) scale(.85);
   }
 
-  /* Mobile: icons only - no hamburger, no drawer */
-  @media (max-width: 768px) {
-    .nav-link-text { display: none; }
-    .nav-link { padding: var(--s-xs); }
+  /* Mobile: hide logo wordmark on very small screens */
+  @media (max-width: 380px) {
+    .logo-text { display: none; }
   }
 
   /* ════════════════════════
@@ -1084,6 +1179,5 @@ const ogImage = `${site}/ogImage.webp`;
     :root { --container-pad: 16px; }
     .tool-card { padding: var(--s-md); gap: var(--s-md); }
     .btn-lg { height: 44px; padding: 0 var(--s-lg); font-size: 15px; }
-    .logo-text { display: none; }
   }
 </style>

@@ -1,0 +1,1377 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://onlineaudiotest.com/mic-quality-test/#tool",
+      "name": "Microphone Quality Test",
+      "url": "https://onlineaudiotest.com/mic-quality-test/",
+      "description": "Free browser-based microphone quality analyzer. Measures noise floor, signal-to-noise ratio, clipping, dynamic range, and overall recording quality score — entirely in your browser.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires getUserMedia and Web Audio API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Overall microphone quality score 0–100",
+        "Noise floor measurement in dBFS",
+        "Signal-to-noise ratio analysis",
+        "Clipping detection and count",
+        "Dynamic range measurement",
+        "Signal strength assessment",
+        "Background noise pattern detection",
+        "Personalized improvement recommendations",
+        "Live waveform and level meter",
+        "Dark mode support"
+      ],
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Microphone Quality Test", "item": "https://onlineaudiotest.com/mic-quality-test/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I know if my microphone is good quality?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A good microphone has a low noise floor (below -60 dB), a high signal-to-noise ratio (above 40 dB), no clipping, and a consistent signal level. This tool measures all of these and gives you a 0–100 quality score." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a good noise floor for a microphone?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Excellent: below -65 dBFS. Good: -55 to -65 dBFS. Fair: -45 to -55 dBFS. Poor: above -45 dBFS. Lower (more negative) is better." }
+        },
+        {
+          "@type": "Question",
+          "name": "What causes microphone clipping?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Clipping occurs when the input signal exceeds the maximum level the microphone or audio interface can handle. The waveform is literally clipped at the top and bottom, causing harsh distortion. Reduce the microphone gain or move further from the mic to fix it." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is my microphone so quiet?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Low signal strength is usually caused by low microphone gain in system settings, a damaged cable or connector, or a condenser mic not receiving phantom power. Increase input volume in your OS sound settings first." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why do I hear hiss in my recordings?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Microphone hiss is broadband noise, usually from the microphone's own electronics (self-noise) or electrical interference. A high-quality microphone has lower self-noise. Reducing microphone gain and using a preamp can also help." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I test my headset microphone?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Select your headset microphone from the device dropdown if multiple microphones are detected, then run the test normally." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this work on mobile?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes, on Safari (iOS) and Chrome (Android). Mobile microphones tend to score lower due to small capsule size and proximity to fans and components." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my audio uploaded anywhere?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. All analysis is done locally using the Web Audio API. No audio data is transmitted, recorded, or stored anywhere." }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="Microphone Quality Test & Noise Analysis Tool – Online Mic Diagnostics"
+  description="Test your microphone quality online. Analyze noise floor, clipping, SNR, and dynamic range. Get a letter grade (A–F), benchmark comparisons, and personalized recommendations. Free and private."
+  keywords="microphone quality test, mic quality test, microphone noise test, microphone analyzer, background noise microphone test, microphone clipping test"
+  canonical="https://onlineaudiotest.com/mic-quality-test/"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>Microphone Quality Test</h1>
+    <p>Speak for 10 seconds. Get a full diagnostic: noise floor, signal-to-noise ratio, clipping, dynamic range, and a quality score out of 100.</p>
+  </section>
+
+  <!-- TOOL -->
+  <div class="tool-card-wrap" style="max-width:720px">
+    <div class="tool-card" id="mq-tool">
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <div class="status-pill" id="status-pill">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Ready</span>
+        </div>
+        <div class="countdown-wrap" id="countdown-wrap" hidden>
+          <span class="countdown-val" id="countdown-val">10</span>
+          <span class="eyebrow">sec remaining</span>
+        </div>
+      </div>
+
+      <!-- Device selector -->
+      <div class="mq-device-section" id="device-section" hidden>
+        <label class="eyebrow" for="device-select">Microphone</label>
+        <select class="mq-device-select" id="device-select" aria-label="Select microphone"></select>
+      </div>
+
+      <!-- Permission / Idle card -->
+      <div class="perm-card" id="perm-card">
+        <div class="perm-icon" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+            <rect x="11" y="2" width="10" height="17" rx="5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M7 16a9 9 0 0018 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="16" y1="25" x2="16" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="11" y1="30" x2="21" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="perm-text">Click <strong>Start Test</strong>, allow microphone access, then <strong>speak normally for 10 seconds</strong>. The tool will analyze your microphone and generate a full quality report.</p>
+      </div>
+
+      <!-- Analysis panel (shown during test) -->
+      <div class="analysis-panel" id="analysis-panel" hidden>
+
+        <!-- Live waveform -->
+        <canvas id="mq-canvas" width="640" height="72"
+          aria-label="Live microphone waveform"></canvas>
+
+        <!-- Level + progress -->
+        <div class="mq-meters">
+          <div class="mq-meter-wrap">
+            <div class="mq-meter-label">
+              <span class="eyebrow">Input Level</span>
+              <span class="mq-meter-val" id="mq-level">-- dB</span>
+            </div>
+            <div class="mq-meter-track">
+              <div class="mq-meter-fill" id="mq-fill"></div>
+            </div>
+          </div>
+          <div class="mq-meter-wrap">
+            <div class="mq-meter-label">
+              <span class="eyebrow">Analysis Progress</span>
+              <span class="mq-meter-val" id="mq-progress-pct">0%</span>
+            </div>
+            <div class="mq-meter-track">
+              <div class="mq-progress-fill" id="mq-progress-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live indicators -->
+        <div class="live-indicators">
+          <div class="indicator" id="ind-speech">
+            <span class="ind-dot"></span>
+            <span>Waiting for speech…</span>
+          </div>
+          <div class="indicator" id="ind-noise">
+            <span class="ind-dot"></span>
+            <span>Measuring noise floor…</span>
+          </div>
+          <div class="indicator" id="ind-clip">
+            <span class="ind-dot"></span>
+            <span>Checking for clipping…</span>
+          </div>
+        </div>
+
+        <p class="analysis-hint eyebrow" id="analysis-hint">Speak normally — say a few sentences or count aloud</p>
+      </div>
+
+      <!-- Results panel (shown after test) -->
+      <div class="results-panel" id="results-panel" hidden>
+
+        <!-- Grade + score -->
+        <div class="grade-wrap">
+          <div class="grade-ring" id="grade-ring">
+            <span class="grade-letter" id="grade-letter">--</span>
+          </div>
+          <div class="grade-meta">
+            <div class="grade-score-row">
+              <span class="grade-score" id="grade-score">--</span>
+              <span class="grade-score-max">/100</span>
+            </div>
+            <span class="grade-label">Microphone Grade</span>
+            <span class="grade-sub" id="grade-sub"></span>
+          </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="mq-metrics" id="mq-metrics"></div>
+
+        <!-- Use-case compatibility -->
+        <div class="use-cases" id="use-cases"></div>
+
+        <!-- Noise patterns -->
+        <div class="noise-analysis" id="noise-analysis" hidden>
+          <span class="eyebrow noise-label">Background Noise Detected</span>
+          <div class="noise-tags" id="noise-tags"></div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="mq-recs" id="mq-recs"></div>
+
+        <!-- Download report card -->
+        <button class="btn btn-secondary btn-sm download-report-btn" id="btn-download-report">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Download Report Card (PNG)
+        </button>
+      </div>
+
+      <!-- Action row -->
+      <div class="action-row" id="action-row">
+        <button class="btn btn-primary btn-lg" id="btn-start" style="min-width:200px">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="7" y="2" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Start Mic Quality Test
+        </button>
+      </div>
+
+      <p class="result-note" id="result-note">All analysis happens locally. No audio is uploaded or stored.</p>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <h2>How the microphone quality test works</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Click Start Test</strong> and allow microphone access. The tool begins capturing audio in real time via the Web Audio API.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Speak normally for 10 seconds.</strong> The analyzer captures speech, measures noise floor during quiet moments, detects clipping, and samples your signal level.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>A full report is generated.</strong> Your microphone receives a quality score from 0–100 based on noise floor, SNR, clipping, input level, and dynamic range.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Review your recommendations.</strong> The tool explains any issues found and suggests specific steps to improve recording quality.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO CONTENT -->
+  <div class="mq-seo-section">
+    <div class="mq-seo-inner">
+
+      <h2>What is a microphone quality test?</h2>
+      <p>A microphone quality test measures the technical performance of your microphone using audio analysis. Rather than simply checking if a microphone works, it quantifies how well it works — measuring the noise it adds to your signal, how cleanly it captures loud sounds, and how consistently it reproduces your voice. This matters for video calls, streaming, podcasting, and remote work where poor microphone quality affects how you're perceived.</p>
+
+      <h2>How microphone quality is measured</h2>
+      <div class="mq-metrics-table-wrap">
+        <table class="mq-metrics-table">
+          <thead>
+            <tr><th>Metric</th><th>What it measures</th><th>Excellent</th><th>Poor</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Noise Floor</td><td>Ambient noise when silent</td><td>Below −65 dB</td><td>Above −45 dB</td></tr>
+            <tr><td>Signal-to-Noise Ratio</td><td>Voice level vs. noise level</td><td>45+ dB</td><td>Below 20 dB</td></tr>
+            <tr><td>Clipping</td><td>Distortion from overload</td><td>None detected</td><td>10+ events</td></tr>
+            <tr><td>Input Level</td><td>Average speaking volume</td><td>−18 to −6 dB</td><td>Below −50 dB</td></tr>
+            <tr><td>Dynamic Range</td><td>Range from quiet to loud</td><td>25+ dB</td><td>Below 10 dB</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Understanding noise floor</h2>
+      <p>The noise floor is the level of sound your microphone captures when you're not making any noise. Every microphone produces some self-noise — electronic noise from the capsule and circuitry. A lower (more negative) noise floor means a quieter, cleaner microphone. Built-in laptop microphones typically measure around −45 to −55 dBFS. A quality USB condenser microphone can reach −65 to −75 dBFS.</p>
+
+      <h2>Common microphone problems and causes</h2>
+      <ul class="mq-seo-list">
+        <li><strong>High noise floor:</strong> Electrical interference, low-quality microphone capsule, proximity to fans or hard drives, long USB cable without shielding.</li>
+        <li><strong>Clipping/distortion:</strong> Microphone gain set too high, speaking too close to the mic, loud environment causing the input to saturate.</li>
+        <li><strong>Too quiet:</strong> Gain set too low in OS settings, condenser mic missing phantom power, damaged cable.</li>
+        <li><strong>Room echo:</strong> Hard surfaces reflecting sound — bare walls, floors, and ceilings. Carpets, curtains, and acoustic foam help.</li>
+        <li><strong>Hiss:</strong> Microphone self-noise or ground loop interference. Try a different USB port or a USB isolator.</li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">How do I know if my microphone is good quality?</p>
+      <p class="faq-a">Run this test and check your score. A score above 75 means your microphone is suitable for most uses. Below 50 suggests significant issues — usually high background noise, too-low gain, or clipping.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is a good noise floor for a microphone?</p>
+      <p class="faq-a">Below −65 dBFS is excellent. −55 to −65 dBFS is good. −45 to −55 dBFS is fair. Above −45 dBFS means your environment or microphone is adding significant noise. Lower (more negative) is always better.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What causes microphone clipping?</p>
+      <p class="faq-a">Clipping happens when input signal exceeds the maximum the interface can handle — the waveform peaks get flattened, creating harsh distortion. Fix it by reducing gain in system settings or moving further from the microphone.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why is my microphone so quiet?</p>
+      <p class="faq-a">Check your microphone input volume in System Preferences (macOS) or Sound Settings (Windows). Also verify you've selected the correct microphone. Condenser microphones require phantom power — ensure your interface or adapter provides it.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why do I hear hiss in my recordings?</p>
+      <p class="faq-a">Hiss is broadband noise — usually the microphone's own electronic self-noise. Better microphones have lower self-noise. Also check for ground loop interference from USB power by trying a different USB port or hub.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Can I test my headset microphone?</p>
+      <p class="faq-a">Yes. If your headset appears as a separate audio input, it will show in the device selector. Select it and run the test normally.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Does this work on mobile?</p>
+      <p class="faq-a">Yes, on Safari (iOS) and Chrome (Android). Note that mobile microphones are small and often surrounded by fan and component noise, so scores tend to be lower than dedicated USB microphones.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Is my audio uploaded anywhere?</p>
+      <p class="faq-a">No. All analysis runs locally in your browser using the Web Audio API. No audio is transmitted, recorded, or stored on any server.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  (() => {
+    type State = 'idle' | 'requesting' | 'testing' | 'done';
+    const TEST_DURATION = 10; // seconds
+
+    /* ── State ── */
+    let state: State = 'idle';
+    let stream: MediaStream | null = null;
+    let audioCtx: AudioContext | null = null;
+    let analyser: AnalyserNode | null = null;
+    let animFrame = 0;
+    let startTime = 0;
+    let countInterval: ReturnType<typeof setInterval> | null = null;
+
+    // Collected analysis data
+    let allFrames: number[] = [];  // RMS dBFS per 50ms frame
+    let peakSample = 0;
+    let clipCount = 0;
+    let speechFrames = 0;
+
+    // Live waveform ring buffer
+    let liveWave = new Float32Array(640);
+    let liveWavePos = 0;
+
+    /* ── DOM refs ── */
+    const statusDot     = document.getElementById('status-dot')!;
+    const statusText    = document.getElementById('status-text')!;
+    const cdWrap        = document.getElementById('countdown-wrap') as HTMLElement;
+    const cdVal         = document.getElementById('countdown-val')!;
+    const deviceSec     = document.getElementById('device-section') as HTMLElement;
+    const deviceSelect  = document.getElementById('device-select') as HTMLSelectElement;
+    const permCard      = document.getElementById('perm-card') as HTMLElement;
+    const analysisPanel = document.getElementById('analysis-panel') as HTMLElement;
+    const mqCanvas      = document.getElementById('mq-canvas') as HTMLCanvasElement;
+    const mqCtx         = mqCanvas.getContext('2d')!;
+    const mqFill        = document.getElementById('mq-fill') as HTMLElement;
+    const mqLevel       = document.getElementById('mq-level')!;
+    const mqProgressFill = document.getElementById('mq-progress-fill') as HTMLElement;
+    const mqProgressPct = document.getElementById('mq-progress-pct')!;
+    const indSpeech     = document.getElementById('ind-speech')!;
+    const indNoise      = document.getElementById('ind-noise')!;
+    const indClip       = document.getElementById('ind-clip')!;
+    const analysisHint  = document.getElementById('analysis-hint') as HTMLElement;
+    const resultsPanel  = document.getElementById('results-panel') as HTMLElement;
+    const gradeRing     = document.getElementById('grade-ring')!;
+    const gradeLetter   = document.getElementById('grade-letter')!;
+    const gradeScore    = document.getElementById('grade-score')!;
+    const gradeSub      = document.getElementById('grade-sub')!;
+    const mqMetrics     = document.getElementById('mq-metrics')!;
+    const useCasesEl    = document.getElementById('use-cases')!;
+    const noiseAnalysis = document.getElementById('noise-analysis') as HTMLElement;
+    const noiseTags     = document.getElementById('noise-tags')!;
+    const mqRecs        = document.getElementById('mq-recs')!;
+    const actionRow     = document.getElementById('action-row')!;
+    const resultNote    = document.getElementById('result-note')!;
+
+    const W = mqCanvas.width;  // 640
+    const H = mqCanvas.height; // 72
+
+    /* ── Colors ── */
+    function css(v: string, fb: string) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim() || fb; }
+    function getColors() {
+      return {
+        bg:       css('--canvas-soft-2', '#f5f5f5'),
+        wave:     css('--link',          '#0070f3'),
+        hairline: css('--hairline',      '#ebebeb'),
+        ink:      css('--ink',           '#171717'),
+        mute:     css('--mute',          '#888'),
+      };
+    }
+
+    /* ── Device enumeration ── */
+    async function populateDevices() {
+      try {
+        const devs = await navigator.mediaDevices.enumerateDevices();
+        const mics = devs.filter(d => d.kind === 'audioinput');
+        if (mics.length <= 1) { deviceSec.hidden = true; return; }
+        deviceSelect.innerHTML = '';
+        mics.forEach((m, i) => {
+          const o = document.createElement('option');
+          o.value = m.deviceId;
+          o.textContent = m.label || `Microphone ${i + 1}`;
+          deviceSelect.appendChild(o);
+        });
+        deviceSec.hidden = false;
+      } catch { deviceSec.hidden = true; }
+    }
+    populateDevices();
+
+    /* ── Status ── */
+    function setStatus(s: State, msg: string) {
+      statusText.textContent = msg;
+      statusDot.className = 'dot';
+      if (s === 'testing') statusDot.classList.add('active');
+      if (s === 'requesting') statusDot.classList.add('warning');
+    }
+
+    /* ── Live draw ── */
+    function drawFrame() {
+      if (state !== 'testing') return;
+      animFrame = requestAnimationFrame(drawFrame);
+      if (!analyser) return;
+
+      const td = new Float32Array(analyser.fftSize);
+      analyser.getFloatTimeDomainData(td);
+
+      // Compute frame stats
+      let rmsSum = 0, pk = 0;
+      for (const s of td) {
+        rmsSum += s * s;
+        const a = Math.abs(s);
+        if (a > pk) pk = a;
+        if (a >= 0.995) clipCount++;
+        if (a > peakSample) peakSample = a;
+      }
+      const rms = Math.sqrt(rmsSum / td.length);
+      const db  = 20 * Math.log10(Math.max(rms, 1e-10));
+      const pkDb = 20 * Math.log10(Math.max(pk, 1e-10));
+
+      // Collect every ~50ms worth of frames (at 60fps ~= every 3 frames)
+      allFrames.push(db);
+      if (db > -40) speechFrames++;
+
+      // Update live stats
+      const fillPct = Math.max(0, Math.min(100, (db + 60) / 60 * 100));
+      mqFill.style.width = `${fillPct}%`;
+      mqFill.style.background = db > -6 ? '#ee0000' : db > -18 ? '#f5a623' : '';
+      mqLevel.textContent = db > -60 ? `${db.toFixed(1)} dB` : '< −60 dB';
+
+      // Progress
+      const elapsed = (Date.now() - startTime) / 1000;
+      const pct = Math.min(100, (elapsed / TEST_DURATION) * 100);
+      mqProgressFill.style.width = `${pct}%`;
+      mqProgressPct.textContent = `${Math.round(pct)}%`;
+
+      // Update indicators
+      updateIndicator(indSpeech, speechFrames > 10, 'Speech detected', 'Waiting for speech…');
+      updateIndicator(indNoise, allFrames.length > 20, 'Noise floor sampled', 'Measuring noise floor…');
+      updateIndicator(indClip, allFrames.length > 5, clipCount > 0 ? `${clipCount} clipping events` : 'No clipping', 'Checking for clipping…');
+
+      // Countdown
+      const remaining = Math.max(0, TEST_DURATION - elapsed);
+      cdVal.textContent = Math.ceil(remaining).toString();
+
+      // Waveform
+      liveWave[liveWavePos % W] = pk;
+      liveWavePos++;
+
+      const col = getColors();
+      mqCtx.fillStyle = col.bg;
+      mqCtx.fillRect(0, 0, W, H);
+      mqCtx.strokeStyle = col.hairline;
+      mqCtx.lineWidth = 0.5;
+      mqCtx.beginPath(); mqCtx.moveTo(0, H / 2); mqCtx.lineTo(W, H / 2); mqCtx.stroke();
+
+      for (let i = 0; i < W; i++) {
+        const idx = ((liveWavePos - W + i) % W + W) % W;
+        const amp = liveWave[idx] ?? 0;
+        const barH = amp * (H * 0.44);
+        mqCtx.fillStyle = col.wave;
+        mqCtx.fillRect(i, H / 2 - barH, 1, barH * 2 || 1);
+      }
+
+      if (elapsed >= TEST_DURATION) finishTest();
+    }
+
+    function updateIndicator(el: HTMLElement, done: boolean, doneText: string, pendingText: string) {
+      const dot = el.querySelector('.ind-dot') as HTMLElement;
+      const text = el.querySelector('span:last-child')!;
+      if (done) {
+        dot.classList.add('done');
+        text.textContent = doneText;
+      } else {
+        text.textContent = pendingText;
+      }
+    }
+
+    /* ── Analysis ── */
+    interface MQResult {
+      noiseFloor: number;
+      avgDb: number;
+      peakDb: number;
+      snr: number;
+      dynRange: number;
+      clips: number;
+      speechPct: number;
+      noisePatterns: string[];
+    }
+
+    function analyze(): MQResult {
+      const sorted = [...allFrames].sort((a, b) => a - b);
+      const quietN = Math.max(1, Math.floor(sorted.length * 0.15));
+      const noiseLevelDb = sorted.slice(0, quietN).reduce((a, b) => a + b, 0) / quietN;
+      const peakDb = 20 * Math.log10(Math.max(peakSample, 1e-10));
+      const avgDb = allFrames.reduce((a, b) => a + b, 0) / allFrames.length;
+      const snr = Math.max(0, avgDb - noiseLevelDb);
+      const dynRange = peakDb - noiseLevelDb;
+      const speechPct = speechFrames / allFrames.length;
+
+      // Background noise pattern heuristics via FFT
+      const noisePatterns: string[] = [];
+      if (analyser) {
+        const fd = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(fd);
+        const sr = audioCtx!.sampleRate;
+        const binHz = sr / (analyser.fftSize);
+
+        // AC hum: energy at 50 or 60 Hz
+        const hum50  = fd[Math.round(50 / binHz)] ?? 0;
+        const hum60  = fd[Math.round(60 / binHz)] ?? 0;
+        if (hum50 > 60 || hum60 > 60) noisePatterns.push('Electrical hum (50/60 Hz)');
+
+        // Fan noise: elevated 100–400 Hz
+        let fanSum = 0;
+        for (let i = Math.round(100/binHz); i < Math.round(400/binHz); i++) fanSum += fd[i] ?? 0;
+        if (fanSum / (Math.round(300/binHz)) > 40) noisePatterns.push('Possible fan or motor noise');
+
+        // Air conditioning / white noise: broadband 500–4000 Hz
+        let broadSum = 0, broadN = 0;
+        for (let i = Math.round(500/binHz); i < Math.round(4000/binHz); i++) { broadSum += fd[i] ?? 0; broadN++; }
+        if (broadN > 0 && broadSum / broadN > 35) noisePatterns.push('Broadband noise (HVAC / hiss)');
+      }
+
+      return { noiseFloor: noiseLevelDb, avgDb, peakDb, snr, dynRange, clips: clipCount, speechPct, noisePatterns };
+    }
+
+    function calcScore(r: MQResult): number {
+      const nf  = Math.max(0, Math.min(30, (-r.noiseFloor - 40) / 35 * 30));
+      const snr = Math.max(0, Math.min(25, (r.snr - 15) / 30 * 25));
+      const cl  = Math.max(0, 20 - r.clips * 2);
+      const lvl = r.avgDb > -6 ? 5 : r.avgDb < -50 ? 2 : Math.max(0, (r.avgDb + 50) / 44 * 15);
+      const dr  = Math.max(0, Math.min(10, r.dynRange / 20 * 10));
+      return Math.round(Math.min(100, nf + snr + cl + lvl + dr));
+    }
+
+    function buildRecs(r: MQResult, score: number): string[] {
+      const recs: string[] = [];
+      if (r.clips > 5) recs.push('Reduce microphone gain — clipping is causing distortion. Lower input volume in System Settings.');
+      else if (r.avgDb < -50) recs.push('Signal is too quiet. Increase microphone input volume in System Settings or move closer to the mic.');
+      if (r.noiseFloor > -50) recs.push('High background noise detected. Try a quieter room, close windows, or turn off fans.');
+      if (r.snr < 25) recs.push('Low signal-to-noise ratio. A directional (cardioid) microphone or moving closer will help significantly.');
+      if (r.noisePatterns.includes('Electrical hum (50/60 Hz)')) recs.push('Electrical hum detected. Try a different USB port or a USB hub with power filtering.');
+      if (r.speechPct < 0.3) recs.push('Very little speech was detected. Speak louder or move closer to the microphone.');
+      if (score >= 85 && !recs.length) recs.push('Excellent recording conditions. Your microphone is suitable for streaming, podcasting, and professional calls.');
+      else if (score >= 70 && !recs.length) recs.push('Good microphone quality. Suitable for video calls, online meetings, and casual recordings.');
+      if (!recs.length) recs.push('Review the metrics above to identify the weakest areas for improvement.');
+      return recs;
+    }
+
+    function letterGrade(score: number): { letter: string; gc: string } {
+      if (score >= 90) return { letter: 'A+', gc: 'aplus' };
+      if (score >= 80) return { letter: 'A',  gc: 'a' };
+      if (score >= 70) return { letter: 'B',  gc: 'b' };
+      if (score >= 60) return { letter: 'C',  gc: 'c' };
+      if (score >= 40) return { letter: 'D',  gc: 'd' };
+      return { letter: 'F', gc: 'f' };
+    }
+
+    function nfBenchmark(nf: number): string {
+      if (nf < -70) return 'Better than studio condenser microphones';
+      if (nf < -65) return 'Better than Blue Yeti / professional USB mics';
+      if (nf < -58) return 'Better than most USB headsets';
+      if (nf < -50) return 'Similar to a budget USB headset';
+      return 'Similar to a built-in laptop microphone';
+    }
+
+    function snrBenchmark(snr: number): string {
+      if (snr > 45) return 'Studio-quality separation from noise';
+      if (snr > 35) return 'Suitable for podcasting and streaming';
+      if (snr > 20) return 'Adequate for video calls and meetings';
+      return 'Background noise may be audible to listeners';
+    }
+
+    function renderResults(r: MQResult) {
+      const score = calcScore(r);
+      const { letter, gc } = letterGrade(score);
+
+      const gradeDesc: Record<string, string> = {
+        aplus: 'Studio-quality microphone. Excellent for everything.',
+        a:     'Professional-grade quality for streaming, podcasting, and calls.',
+        b:     'Good quality. Suitable for all standard recording uses.',
+        c:     'Acceptable quality. Some noise or level issues present.',
+        d:     'Below average. Audio quality may distract listeners.',
+        f:     'Significant issues detected. See recommendations below.',
+      };
+
+      gradeRing.className = `grade-ring ${gc}`;
+      gradeLetter.textContent = letter;
+      gradeScore.textContent = String(score);
+      gradeSub.textContent = gradeDesc[gc] ?? '';
+
+      // Metric grades
+      const nfG  = r.noiseFloor < -65 ? 'excellent' : r.noiseFloor < -55 ? 'good' : r.noiseFloor < -45 ? 'fair' : 'poor';
+      const snrG = r.snr > 45 ? 'excellent' : r.snr > 35 ? 'good' : r.snr > 25 ? 'fair' : 'poor';
+      const clipG = r.clips === 0 ? 'excellent' : r.clips < 5 ? 'fair' : 'poor';
+      const lvlLabel = r.avgDb > -6 ? 'Too loud' : r.avgDb < -50 ? 'Too quiet' : r.avgDb < -30 ? 'Moderate' : 'Strong';
+      const lvlG = r.avgDb > -6 ? 'poor' : r.avgDb < -50 ? 'fair' : 'good';
+
+      mqMetrics.innerHTML = `
+        <div class="mq-metric-grid">
+          <div class="mq-metric ${nfG}">
+            <div class="mq-metric-head">
+              <span class="mq-metric-name">Noise Floor</span>
+              <span class="mq-metric-badge ${nfG}">${cap(nfG)}</span>
+            </div>
+            <span class="mq-metric-val">${r.noiseFloor.toFixed(1)} dB</span>
+            <span class="mq-metric-bench">${nfBenchmark(r.noiseFloor)}</span>
+          </div>
+          <div class="mq-metric ${snrG}">
+            <div class="mq-metric-head">
+              <span class="mq-metric-name">Signal-to-Noise</span>
+              <span class="mq-metric-badge ${snrG}">${cap(snrG)}</span>
+            </div>
+            <span class="mq-metric-val">${r.snr.toFixed(1)} dB</span>
+            <span class="mq-metric-bench">${snrBenchmark(r.snr)}</span>
+          </div>
+          <div class="mq-metric ${clipG}">
+            <div class="mq-metric-head">
+              <span class="mq-metric-name">Clipping</span>
+              <span class="mq-metric-badge ${clipG}">${r.clips === 0 ? 'None' : `${r.clips} events`}</span>
+            </div>
+            <span class="mq-metric-val">${r.clips === 0 ? 'Clean' : `${r.clips} clips`}</span>
+            <span class="mq-metric-bench">${r.clips === 0 ? 'No distortion detected' : 'Reduce microphone gain'}</span>
+          </div>
+          <div class="mq-metric ${lvlG}">
+            <div class="mq-metric-head">
+              <span class="mq-metric-name">Input Level</span>
+              <span class="mq-metric-badge ${lvlG}">${lvlLabel}</span>
+            </div>
+            <span class="mq-metric-val">${r.avgDb.toFixed(1)} dB</span>
+            <span class="mq-metric-bench">Ideal range: −18 to −6 dB</span>
+          </div>
+          <div class="mq-metric">
+            <div class="mq-metric-head"><span class="mq-metric-name">Dynamic Range</span></div>
+            <span class="mq-metric-val">${r.dynRange.toFixed(1)} dB</span>
+            <span class="mq-metric-bench">Quiet-to-loud variation</span>
+          </div>
+          <div class="mq-metric">
+            <div class="mq-metric-head"><span class="mq-metric-name">Speech Detected</span></div>
+            <span class="mq-metric-val">${(r.speechPct * 100).toFixed(0)}%</span>
+            <span class="mq-metric-bench">Of test duration had speech signal</span>
+          </div>
+        </div>
+        <div class="benchmark-row">
+          <span class="eyebrow">Noise floor vs. common devices</span>
+          <div class="benchmark-bars">
+            ${[
+              { label: 'Your mic',      val: r.noiseFloor, highlight: true },
+              { label: 'Laptop mic',    val: -45 },
+              { label: 'USB headset',   val: -55 },
+              { label: 'Blue Yeti',     val: -68 },
+              { label: 'Studio mic',    val: -76 },
+            ].map(b => {
+              const pct = Math.max(0, Math.min(100, (b.val + 80) / 50 * 100));
+              return `<div class="bench-item">
+                <span class="bench-label ${b.highlight ? 'highlight' : ''}">${b.label}</span>
+                <div class="bench-track">
+                  <div class="bench-fill ${b.highlight ? 'highlight' : ''}" style="width:${pct}%"></div>
+                </div>
+                <span class="bench-val ${b.highlight ? 'highlight' : ''}">${b.val} dB</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+
+      // Use-case compatibility
+      const uses = [
+        { label: 'Zoom / Google Meet',    ok: r.snr > 20 && r.clips < 5 && r.avgDb > -55 },
+        { label: 'Discord / Gaming',      ok: r.snr > 15 && r.clips < 10 },
+        { label: 'Podcast Recording',     ok: score >= 70 && r.clips === 0 },
+        { label: 'Streaming / YouTube',   ok: score >= 75 && r.noiseFloor < -55 },
+        { label: 'Professional Voiceover', ok: score >= 88 && r.noiseFloor < -65 && r.clips === 0 },
+      ];
+      useCasesEl.innerHTML = `
+        <span class="eyebrow use-cases-title">Can your microphone handle:</span>
+        <div class="use-case-list">
+          ${uses.map(u => `
+            <div class="use-case-item ${u.ok ? 'ok' : 'no'}">
+              <span class="use-case-icon">${u.ok ? '✓' : '✗'}</span>
+              <span>${u.label}</span>
+            </div>`).join('')}
+        </div>`;
+
+      // Noise patterns
+      if (r.noisePatterns.length > 0) {
+        noiseAnalysis.hidden = false;
+        noiseTags.innerHTML = r.noisePatterns.map(p => `<span class="noise-tag">${p}</span>`).join('');
+      }
+
+      // Recommendations
+      const recs = buildRecs(r, score);
+      mqRecs.innerHTML = `
+        <div class="recs-header">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="10" y1="8" x2="10" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="10" cy="6" r="0.75" fill="currentColor"/>
+          </svg>
+          <span class="eyebrow">Recommendations</span>
+        </div>
+        <ul class="mq-recs-list">${recs.map(rec => `<li>${rec}</li>`).join('')}</ul>`;
+
+      // Bind download
+      document.getElementById('btn-download-report')?.addEventListener('click', () => downloadReportCard(r, score, letter));
+    }
+
+    function cap(s: string) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    function downloadReportCard(r: MQResult, score: number, letter: string) {
+      const W = 520, H = 320;
+      const cv = document.createElement('canvas');
+      cv.width = W * 2; cv.height = H * 2;
+      const cx = cv.getContext('2d')!;
+      cx.scale(2, 2);
+
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const bg     = isDark ? '#0a0a0a' : '#ffffff';
+      const ink    = isDark ? '#ededed' : '#171717';
+      const muted  = isDark ? '#737373' : '#888888';
+      const hairline = isDark ? '#2a2a2a' : '#ebebeb';
+      const { gc } = letterGrade(score);
+      const accentMap: Record<string, string> = { aplus: '#00b894', a: '#00b894', b: '#0070f3', c: '#f5a623', d: '#f5a623', f: '#ee0000' };
+      const accent = accentMap[gc] ?? '#888';
+
+      // Background
+      cx.fillStyle = bg;
+      cx.fillRect(0, 0, W, H);
+
+      // Header strip
+      cx.fillStyle = accent;
+      cx.fillRect(0, 0, W, 6);
+
+      // Grade circle
+      cx.strokeStyle = accent;
+      cx.lineWidth = 3;
+      cx.beginPath(); cx.arc(68, 68, 44, 0, Math.PI * 2); cx.stroke();
+      cx.fillStyle = ink;
+      cx.font = 'bold 36px ui-monospace, monospace';
+      cx.textAlign = 'center'; cx.textBaseline = 'middle';
+      cx.fillText(letter, 68, 68);
+
+      // Title
+      cx.fillStyle = ink;
+      cx.font = 'bold 20px ui-sans-serif, system-ui, sans-serif';
+      cx.textAlign = 'left'; cx.textBaseline = 'alphabetic';
+      cx.fillText('Microphone Report Card', 132, 52);
+      cx.fillStyle = muted;
+      cx.font = '13px ui-sans-serif, system-ui, sans-serif';
+      cx.fillText(`Score: ${score}/100 · onlineaudiotest.com`, 132, 74);
+
+      // Divider
+      cx.strokeStyle = hairline;
+      cx.lineWidth = 1;
+      cx.beginPath(); cx.moveTo(24, 112); cx.lineTo(W - 24, 112); cx.stroke();
+
+      // Metrics (2 columns)
+      const metrics = [
+        ['Noise Floor', `${r.noiseFloor.toFixed(1)} dB`],
+        ['Signal-to-Noise', `${r.snr.toFixed(1)} dB`],
+        ['Clipping', r.clips === 0 ? 'None' : `${r.clips} events`],
+        ['Input Level', `${r.avgDb.toFixed(1)} dB`],
+        ['Dynamic Range', `${r.dynRange.toFixed(1)} dB`],
+        ['Speech Detected', `${(r.speechPct * 100).toFixed(0)}%`],
+      ];
+      metrics.forEach(([label, val], i) => {
+        const col = i % 2;
+        const row = Math.floor(i / 2);
+        const x = 24 + col * 238;
+        const y = 136 + row * 48;
+        cx.fillStyle = muted;
+        cx.font = '10px ui-monospace, monospace';
+        cx.textAlign = 'left';
+        cx.fillText(label.toUpperCase(), x, y);
+        cx.fillStyle = ink;
+        cx.font = 'bold 16px ui-monospace, monospace';
+        cx.fillText(val, x, y + 18);
+      });
+
+      // Footer
+      cx.fillStyle = hairline;
+      cx.fillRect(0, H - 36, W, 1);
+      cx.fillStyle = muted;
+      cx.font = '11px ui-sans-serif, system-ui, sans-serif';
+      cx.textAlign = 'center';
+      cx.fillText(`Generated by OnlineAudioTest.com · ${new Date().toLocaleDateString()}`, W / 2, H - 14);
+
+      const a = document.createElement('a');
+      a.download = `mic-report-${Date.now()}.png`;
+      a.href = cv.toDataURL('image/png');
+      a.click();
+    }
+
+    /* ── Test flow ── */
+    function finishTest() {
+      if (state !== 'testing') return;
+      state = 'done';
+      cancelAnimationFrame(animFrame);
+      if (countInterval) { clearInterval(countInterval); countInterval = null; }
+      stream?.getTracks().forEach(t => t.stop());
+
+      const result = analyze();
+      analysisPanel.hidden = true;
+      resultsPanel.hidden = false;
+      renderResults(result);
+
+      cdWrap.hidden = true;
+      setStatus('done', 'Test complete');
+      resultNote.textContent = 'Analysis complete. Scroll down for full report.';
+      resultNote.className = 'result-note success';
+      actionRow.innerHTML = `<button class="btn btn-secondary btn-lg" id="btn-retest" style="min-width:180px">Run Another Test</button>`;
+      document.getElementById('btn-retest')?.addEventListener('click', resetToIdle);
+    }
+
+    async function startTest() {
+      state = 'requesting';
+      setStatus('requesting', 'Requesting mic…');
+      (document.getElementById('btn-start') as HTMLButtonElement).disabled = true;
+
+      try {
+        const constraints = {
+          audio: deviceSelect.value ? { deviceId: { exact: deviceSelect.value } } : true,
+          video: false,
+        };
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch {
+        setStatus('idle', 'Permission denied');
+        resultNote.textContent = 'Microphone access denied. Allow it in browser settings and try again.';
+        resultNote.className = 'result-note error';
+        state = 'idle';
+        (document.getElementById('btn-start') as HTMLButtonElement).disabled = false;
+        return;
+      }
+
+      populateDevices();
+
+      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const src = audioCtx.createMediaStreamSource(stream);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.2;
+      src.connect(analyser);
+
+      allFrames = []; peakSample = 0; clipCount = 0; speechFrames = 0;
+      liveWave = new Float32Array(W); liveWavePos = 0;
+      startTime = Date.now();
+
+      state = 'testing';
+      setStatus('testing', 'Analyzing…');
+      permCard.hidden = true;
+      deviceSec.hidden = true;
+      analysisPanel.hidden = false;
+      cdWrap.hidden = false;
+      cdVal.textContent = String(TEST_DURATION);
+
+      // Reset indicators
+      [indSpeech, indNoise, indClip].forEach(el => {
+        el.querySelector('.ind-dot')!.classList.remove('done');
+      });
+
+      resultNote.textContent = 'Speak normally for 10 seconds — count aloud, read something, or have a conversation.';
+      resultNote.className = 'result-note success';
+
+      actionRow.innerHTML = `<button class="btn btn-secondary btn-sm" id="btn-cancel">Cancel</button>`;
+      document.getElementById('btn-cancel')?.addEventListener('click', resetToIdle);
+
+      drawFrame();
+
+      // Safety timeout in case rAF doesn't trigger finish
+      setTimeout(() => { if (state === 'testing') finishTest(); }, (TEST_DURATION + 0.5) * 1000);
+    }
+
+    function resetToIdle() {
+      cancelAnimationFrame(animFrame);
+      if (countInterval) { clearInterval(countInterval); countInterval = null; }
+      stream?.getTracks().forEach(t => t.stop());
+      audioCtx?.close();
+      stream = null; audioCtx = null; analyser = null;
+
+      state = 'idle';
+      setStatus('idle', 'Ready');
+      permCard.hidden = false;
+      analysisPanel.hidden = true;
+      resultsPanel.hidden = true;
+      cdWrap.hidden = true;
+      resultNote.textContent = 'All analysis happens locally. No audio is uploaded or stored.';
+      resultNote.className = 'result-note';
+      actionRow.innerHTML = `
+        <button class="btn btn-primary btn-lg" id="btn-start" style="min-width:200px">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="7" y="2" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Start Mic Quality Test
+        </button>`;
+      document.getElementById('btn-start')?.addEventListener('click', startTest);
+      populateDevices();
+    }
+
+    /* ── Init ── */
+    document.getElementById('btn-start')?.addEventListener('click', startTest);
+  })();
+</script>
+
+<style>
+  /* ── Countdown ── */
+  .countdown-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .countdown-val {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--link);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  /* ── Device selector ── */
+  .mq-device-section {
+    display: flex;
+    align-items: center;
+    gap: var(--s-sm);
+  }
+  .mq-device-select {
+    flex: 1;
+    max-width: 320px;
+    background: var(--canvas-soft);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-sm);
+    padding: 6px 10px;
+    font-size: 14px;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    cursor: pointer;
+    outline: none;
+  }
+  .mq-device-select:focus { border-color: var(--link); }
+
+  /* ── Analysis panel ── */
+  .analysis-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  #mq-canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--r-sm);
+    background: var(--canvas-soft-2);
+    box-shadow: var(--shadow-1);
+  }
+
+  /* ── MQ meters ── */
+  .mq-meters {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+  }
+  .mq-meter-wrap { display: flex; flex-direction: column; gap: 4px; }
+  .mq-meter-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .mq-meter-val {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+  }
+  .mq-meter-track {
+    height: 6px;
+    background: var(--canvas-soft-2);
+    border-radius: var(--r-full);
+    box-shadow: var(--shadow-1);
+    overflow: hidden;
+  }
+  .mq-meter-fill {
+    height: 100%;
+    border-radius: var(--r-full);
+    background: var(--grad-develop);
+    width: 0%;
+    transition: width .07s linear, background .1s;
+  }
+  .mq-progress-fill {
+    height: 100%;
+    border-radius: var(--r-full);
+    background: linear-gradient(to right, #00b894, var(--link));
+    width: 0%;
+    transition: width .25s linear;
+  }
+
+  /* ── Indicators ── */
+  .live-indicators {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--mute);
+  }
+  .ind-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--hairline-strong);
+    flex-shrink: 0;
+    transition: background .3s;
+  }
+  .ind-dot.done { background: #00b894; }
+
+  .analysis-hint {
+    text-align: center;
+    color: var(--mute);
+    padding: var(--s-xs) 0;
+  }
+
+  /* ── Grade display ── */
+  .grade-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--s-xl);
+    padding: var(--s-sm) 0;
+  }
+  .grade-ring {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    border: 3px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .grade-ring.aplus { color: #00b894; }
+  .grade-ring.a     { color: #00b894; }
+  .grade-ring.b     { color: var(--link); }
+  .grade-ring.c     { color: #f5a623; }
+  .grade-ring.d     { color: #f5a623; }
+  .grade-ring.f     { color: var(--error); }
+  .grade-letter {
+    font-size: 38px;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: currentColor;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .grade-meta { display: flex; flex-direction: column; gap: 4px; }
+  .grade-score-row { display: flex; align-items: baseline; gap: 3px; }
+  .grade-score {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--ink);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .grade-score-max { font-size: 14px; font-family: var(--font-mono); color: var(--mute); }
+  .grade-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--mute);
+  }
+  .grade-sub { font-size: 13px; color: var(--body-text); line-height: 1.5; max-width: 280px; }
+
+  /* ── Benchmark bars ── */
+  .benchmark-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+    margin-top: var(--s-sm);
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    padding: var(--s-sm) var(--s-md);
+    box-shadow: var(--shadow-1);
+  }
+  .benchmark-bars { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .bench-item {
+    display: grid;
+    grid-template-columns: 110px 1fr 52px;
+    align-items: center;
+    gap: 8px;
+  }
+  .bench-label {
+    font-size: 12px;
+    color: var(--mute);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .bench-label.highlight { color: var(--ink); font-weight: 600; }
+  .bench-track {
+    height: 6px;
+    background: var(--canvas-soft-2);
+    border-radius: var(--r-full);
+    overflow: hidden;
+    box-shadow: var(--shadow-1);
+  }
+  .bench-fill {
+    height: 100%;
+    border-radius: var(--r-full);
+    background: var(--hairline-strong);
+  }
+  .bench-fill.highlight { background: var(--link); }
+  .bench-val {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--mute);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .bench-val.highlight { color: var(--ink); font-weight: 600; }
+
+  /* ── Use-case panel ── */
+  .use-cases {
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    padding: var(--s-md);
+    box-shadow: var(--shadow-1);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  .use-cases-title { display: block; margin-bottom: 2px; }
+  .use-case-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .use-case-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--body-text);
+    padding: 6px 10px;
+    border-radius: var(--r-sm);
+    background: var(--canvas);
+    box-shadow: var(--shadow-1);
+  }
+  .use-case-icon {
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .use-case-item.ok .use-case-icon { color: #00b894; }
+  .use-case-item.no .use-case-icon { color: var(--error); }
+  .use-case-item.no { opacity: 0.65; }
+
+  /* ── Download button ── */
+  .download-report-btn {
+    align-self: flex-start;
+  }
+
+  /* ── Metric grid ── */
+  .mq-metric-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-xs);
+  }
+  .mq-metric {
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    padding: var(--s-sm) var(--s-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--shadow-1);
+  }
+  .mq-metric-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+  }
+  .mq-metric-name {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--mute);
+  }
+  .mq-metric-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: var(--r-full);
+    background: var(--canvas-soft-2);
+    color: var(--mute);
+  }
+  .mq-metric-badge.excellent { background: rgba(0,184,148,.12); color: #00b894; }
+  .mq-metric-badge.good      { background: rgba(0,112,243,.1);  color: var(--link); }
+  .mq-metric-badge.fair      { background: rgba(245,166,35,.12); color: #f5a623; }
+  .mq-metric-badge.poor      { background: rgba(238,0,0,.1);    color: var(--error); }
+  .mq-metric-val {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .mq-metric-bench {
+    font-size: 11px;
+    color: var(--mute);
+    line-height: 1.4;
+  }
+
+  /* ── Noise analysis ── */
+  .noise-analysis {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+    padding: var(--s-sm) var(--s-md);
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    border-radius: var(--r-md);
+  }
+  .noise-label { color: var(--warning-fg); }
+  .noise-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .noise-tag {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    background: var(--canvas);
+    border: 1px solid var(--warning-border);
+    border-radius: var(--r-full);
+    padding: 2px 10px;
+    color: var(--warning-fg);
+  }
+
+  /* ── Recommendations ── */
+  .mq-recs {
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    padding: var(--s-md);
+    box-shadow: var(--shadow-1);
+  }
+  .recs-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: var(--s-sm);
+    color: var(--ink);
+  }
+  .mq-recs-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mq-recs-list li {
+    font-size: 14px;
+    color: var(--body-text);
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.55;
+  }
+  .mq-recs-list li::before { content: '→'; position: absolute; left: 0; color: var(--link); }
+
+  /* ── SEO section ── */
+  .mq-seo-section {
+    max-width: 680px;
+    margin-inline: auto;
+    padding: 0 var(--container-pad);
+    margin-bottom: var(--s-3xl);
+  }
+  .mq-seo-inner { display: flex; flex-direction: column; gap: var(--s-lg); }
+  .mq-seo-inner h2 {
+    font-size: 22px; font-weight: 600;
+    letter-spacing: -0.7px; color: var(--ink);
+    margin-top: var(--s-sm);
+  }
+  .mq-seo-inner p { font-size: 14px; color: var(--body-text); line-height: 1.7; }
+  .mq-metrics-table-wrap { overflow-x: auto; }
+  .mq-metrics-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  .mq-metrics-table th {
+    font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: .04em;
+    color: var(--mute); font-weight: 400; text-align: left;
+    padding: 6px 12px 6px 0; border-bottom: 1px solid var(--hairline);
+  }
+  .mq-metrics-table td {
+    padding: 8px 12px 8px 0; border-bottom: 1px solid var(--hairline);
+    color: var(--body-text); line-height: 1.5; vertical-align: top;
+  }
+  .mq-metrics-table tr:last-child td { border-bottom: none; }
+  .mq-metrics-table td:first-child { color: var(--ink); font-weight: 500; white-space: nowrap; }
+  .mq-seo-list {
+    list-style: none; padding: 0;
+    display: flex; flex-direction: column; gap: var(--s-sm);
+  }
+  .mq-seo-list li {
+    font-size: 14px; color: var(--body-text); line-height: 1.6;
+    padding-left: var(--s-lg); position: relative;
+  }
+  .mq-seo-list li::before { content: '–'; position: absolute; left: 0; color: var(--mute); }
+  .mq-seo-list strong { color: var(--ink); font-weight: 500; }
+
+  /* ── Results panel ── */
+  .results-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-md);
+  }
+
+  /* ── Responsive ── */
+  /* ── Results panel layout ── */
+  .results-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-md);
+  }
+
+  @media (max-width: 560px) {
+    .mq-metric-grid    { grid-template-columns: repeat(2, 1fr); }
+    .use-case-list     { grid-template-columns: 1fr; }
+    .grade-ring        { width: 76px; height: 76px; }
+    .grade-letter      { font-size: 30px; }
+    .grade-score       { font-size: 22px; }
+    .grade-wrap        { gap: var(--s-md); }
+    .bench-item        { grid-template-columns: 90px 1fr 48px; }
+  }
+  @media (max-width: 400px) {
+    .mq-metric-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>

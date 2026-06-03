@@ -25,10 +25,13 @@ const schema = {
       "@type": "ItemList",
       "name": "Free Online Audio Test Tools",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "url": "https://onlineaudiotest.com/mic-test/",     "name": "Mic Check Online — Free Microphone & Earphone Mic Test" },
-        { "@type": "ListItem", "position": 2, "url": "https://onlineaudiotest.com/speaker-test/", "name": "Left Right Audio Test — Stereo & Headphone Check" },
-        { "@type": "ListItem", "position": 3, "url": "https://onlineaudiotest.com/latency-test/", "name": "Audio Latency Test — Bluetooth & AirPods Delay" },
-        { "@type": "ListItem", "position": 4, "url": "https://onlineaudiotest.com/hearing-test/", "name": "Online Hearing Test — Check Your Hearing Range & Frequency Limit" }
+        { "@type": "ListItem", "position": 1, "url": "https://onlineaudiotest.com/mic-test/",                    "name": "Mic Check Online — Free Microphone & Earphone Mic Test" },
+        { "@type": "ListItem", "position": 2, "url": "https://onlineaudiotest.com/speaker-test/",               "name": "Left Right Audio Test — Stereo & Headphone Check" },
+        { "@type": "ListItem", "position": 3, "url": "https://onlineaudiotest.com/latency-test/",               "name": "Audio Latency Test — Bluetooth & AirPods Delay" },
+        { "@type": "ListItem", "position": 4, "url": "https://onlineaudiotest.com/hearing-test/",               "name": "Online Hearing Test — Check Your Hearing Range & Frequency Limit" },
+        { "@type": "ListItem", "position": 5, "url": "https://onlineaudiotest.com/audio-spectrum-analyzer/",    "name": "Audio Spectrum Analyzer — Real-Time FFT Microphone Frequency Visualizer" },
+        { "@type": "ListItem", "position": 6, "url": "https://onlineaudiotest.com/voice-recorder/",             "name": "Online Voice Recorder — Free Browser Audio Recorder with WAV Download" },
+        { "@type": "ListItem", "position": 7, "url": "https://onlineaudiotest.com/mic-quality-test/",           "name": "Microphone Quality Test — Noise Floor, SNR, Clipping & Quality Score" }
       ]
     },
   ]
@@ -66,6 +69,30 @@ const tools = [
     desc: 'Online hearing test that estimates the highest frequency you can hear and your hearing age. Pure tone sweep using the Web Audio API — no download required.',
     gradClass: 'develop',
     cta: 'Test my hearing →',
+  },
+  {
+    href: '/audio-spectrum-analyzer/',
+    eyebrow: 'Real-Time FFT Visualizer',
+    title: 'Spectrum Analyzer',
+    desc: 'See every frequency your microphone picks up in real time. FFT spectrum visualization with peak hold, dominant frequency display, and musical note detection.',
+    gradClass: 'preview',
+    cta: 'Open spectrum analyzer →',
+  },
+  {
+    href: '/voice-recorder/',
+    eyebrow: 'Browser Audio Recorder',
+    title: 'Voice Recorder',
+    desc: 'Record, pause, trim, normalize, and download audio in your browser. Live waveform, level meter, quality analytics, and WAV download — no uploads, no account.',
+    gradClass: 'ship',
+    cta: 'Start recording →',
+  },
+  {
+    href: '/mic-quality-test/',
+    eyebrow: 'Mic Diagnostic Report',
+    title: 'Microphone Quality Test',
+    desc: 'Speak for 10 seconds and get a full diagnostic: noise floor, signal-to-noise ratio, clipping count, dynamic range, and a quality score from 0–100 with personalized recommendations.',
+    gradClass: 'develop',
+    cta: 'Test mic quality →',
   },
 ];
 ---
@@ -119,7 +146,7 @@ const tools = [
     <div class="container">
       <div class="tools-header">
         <span class="eyebrow">Audio Tools</span>
-        <h2 class="display-md tools-title">Three audio tests. Every device.</h2>
+        <h2 class="display-md tools-title">Five audio tools. Every device.</h2>
       </div>
       <div class="tools-grid">
         {tools.map(tool => (
