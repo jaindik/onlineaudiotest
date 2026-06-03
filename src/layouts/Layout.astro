@@ -116,6 +116,12 @@ const ogImage = `${site}/ogImage.webp`;
             </svg>
             <span class="nav-link-text">Hearing Test</span>
           </a>
+          <a href="/frequency-generator/" class:list={['nav-link', { 'nav-active': currentPath === '/frequency-generator' }]}>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M1 10 Q4 3 7 10 Q10 17 13 10 Q16 3 19 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="nav-link-text">Frequency Generator</span>
+          </a>
         </nav>
         <ThemeToggle />
       </div>
@@ -184,6 +190,18 @@ const ogImage = `${site}/ogImage.webp`;
             </div>
           </a>
 
+          <a href="/frequency-generator/" class:list={['sidebar-item', { active: currentPath === '/frequency-generator' }]}>
+            <div class="sidebar-icon">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M1 10 Q4 3 7 10 Q10 17 13 10 Q16 3 19 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="sidebar-text">
+              <span class="sidebar-item-title">Frequency Generator</span>
+              <span class="sidebar-item-desc">Tone generator, 20 Hz–20 kHz</span>
+            </div>
+          </a>
+
         </div>
       </aside>
     </div>
@@ -212,6 +230,7 @@ const ogImage = `${site}/ogImage.webp`;
           <a href="/speaker-test/" class="footer-link">Headphone Test</a>
           <a href="/latency-test/" class="footer-link">Audio Latency Test</a>
           <a href="/hearing-test/" class="footer-link">Hearing Test</a>
+          <a href="/frequency-generator/" class="footer-link">Frequency Generator</a>
         </div>
         <div class="footer-col">
           <span class="footer-col-label">Company</span>

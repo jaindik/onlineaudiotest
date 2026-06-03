@@ -1,0 +1,1458 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Frequency Generator Online",
+      "url": "https://onlineaudiotest.com/frequency-generator/",
+      "description": "Generate any sound frequency from 20Hz to 20kHz directly in your browser. Free online frequency generator with sine, square, sawtooth and triangle waves. Download as WAV.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires Web Audio API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Frequency Generator", "item": "https://onlineaudiotest.com/frequency-generator/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a frequency generator?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A frequency generator produces audio tones at a precise frequency in Hertz (Hz). This online version uses the Web Audio API to synthesize tones directly in your browser — no download required. You can generate any frequency from 20 Hz to 20,000 Hz with four wave shapes and download the result as a WAV file." }
+        },
+        {
+          "@type": "Question",
+          "name": "What frequencies can humans hear?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The human audible range is approximately 20 Hz to 20,000 Hz. The upper limit declines with age — most adults over 40 cannot hear above 15–16 kHz. Low frequencies (20–200 Hz) are felt as bass. Mid frequencies (200 Hz–5 kHz) carry speech. High frequencies (5–20 kHz) add air and detail." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is 440 Hz used for?",
+          "acceptedAnswer": { "@type": "Answer", "text": "440 Hz is concert pitch A4 — the international standard tuning reference (ISO 16) used worldwide to tune instruments. It is the A above middle C. Musicians and audio engineers use 440 Hz as the universal tuning anchor." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I generate 20000 Hz online?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes — this generator supports 20 Hz to 20,000 Hz. Whether you hear 20,000 Hz depends on your age and hardware. Most adults over 30 cannot hear above 18,000 Hz, and many consumer speakers cannot accurately reproduce frequencies above 14–16 kHz." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why can't I hear high frequencies?",
+          "acceptedAnswer": { "@type": "Answer", "text": "High-frequency hearing declines with age due to loss of cochlear hair cells (presbycusis). This begins in the mid-20s and accelerates with noise exposure. Adults over 40 often cannot hear above 15,000 Hz. Hardware is also a limiting factor — laptop speakers typically cannot reproduce above 14–15 kHz." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this frequency generator free?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes — completely free, no account, no download, no subscription. Runs entirely in your browser. You can also export tones as WAV files for offline use, calibration, or import into video and audio editors." }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="Frequency Generator Online – Free Tone Generator (20Hz–20kHz)"
+  description="Generate any sound frequency from 20Hz to 20kHz in your browser. Free online frequency generator with sine, square, sawtooth and triangle waves. Download as WAV."
+  keywords="frequency generator, frequency generator online, tone generator, sound frequency generator, audio frequency generator, sine wave generator, square wave generator, sawtooth wave generator, triangle wave generator, 440hz tone generator, download test tone, calibration tone, audio test tone, frequency sweep generator, 1000hz tone wav"
+  canonical="https://onlineaudiotest.com/frequency-generator/"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>Frequency Generator</h1>
+    <p>Generate any tone from 20 Hz to 20,000 Hz. Choose wave type, stereo routing, and download as WAV — all in your browser.</p>
+  </section>
+
+  <!-- TOOL CARD -->
+  <div class="tool-card-wrap">
+    <div class="tool-card" id="fg-card">
+
+      <!-- Status bar -->
+      <div class="status-bar">
+        <div class="status-pill">
+          <span class="dot" id="fg-dot"></span>
+          <span id="fg-status">Ready</span>
+        </div>
+        <span class="eyebrow caption-mono" id="fg-label"></span>
+      </div>
+
+      <!-- Mode tabs -->
+      <div class="mode-tabs" role="tablist" aria-label="Generator mode">
+        <button class="mode-tab active" data-mode="tone" role="tab" aria-selected="true">Tone</button>
+        <button class="mode-tab" data-mode="sweep" role="tab" aria-selected="false">Sweep</button>
+      </div>
+
+      <!-- Frequency display (shared) -->
+      <div class="fg-freq-display" aria-live="polite" aria-label="Current frequency">
+        <span class="fg-freq-num" id="fg-num">440</span>
+        <span class="fg-freq-unit" id="fg-unit">Hz</span>
+      </div>
+
+      <!-- Visualizer canvas (shared) -->
+      <canvas id="fg-canvas" class="fg-canvas" role="img" aria-label="Waveform visualizer"></canvas>
+
+      <!-- ── TONE CONTROLS ── -->
+      <div id="tone-controls">
+
+        <!-- Frequency slider -->
+        <div class="ctrl-group">
+          <div class="ctrl-row">
+            <label class="ctrl-label" for="freq-slider">Frequency</label>
+            <span class="ctrl-value" id="freq-display-inline">440 Hz</span>
+          </div>
+          <input type="range" id="freq-slider" class="fg-range" min="0" max="1000" value="447" step="1" aria-label="Frequency (logarithmic)">
+          <div class="range-bounds"><span>20 Hz</span><span>20 kHz</span></div>
+        </div>
+
+        <!-- Exact Hz input -->
+        <div class="freq-input-row">
+          <input type="number" id="freq-input" class="fg-number-input" min="20" max="20000" value="440" step="1" aria-label="Frequency in Hz">
+          <span class="freq-input-unit">Hz</span>
+        </div>
+
+      </div>
+
+      <!-- ── SWEEP CONTROLS ── -->
+      <div id="sweep-controls" hidden>
+
+        <div class="sweep-grid">
+          <div class="ctrl-group">
+            <div class="ctrl-row">
+              <label class="ctrl-label" for="sweep-start-slider">Start</label>
+              <span class="ctrl-value" id="sweep-start-display">20 Hz</span>
+            </div>
+            <input type="range" id="sweep-start-slider" class="fg-range" min="0" max="1000" value="0" step="1" aria-label="Sweep start frequency">
+            <div class="freq-input-row" style="margin-top:var(--s-xs)">
+              <input type="number" id="sweep-start-input" class="fg-number-input" min="20" max="20000" value="20" step="1">
+              <span class="freq-input-unit">Hz</span>
+            </div>
+          </div>
+
+          <div class="ctrl-group">
+            <div class="ctrl-row">
+              <label class="ctrl-label" for="sweep-end-slider">End</label>
+              <span class="ctrl-value" id="sweep-end-display">20 kHz</span>
+            </div>
+            <input type="range" id="sweep-end-slider" class="fg-range" min="0" max="1000" value="1000" step="1" aria-label="Sweep end frequency">
+            <div class="freq-input-row" style="margin-top:var(--s-xs)">
+              <input type="number" id="sweep-end-input" class="fg-number-input" min="20" max="20000" value="20000" step="1">
+              <span class="freq-input-unit">Hz</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="ctrl-row">
+            <label class="ctrl-label" for="sweep-dur-input">Sweep duration</label>
+            <span class="ctrl-value" id="sweep-dur-display">10 s</span>
+          </div>
+          <input type="range" id="sweep-dur-slider" class="fg-range" min="1" max="60" value="10" step="1" aria-label="Sweep duration in seconds">
+          <div class="range-bounds"><span>1 s</span><span>60 s</span></div>
+        </div>
+
+        <!-- Sweep progress (hidden until playing) -->
+        <div id="sweep-progress-wrap" hidden>
+          <div class="sweep-track" role="progressbar" aria-label="Sweep progress">
+            <div class="sweep-fill" id="sweep-fill"></div>
+          </div>
+          <div class="sweep-progress-labels">
+            <span id="sweep-prog-start">20 Hz</span>
+            <span id="sweep-prog-end">20 kHz</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── SHARED CONTROLS ── -->
+
+      <!-- Wave type -->
+      <div class="ctrl-group">
+        <span class="ctrl-label" id="wave-label">Wave Type</span>
+        <div class="wave-tabs" role="group" aria-labelledby="wave-label">
+          <button class="wave-tab active" data-wave="sine" aria-pressed="true">Sine</button>
+          <button class="wave-tab" data-wave="square" aria-pressed="false">Square</button>
+          <button class="wave-tab" data-wave="sawtooth" aria-pressed="false">Sawtooth</button>
+          <button class="wave-tab" data-wave="triangle" aria-pressed="false">Triangle</button>
+        </div>
+      </div>
+
+      <!-- Stereo -->
+      <div class="ctrl-group">
+        <span class="ctrl-label" id="stereo-label">Channel</span>
+        <div class="stereo-tabs" role="group" aria-labelledby="stereo-label">
+          <button class="stereo-tab" data-ch="left" aria-pressed="false">L</button>
+          <button class="stereo-tab active" data-ch="both" aria-pressed="true">Both</button>
+          <button class="stereo-tab" data-ch="right" aria-pressed="false">R</button>
+        </div>
+      </div>
+
+      <!-- Volume -->
+      <div class="ctrl-group">
+        <div class="ctrl-row">
+          <label class="ctrl-label" for="vol-slider">Volume</label>
+          <span class="ctrl-value" id="vol-display">70%</span>
+        </div>
+        <div class="vol-row">
+          <input type="range" id="vol-slider" class="fg-range" min="0" max="100" value="70" step="1" aria-label="Volume">
+          <button class="mute-btn" id="mute-btn" aria-label="Mute" aria-pressed="false">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true" id="mute-icon">
+              <path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M14 7a4 4 0 010 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M16.5 4.5a8 8 0 010 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Fade in / out -->
+      <div class="fade-row">
+        <div class="ctrl-group fade-half">
+          <div class="ctrl-row">
+            <label class="ctrl-label" for="fade-in-slider">Fade In</label>
+            <span class="ctrl-value" id="fade-in-display">10 ms</span>
+          </div>
+          <input type="range" id="fade-in-slider" class="fg-range" min="0" max="1000" value="10" step="10" aria-label="Fade in duration in milliseconds">
+        </div>
+        <div class="ctrl-group fade-half">
+          <div class="ctrl-row">
+            <label class="ctrl-label" for="fade-out-slider">Fade Out</label>
+            <span class="ctrl-value" id="fade-out-display">10 ms</span>
+          </div>
+          <input type="range" id="fade-out-slider" class="fg-range" min="0" max="1000" value="10" step="10" aria-label="Fade out duration in milliseconds">
+        </div>
+      </div>
+
+      <!-- Play / Stop -->
+      <div class="action-row">
+        <button class="btn btn-primary btn-lg fg-play-btn" id="fg-play-btn" aria-pressed="false">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true" id="play-icon">
+            <polygon points="2,1 12,6.5 2,12" fill="currentColor"/>
+          </svg>
+          <span id="play-label">Generate Tone</span>
+        </button>
+      </div>
+
+      <!-- Presets (tone mode only) -->
+      <div id="preset-section" class="presets-section">
+
+        <div class="presets-group">
+          <span class="presets-label">Bass (20–100 Hz)</span>
+          <div class="presets-chips">
+            <button class="preset-chip" data-freq="20">20 Hz</button>
+            <button class="preset-chip" data-freq="40">40 Hz</button>
+            <button class="preset-chip" data-freq="60">60 Hz</button>
+            <button class="preset-chip" data-freq="80">80 Hz</button>
+            <button class="preset-chip" data-freq="100">100 Hz</button>
+          </div>
+        </div>
+
+        <div class="presets-group">
+          <span class="presets-label">Mid (250 Hz–2 kHz)</span>
+          <div class="presets-chips">
+            <button class="preset-chip" data-freq="250">250 Hz</button>
+            <button class="preset-chip active" data-freq="440">440 Hz</button>
+            <button class="preset-chip" data-freq="500">500 Hz</button>
+            <button class="preset-chip" data-freq="1000">1 kHz</button>
+            <button class="preset-chip" data-freq="2000">2 kHz</button>
+          </div>
+        </div>
+
+        <div class="presets-group">
+          <span class="presets-label">High (5–20 kHz)</span>
+          <div class="presets-chips">
+            <button class="preset-chip" data-freq="5000">5 kHz</button>
+            <button class="preset-chip" data-freq="10000">10 kHz</button>
+            <button class="preset-chip" data-freq="12000">12 kHz</button>
+            <button class="preset-chip" data-freq="15000">15 kHz</button>
+            <button class="preset-chip" data-freq="17000">17 kHz</button>
+            <button class="preset-chip" data-freq="20000">20 kHz</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Export -->
+      <div class="export-section">
+        <div class="export-header">
+          <span class="ctrl-label">Download WAV</span>
+          <span class="export-hint">Rendered offline — no latency</span>
+        </div>
+        <div class="ctrl-row" style="margin-bottom:var(--s-xs)">
+          <span class="ctrl-label">Duration</span>
+        </div>
+        <div class="duration-chips">
+          <button class="dur-chip" data-dur="1">1 s</button>
+          <button class="dur-chip active" data-dur="5">5 s</button>
+          <button class="dur-chip" data-dur="10">10 s</button>
+          <button class="dur-chip" data-dur="30">30 s</button>
+          <button class="dur-chip" data-dur="60">60 s</button>
+        </div>
+        <button class="btn btn-secondary download-btn" id="download-btn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span id="download-label">Download WAV</span>
+        </button>
+      </div>
+
+      <!-- Disclaimer -->
+      <p class="fg-disclaimer">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><line x1="8" y1="5" x2="8" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.75" fill="currentColor"/></svg>
+        Use headphones for best results. Laptop speakers typically cannot reproduce below 80 Hz or above 14 kHz accurately.
+      </p>
+
+    </div>
+  </div>
+
+  <!-- EDUCATIONAL CONTENT -->
+  <div class="edu-section">
+
+    <h2>What Is a Frequency Generator?</h2>
+    <p>A frequency generator produces a continuous audio tone at a specific frequency. Frequency — measured in Hertz (Hz) — describes how many times per second a sound wave completes a full cycle. A 440 Hz tone completes 440 cycles per second; a 20 Hz tone completes just 20. The human ear perceives frequency as pitch: low frequencies are bass, high frequencies are treble.</p>
+    <p>This generator uses the <strong>Web Audio API</strong> to synthesize tones entirely in your browser. No files are downloaded from a server, no audio is transmitted anywhere. The oscillator runs locally, which means there is zero latency between changing a setting and hearing the result. The <strong>Download WAV</strong> feature renders audio offline using a separate high-speed rendering pass — the exported file is identical to what you hear.</p>
+
+    <h2>Human Hearing Range</h2>
+    <p>The standard human audible range is <strong>20 Hz to 20,000 Hz</strong>. In practice, the upper limit is highly age-dependent:</p>
+    <table class="freq-table">
+      <thead><tr><th>Age</th><th>Typical upper limit</th></tr></thead>
+      <tbody>
+        <tr><td>Under 18</td><td>Up to 20,000 Hz</td></tr>
+        <tr><td>18–25</td><td>17,000–20,000 Hz</td></tr>
+        <tr><td>26–35</td><td>16,000–18,000 Hz</td></tr>
+        <tr><td>36–50</td><td>14,000–17,000 Hz</td></tr>
+        <tr><td>51–60</td><td>12,000–15,000 Hz</td></tr>
+        <tr><td>60+</td><td>10,000–13,000 Hz</td></tr>
+      </tbody>
+    </table>
+    <p>High-frequency hearing declines because cochlear hair cells at the base of the cochlea — which respond to high frequencies — experience the most mechanical stress and wear out first. This process (presbycusis) begins in the mid-20s and accelerates with noise exposure. Hair cells do not regenerate once lost. Use the <a href="/hearing-test/">hearing test</a> to find your personal upper frequency limit.</p>
+
+    <h2>Wave Types Explained</h2>
+    <p><strong>Sine wave</strong> — A pure tone containing only the fundamental frequency with no harmonics. Smooth, clean, and used for precise acoustic measurements. Sounds like a tuning fork or flute.</p>
+    <p><strong>Square wave</strong> — Jumps abruptly between extremes, containing the fundamental plus all odd harmonics (decaying at 1/n). Sounds buzzy and hollow — similar to a clarinet or vintage synthesizer. Useful for testing amplifier transient response.</p>
+    <p><strong>Sawtooth wave</strong> — Contains all harmonics (odd and even, decaying at 1/n). The brightest, most harmonically rich waveform. The starting point for subtractive synthesis in analog synthesizers.</p>
+    <p><strong>Triangle wave</strong> — Contains only odd harmonics, but they decay faster than a square wave (at 1/n²). Softer and flute-like — more character than a sine, less buzz than a square.</p>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <p class="faq-q">What is a frequency generator?</p>
+      <p class="faq-a">A frequency generator produces a continuous audio tone at a specific frequency. This online version uses the Web Audio API to create tones from 20 Hz to 20,000 Hz in your browser. Choose the frequency, wave shape, stereo routing, and volume — then play or download as WAV. No download or account required.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What frequencies can humans hear?</p>
+      <p class="faq-a">The standard human hearing range is 20 Hz to 20,000 Hz. The upper limit declines with age — most adults over 40 cannot hear above 15,000 Hz. Use the <a href="/hearing-test/">hearing test</a> on this site to estimate your personal limit.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">What is 440 Hz used for?</p>
+      <p class="faq-a">440 Hz is concert pitch A4 — the international standard tuning reference (ISO 16) used to tune instruments worldwide. It is the A above middle C. Audio engineers use it as a quick calibration reference, and musicians use it to verify tuning before sessions.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">Can I generate 20,000 Hz online?</p>
+      <p class="faq-a">Yes — the generator supports 20 Hz to 20,000 Hz. Whether you hear it depends on age and hardware. Most adults over 30 cannot perceive 20,000 Hz, and many consumer speakers cannot accurately reproduce frequencies above 14–16 kHz regardless of the source signal.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">Why can't I hear high frequencies?</p>
+      <p class="faq-a">High-frequency hearing declines naturally with age due to the loss of cochlear hair cells (presbycusis). Hair cells do not regenerate once damaged. Adults over 40 commonly cannot hear above 15,000 Hz. Hardware also limits reproduction — cheap laptop speakers and earbuds often cannot produce frequencies above 14–15 kHz regardless of your hearing.</p>
+    </div>
+
+    <div class="faq-item">
+      <p class="faq-q">Is this frequency generator free?</p>
+      <p class="faq-a">Yes — completely free, no account, no download, no subscription. Runs entirely in your browser. WAV export is also free — tones are rendered offline locally and never sent to any server.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  (() => {
+    // ════════════════════════════════════
+    //  DOM REFS
+    // ════════════════════════════════════
+    const fgDot              = document.getElementById('fg-dot')!;
+    const fgStatus           = document.getElementById('fg-status')!;
+    const fgLabel            = document.getElementById('fg-label')!;
+    const fgNum              = document.getElementById('fg-num')!;
+    const fgUnit             = document.getElementById('fg-unit')!;
+    const freqDisplayInline  = document.getElementById('freq-display-inline')!;
+    const vizCanvas          = document.getElementById('fg-canvas') as HTMLCanvasElement;
+
+    // Tone controls
+    const toneControls       = document.getElementById('tone-controls')!;
+    const freqSlider         = document.getElementById('freq-slider') as HTMLInputElement;
+    const freqInput          = document.getElementById('freq-input') as HTMLInputElement;
+    const presetSection      = document.getElementById('preset-section')!;
+    const presetChips        = document.querySelectorAll<HTMLButtonElement>('.preset-chip');
+
+    // Sweep controls
+    const sweepControls      = document.getElementById('sweep-controls')!;
+    const sweepStartSlider   = document.getElementById('sweep-start-slider') as HTMLInputElement;
+    const sweepStartInput    = document.getElementById('sweep-start-input') as HTMLInputElement;
+    const sweepStartDisplay  = document.getElementById('sweep-start-display')!;
+    const sweepEndSlider     = document.getElementById('sweep-end-slider') as HTMLInputElement;
+    const sweepEndInput      = document.getElementById('sweep-end-input') as HTMLInputElement;
+    const sweepEndDisplay    = document.getElementById('sweep-end-display')!;
+    const sweepDurSlider     = document.getElementById('sweep-dur-slider') as HTMLInputElement;
+    const sweepDurDisplay    = document.getElementById('sweep-dur-display')!;
+    const sweepProgressWrap  = document.getElementById('sweep-progress-wrap')!;
+    const sweepFill          = document.getElementById('sweep-fill')!;
+    const sweepProgStart     = document.getElementById('sweep-prog-start')!;
+    const sweepProgEnd       = document.getElementById('sweep-prog-end')!;
+
+    // Shared controls
+    const waveTabs           = document.querySelectorAll<HTMLButtonElement>('.wave-tab');
+    const stereoTabs         = document.querySelectorAll<HTMLButtonElement>('.stereo-tab');
+    const volSlider          = document.getElementById('vol-slider') as HTMLInputElement;
+    const volDisplay         = document.getElementById('vol-display')!;
+    const muteBtn            = document.getElementById('mute-btn') as HTMLButtonElement;
+    const fadeInSlider       = document.getElementById('fade-in-slider') as HTMLInputElement;
+    const fadeInDisplay      = document.getElementById('fade-in-display')!;
+    const fadeOutSlider      = document.getElementById('fade-out-slider') as HTMLInputElement;
+    const fadeOutDisplay     = document.getElementById('fade-out-display')!;
+    const playBtn            = document.getElementById('fg-play-btn') as HTMLButtonElement;
+    const playLabel          = document.getElementById('play-label')!;
+    const playIcon           = document.getElementById('play-icon') as SVGSVGElement;
+    const modeTabs           = document.querySelectorAll<HTMLButtonElement>('.mode-tab');
+
+    // Export
+    const durChips           = document.querySelectorAll<HTMLButtonElement>('.dur-chip');
+    const downloadBtn        = document.getElementById('download-btn') as HTMLButtonElement;
+    const downloadLabel      = document.getElementById('download-label')!;
+
+    // ════════════════════════════════════
+    //  STATE
+    // ════════════════════════════════════
+    type ChannelMode = 'left' | 'both' | 'right';
+    type AppMode     = 'tone' | 'sweep';
+
+    let audioCtx: AudioContext | null = null;
+    let osc: OscillatorNode | null = null;
+    let gainNode: GainNode | null = null;
+    let analyser: AnalyserNode | null = null;
+    let rafId = 0;
+    let isPlaying = false;
+    let isMuted = false;
+    let appMode: AppMode = 'tone';
+
+    let currentFreq   = 440;
+    let currentVolume = 0.7;
+    let currentWave: OscillatorType = 'sine';
+    let stereoMode: ChannelMode = 'both';
+
+    let sweepStartFreq = 20;
+    let sweepEndFreq   = 20000;
+    let sweepDuration  = 10;
+    let sweepStartCtxTime = 0;
+
+    let fadeInMs  = 10;
+    let fadeOutMs = 10;
+    let wavDuration = 5;
+
+    // Canvas
+    let ctx2d: CanvasRenderingContext2D | null = null;
+    let canvasW = 0;
+    let canvasH = 0;
+
+    // ════════════════════════════════════
+    //  URL PARAMS — read on init
+    // ════════════════════════════════════
+    (() => {
+      const p = new URLSearchParams(window.location.search);
+      const pFreq   = parseFloat(p.get('freq') ?? '');
+      const pType   = p.get('type') ?? '';
+      const pStereo = p.get('stereo') ?? '';
+      const pMode   = p.get('mode') ?? '';
+      const pStart  = parseFloat(p.get('start') ?? '');
+      const pEnd    = parseFloat(p.get('end') ?? '');
+
+      if (!isNaN(pFreq) && pFreq >= 20 && pFreq <= 20000) currentFreq = pFreq;
+      if (['sine','square','sawtooth','triangle'].includes(pType)) currentWave = pType as OscillatorType;
+      if (['left','both','right'].includes(pStereo)) stereoMode = pStereo as ChannelMode;
+      if (pMode === 'sweep') appMode = 'sweep';
+      if (!isNaN(pStart) && pStart >= 20 && pStart <= 20000) sweepStartFreq = pStart;
+      if (!isNaN(pEnd) && pEnd >= 20 && pEnd <= 20000) sweepEndFreq = pEnd;
+    })();
+
+    let urlTimer: ReturnType<typeof setTimeout>;
+    function scheduleURLUpdate() {
+      clearTimeout(urlTimer);
+      urlTimer = setTimeout(() => {
+        const p = new URLSearchParams();
+        if (appMode === 'sweep') {
+          p.set('mode', 'sweep');
+          p.set('start', String(Math.round(sweepStartFreq)));
+          p.set('end', String(Math.round(sweepEndFreq)));
+        } else {
+          p.set('freq', String(Math.round(currentFreq)));
+        }
+        p.set('type', currentWave);
+        if (stereoMode !== 'both') p.set('stereo', stereoMode);
+        history.replaceState(null, '', '?' + p.toString());
+      }, 400);
+    }
+
+    // ════════════════════════════════════
+    //  UTILITIES
+    // ════════════════════════════════════
+    function sliderToFreq(v: number): number {
+      return 20 * Math.pow(1000, v / 1000);
+    }
+    function freqToSlider(f: number): number {
+      return 1000 * Math.log(f / 20) / Math.log(1000);
+    }
+    function formatFreq(hz: number): { num: string; unit: string; inline: string } {
+      if (hz >= 1000) {
+        const k = hz / 1000;
+        const s = Number.isInteger(k) ? k.toFixed(0) : k.toFixed(1);
+        return { num: s, unit: 'kHz', inline: s + ' kHz' };
+      }
+      const r = Math.round(hz).toString();
+      return { num: r, unit: 'Hz', inline: r + ' Hz' };
+    }
+    function updateRangeFill(input: HTMLInputElement) {
+      const pct = ((parseFloat(input.value) - parseFloat(input.min)) / (parseFloat(input.max) - parseFloat(input.min))) * 100;
+      input.style.setProperty('--pct', pct.toFixed(2) + '%');
+    }
+
+    // ════════════════════════════════════
+    //  AUDIO ENGINE
+    // ════════════════════════════════════
+    function getCtx(): AudioContext {
+      if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function connectGraph(ctx: AudioContext, g: GainNode) {
+      analyser = ctx.createAnalyser();
+      analyser.fftSize = 2048;
+      g.connect(analyser);
+
+      if (stereoMode === 'both') {
+        analyser.connect(ctx.destination);
+      } else {
+        const merger = ctx.createChannelMerger(2);
+        analyser.connect(merger, 0, stereoMode === 'left' ? 0 : 1);
+        merger.connect(ctx.destination);
+      }
+    }
+
+    function startTone() {
+      const ctx = getCtx();
+      const fadeInSec  = Math.max(fadeInMs / 1000, 0.001);
+
+      osc = ctx.createOscillator();
+      gainNode = ctx.createGain();
+
+      osc.type = currentWave;
+      osc.frequency.value = currentFreq;
+      gainNode.gain.setValueAtTime(0, ctx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(isMuted ? 0 : currentVolume, ctx.currentTime + fadeInSec);
+
+      osc.connect(gainNode);
+      connectGraph(ctx, gainNode);
+      osc.start();
+
+      isPlaying = true;
+      setPlayingState(true, 'Playing', formatFreq(currentFreq).inline);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(drawFrame);
+    }
+
+    function startSweep() {
+      const ctx = getCtx();
+      const fadeInSec = Math.max(fadeInMs / 1000, 0.001);
+      const t0 = ctx.currentTime + 0.05;
+
+      osc = ctx.createOscillator();
+      gainNode = ctx.createGain();
+
+      osc.type = currentWave;
+      osc.frequency.setValueAtTime(sweepStartFreq, t0);
+      if (sweepStartFreq !== sweepEndFreq) {
+        osc.frequency.exponentialRampToValueAtTime(sweepEndFreq, t0 + sweepDuration);
+      }
+
+      gainNode.gain.setValueAtTime(0, ctx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(isMuted ? 0 : currentVolume, t0 + fadeInSec);
+      // Fade out at end
+      const fadeOutSec = Math.max(fadeOutMs / 1000, 0.001);
+      gainNode.gain.setValueAtTime(isMuted ? 0 : currentVolume, t0 + sweepDuration - fadeOutSec);
+      gainNode.gain.linearRampToValueAtTime(0, t0 + sweepDuration);
+
+      osc.connect(gainNode);
+      connectGraph(ctx, gainNode);
+      osc.start(t0);
+      osc.stop(t0 + sweepDuration + 0.05);
+
+      sweepStartCtxTime = t0;
+      isPlaying = true;
+      sweepProgressWrap.hidden = false;
+      sweepProgStart.textContent = formatFreq(sweepStartFreq).inline;
+      sweepProgEnd.textContent = formatFreq(sweepEndFreq).inline;
+      setPlayingState(true, 'Sweeping', formatFreq(sweepStartFreq).inline);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(drawSweepFrame);
+    }
+
+    function stopAudio() {
+      if (!isPlaying) return;
+      isPlaying = false;
+
+      if (gainNode && audioCtx) {
+        const fadeOutSec = appMode === 'sweep' ? 0.04 : Math.max(fadeOutMs / 1000, 0.001);
+        gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + fadeOutSec);
+      }
+
+      setTimeout(() => {
+        try { osc?.stop(); } catch {}
+        osc = null; gainNode = null; analyser = null;
+        cancelAnimationFrame(rafId);
+        drawFlat();
+      }, Math.max(fadeOutMs + 20, 60));
+
+      sweepProgressWrap.hidden = true;
+      sweepFill.style.width = '0%';
+      setPlayingState(false, 'Ready', '');
+    }
+
+    function setPlayingState(playing: boolean, status: string, label: string) {
+      fgDot.className = playing ? 'dot active' : 'dot';
+      fgStatus.textContent = status;
+      fgLabel.textContent = label;
+      playBtn.setAttribute('aria-pressed', String(playing));
+      if (playing) {
+        playIcon.innerHTML = '<rect x="2" y="2" width="4" height="10" rx="1" fill="currentColor"/><rect x="8" y="2" width="4" height="10" rx="1" fill="currentColor"/>';
+        playIcon.setAttribute('viewBox', '0 0 14 14');
+        playLabel.textContent = 'Stop';
+        playBtn.classList.add('btn-stop-tone');
+        playBtn.classList.remove('btn-primary');
+      } else {
+        playIcon.innerHTML = '<polygon points="2,1 12,6.5 2,12" fill="currentColor"/>';
+        playIcon.setAttribute('viewBox', '0 0 13 13');
+        playLabel.textContent = appMode === 'sweep' ? 'Play Sweep' : 'Generate Tone';
+        playBtn.classList.remove('btn-stop-tone');
+        playBtn.classList.add('btn-primary');
+      }
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (isPlaying) { stopAudio(); return; }
+      if (appMode === 'sweep') startSweep(); else startTone();
+    });
+
+    // ════════════════════════════════════
+    //  WAV EXPORT
+    // ════════════════════════════════════
+    function encodeWAV(buffer: AudioBuffer, ch: ChannelMode): ArrayBuffer {
+      const numCh = 2;
+      const sr = buffer.sampleRate;
+      const n = buffer.length;
+      const bps = 2;
+      const dataSize = n * numCh * bps;
+      const ab = new ArrayBuffer(44 + dataSize);
+      const v = new DataView(ab);
+      const ws = (off: number, s: string) => { for (let i = 0; i < s.length; i++) v.setUint8(off + i, s.charCodeAt(i)); };
+
+      ws(0, 'RIFF'); v.setUint32(4, 36 + dataSize, true); ws(8, 'WAVE');
+      ws(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true);
+      v.setUint16(22, numCh, true); v.setUint32(24, sr, true);
+      v.setUint32(28, sr * numCh * bps, true); v.setUint16(32, numCh * bps, true);
+      v.setUint16(34, 16, true); ws(36, 'data'); v.setUint32(40, dataSize, true);
+
+      const src = buffer.getChannelData(0);
+      let off = 44;
+      for (let i = 0; i < n; i++) {
+        const s = Math.max(-1, Math.min(1, src[i]));
+        const int16 = Math.round(s * 32767);
+        v.setInt16(off, ch === 'right' ? 0 : int16, true); off += 2;
+        v.setInt16(off, ch === 'left'  ? 0 : int16, true); off += 2;
+      }
+      return ab;
+    }
+
+    async function downloadWAV() {
+      downloadBtn.disabled = true;
+      downloadLabel.textContent = 'Rendering…';
+
+      try {
+        const sr = 44100;
+        const dur = wavDuration;
+        const frames = Math.round(dur * sr);
+        const fadeInSec  = Math.max(fadeInMs / 1000, 0.001);
+        const fadeOutSec = Math.max(fadeOutMs / 1000, 0.001);
+
+        const offCtx = new OfflineAudioContext(1, frames, sr);
+        const offOsc  = offCtx.createOscillator();
+        const offGain = offCtx.createGain();
+
+        offOsc.type = currentWave;
+
+        if (appMode === 'sweep') {
+          offOsc.frequency.setValueAtTime(sweepStartFreq, 0);
+          if (sweepStartFreq !== sweepEndFreq) {
+            offOsc.frequency.exponentialRampToValueAtTime(sweepEndFreq, dur);
+          }
+        } else {
+          offOsc.frequency.value = currentFreq;
+        }
+
+        offGain.gain.setValueAtTime(0, 0);
+        offGain.gain.linearRampToValueAtTime(currentVolume, fadeInSec);
+        offGain.gain.setValueAtTime(currentVolume, Math.max(dur - fadeOutSec, fadeInSec));
+        offGain.gain.linearRampToValueAtTime(0, dur);
+
+        offOsc.connect(offGain);
+        offGain.connect(offCtx.destination);
+        offOsc.start(0);
+        offOsc.stop(dur);
+
+        const rendered = await offCtx.startRendering();
+        const wav = encodeWAV(rendered, stereoMode);
+        const blob = new Blob([wav], { type: 'audio/wav' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+
+        let name: string;
+        if (appMode === 'sweep') {
+          name = `sweep-${Math.round(sweepStartFreq)}hz-${Math.round(sweepEndFreq)}hz-${dur}s.wav`;
+        } else {
+          const fl = currentFreq >= 1000 ? (currentFreq / 1000).toFixed(1) + 'khz' : Math.round(currentFreq) + 'hz';
+          name = `${fl}-${currentWave}-${dur}s.wav`;
+        }
+        a.download = name;
+        a.click();
+        URL.revokeObjectURL(url);
+      } finally {
+        downloadBtn.disabled = false;
+        downloadLabel.textContent = 'Download WAV';
+      }
+    }
+
+    downloadBtn.addEventListener('click', downloadWAV);
+
+    // ════════════════════════════════════
+    //  UI EVENT LISTENERS
+    // ════════════════════════════════════
+
+    // Mode tabs
+    modeTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        if (tab.dataset.mode === appMode) return;
+        if (isPlaying) stopAudio();
+        appMode = tab.dataset.mode as AppMode;
+        modeTabs.forEach(t => { t.classList.toggle('active', t === tab); t.setAttribute('aria-selected', String(t === tab)); });
+        toneControls.hidden  = appMode !== 'tone';
+        sweepControls.hidden = appMode !== 'sweep';
+        presetSection.hidden = appMode !== 'tone';
+        setPlayingState(false, 'Ready', '');
+        scheduleURLUpdate();
+      });
+    });
+
+    // Frequency slider (tone)
+    freqSlider.addEventListener('input', () => {
+      currentFreq = Math.max(20, Math.min(20000, sliderToFreq(parseFloat(freqSlider.value))));
+      freqInput.value = String(Math.round(currentFreq));
+      applyFreqDisplay();
+      updateRangeFill(freqSlider);
+      if (isPlaying && osc) osc.frequency.value = currentFreq;
+      scheduleURLUpdate();
+    });
+
+    freqInput.addEventListener('input', () => {
+      const v = parseFloat(freqInput.value);
+      if (isNaN(v)) return;
+      currentFreq = Math.max(20, Math.min(20000, v));
+      freqSlider.value = String(freqToSlider(currentFreq));
+      updateRangeFill(freqSlider);
+      applyFreqDisplay();
+      if (isPlaying && osc) osc.frequency.value = currentFreq;
+      scheduleURLUpdate();
+    });
+
+    freqInput.addEventListener('blur', () => {
+      let v = parseFloat(freqInput.value);
+      if (isNaN(v) || v < 20) v = 20;
+      if (v > 20000) v = 20000;
+      currentFreq = v;
+      freqInput.value = String(Math.round(v));
+      freqSlider.value = String(freqToSlider(v));
+      updateRangeFill(freqSlider);
+      applyFreqDisplay();
+    });
+
+    function applyFreqDisplay() {
+      const { num, unit, inline } = formatFreq(currentFreq);
+      fgNum.textContent = num;
+      fgUnit.textContent = unit;
+      freqDisplayInline.textContent = inline;
+      if (isPlaying && appMode === 'tone') fgLabel.textContent = inline;
+      syncPresetHighlight();
+    }
+
+    function syncPresetHighlight() {
+      const r = Math.round(currentFreq);
+      presetChips.forEach(c => c.classList.toggle('active', parseInt(c.dataset.freq ?? '0', 10) === r));
+    }
+
+    // Sweep controls
+    function bindSweepControl(slider: HTMLInputElement, input: HTMLInputElement, display: HTMLElement, onchange: (v: number) => void) {
+      slider.addEventListener('input', () => {
+        const f = Math.max(20, Math.min(20000, sliderToFreq(parseFloat(slider.value))));
+        input.value = String(Math.round(f));
+        display.textContent = formatFreq(f).inline;
+        updateRangeFill(slider);
+        onchange(f);
+        scheduleURLUpdate();
+      });
+      input.addEventListener('input', () => {
+        let v = parseFloat(input.value);
+        if (isNaN(v)) return;
+        v = Math.max(20, Math.min(20000, v));
+        slider.value = String(freqToSlider(v));
+        updateRangeFill(slider);
+        display.textContent = formatFreq(v).inline;
+        onchange(v);
+        scheduleURLUpdate();
+      });
+      input.addEventListener('blur', () => {
+        let v = parseFloat(input.value);
+        if (isNaN(v) || v < 20) v = 20;
+        if (v > 20000) v = 20000;
+        input.value = String(Math.round(v));
+        slider.value = String(freqToSlider(v));
+        updateRangeFill(slider);
+        display.textContent = formatFreq(v).inline;
+        onchange(v);
+      });
+    }
+
+    bindSweepControl(sweepStartSlider, sweepStartInput, sweepStartDisplay, v => { sweepStartFreq = v; });
+    bindSweepControl(sweepEndSlider, sweepEndInput, sweepEndDisplay, v => { sweepEndFreq = v; });
+
+    sweepDurSlider.addEventListener('input', () => {
+      sweepDuration = parseFloat(sweepDurSlider.value);
+      sweepDurDisplay.textContent = sweepDuration + ' s';
+      updateRangeFill(sweepDurSlider);
+    });
+
+    // Wave type
+    waveTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        waveTabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-pressed', 'false'); });
+        tab.classList.add('active'); tab.setAttribute('aria-pressed', 'true');
+        currentWave = tab.dataset.wave as OscillatorType;
+        if (isPlaying && osc) osc.type = currentWave;
+        scheduleURLUpdate();
+      });
+    });
+
+    // Stereo
+    stereoTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        stereoTabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-pressed', 'false'); });
+        tab.classList.add('active'); tab.setAttribute('aria-pressed', 'true');
+        stereoMode = tab.dataset.ch as ChannelMode;
+        if (isPlaying) { stopAudio(); startTone(); } // re-build graph with new routing
+        scheduleURLUpdate();
+      });
+    });
+
+    // Volume
+    volSlider.addEventListener('input', () => {
+      currentVolume = parseFloat(volSlider.value) / 100;
+      volDisplay.textContent = Math.round(currentVolume * 100) + '%';
+      updateRangeFill(volSlider);
+      if (gainNode && !isMuted && audioCtx) {
+        gainNode.gain.setTargetAtTime(currentVolume, audioCtx.currentTime, 0.01);
+      }
+    });
+
+    // Mute
+    muteBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      muteBtn.setAttribute('aria-pressed', String(isMuted));
+      muteBtn.classList.toggle('muted', isMuted);
+      updateMuteIcon(isMuted);
+      if (gainNode && audioCtx) {
+        gainNode.gain.setTargetAtTime(isMuted ? 0 : currentVolume, audioCtx.currentTime, 0.01);
+      }
+    });
+
+    function updateMuteIcon(muted: boolean) {
+      const el = document.getElementById('mute-icon')!;
+      el.innerHTML = muted
+        ? `<path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="14" y1="8" x2="18" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="18" y1="8" x2="14" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>`
+        : `<path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 7a4 4 0 010 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M16.5 4.5a8 8 0 010 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>`;
+    }
+
+    // Fade sliders
+    fadeInSlider.addEventListener('input', () => {
+      fadeInMs = parseFloat(fadeInSlider.value);
+      fadeInDisplay.textContent = fadeInMs + ' ms';
+      updateRangeFill(fadeInSlider);
+    });
+    fadeOutSlider.addEventListener('input', () => {
+      fadeOutMs = parseFloat(fadeOutSlider.value);
+      fadeOutDisplay.textContent = fadeOutMs + ' ms';
+      updateRangeFill(fadeOutSlider);
+    });
+
+    // Preset chips
+    presetChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const f = parseFloat(chip.dataset.freq ?? '440');
+        currentFreq = f;
+        freqInput.value = String(Math.round(f));
+        freqSlider.value = String(freqToSlider(f));
+        updateRangeFill(freqSlider);
+        applyFreqDisplay();
+        if (isPlaying && osc) osc.frequency.value = f;
+        scheduleURLUpdate();
+      });
+    });
+
+    // WAV duration chips
+    durChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        durChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        wavDuration = parseInt(chip.dataset.dur ?? '5', 10);
+      });
+    });
+
+    // ════════════════════════════════════
+    //  CANVAS
+    // ════════════════════════════════════
+    function initCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = vizCanvas.getBoundingClientRect();
+      if (rect.width === 0) return;
+      canvasW = rect.width;
+      canvasH = rect.height;
+      vizCanvas.width  = Math.round(canvasW * dpr);
+      vizCanvas.height = Math.round(canvasH * dpr);
+      ctx2d = vizCanvas.getContext('2d');
+      if (ctx2d) ctx2d.scale(dpr, dpr);
+      drawFlat();
+    }
+
+    function colors() {
+      const dark = document.documentElement.dataset.theme === 'dark';
+      return { bg: dark ? '#1a1a1a' : '#f5f5f5', grid: dark ? '#2a2a2a' : '#ebebeb', wave: dark ? '#3291ff' : '#0070f3' };
+    }
+
+    function drawFlat() {
+      if (!ctx2d) return;
+      const c = colors();
+      ctx2d.fillStyle = c.bg; ctx2d.fillRect(0, 0, canvasW, canvasH);
+      ctx2d.strokeStyle = c.grid; ctx2d.lineWidth = 1;
+      ctx2d.beginPath(); ctx2d.moveTo(0, canvasH / 2); ctx2d.lineTo(canvasW, canvasH / 2); ctx2d.stroke();
+    }
+
+    function drawFrame() {
+      if (!ctx2d || !analyser || !isPlaying) return;
+      const data = new Float32Array(analyser.frequencyBinCount);
+      analyser.getFloatTimeDomainData(data);
+
+      const sr = audioCtx?.sampleRate ?? 44100;
+      const samplesForCycles = Math.round((sr / currentFreq) * 3);
+      const show = Math.min(data.length, Math.max(64, samplesForCycles));
+
+      const c = colors();
+      ctx2d.fillStyle = c.bg; ctx2d.fillRect(0, 0, canvasW, canvasH);
+      ctx2d.strokeStyle = c.grid; ctx2d.lineWidth = 1;
+      ctx2d.beginPath(); ctx2d.moveTo(0, canvasH / 2); ctx2d.lineTo(canvasW, canvasH / 2); ctx2d.stroke();
+
+      ctx2d.strokeStyle = c.wave; ctx2d.lineWidth = 2; ctx2d.lineJoin = 'round';
+      ctx2d.beginPath();
+      const sw = canvasW / show;
+      for (let i = 0; i < show; i++) {
+        const y = ((data[i] + 1) / 2) * canvasH;
+        if (i === 0) ctx2d.moveTo(0, y); else ctx2d.lineTo(i * sw, y);
+      }
+      ctx2d.stroke();
+      rafId = requestAnimationFrame(drawFrame);
+    }
+
+    function drawSweepFrame() {
+      if (!ctx2d || !isPlaying || appMode !== 'sweep') return;
+      const ctx = audioCtx!;
+      const elapsed = Math.max(0, ctx.currentTime - sweepStartCtxTime);
+
+      // Update sweep progress
+      const t = Math.min(elapsed / sweepDuration, 1);
+      sweepFill.style.width = (t * 100).toFixed(2) + '%';
+
+      // Update freq display
+      const f = sweepStartFreq * Math.pow(sweepEndFreq / sweepStartFreq, t);
+      const { num, unit, inline } = formatFreq(Math.min(f, sweepEndFreq));
+      fgNum.textContent = num; fgUnit.textContent = unit; fgLabel.textContent = inline;
+
+      // Draw waveform (uses analyser data)
+      if (analyser) {
+        const data = new Float32Array(analyser.frequencyBinCount);
+        analyser.getFloatTimeDomainData(data);
+        const show = Math.min(data.length, 256);
+        const c = colors();
+        ctx2d.fillStyle = c.bg; ctx2d.fillRect(0, 0, canvasW, canvasH);
+        ctx2d.strokeStyle = c.grid; ctx2d.lineWidth = 1;
+        ctx2d.beginPath(); ctx2d.moveTo(0, canvasH / 2); ctx2d.lineTo(canvasW, canvasH / 2); ctx2d.stroke();
+        ctx2d.strokeStyle = c.wave; ctx2d.lineWidth = 2; ctx2d.lineJoin = 'round';
+        ctx2d.beginPath();
+        const sw = canvasW / show;
+        for (let i = 0; i < show; i++) {
+          const y = ((data[i] + 1) / 2) * canvasH;
+          if (i === 0) ctx2d.moveTo(0, y); else ctx2d.lineTo(i * sw, y);
+        }
+        ctx2d.stroke();
+      }
+
+      if (t >= 1) { stopAudio(); return; }
+      rafId = requestAnimationFrame(drawSweepFrame);
+    }
+
+    // ════════════════════════════════════
+    //  INIT
+    // ════════════════════════════════════
+
+    // Apply URL-loaded state to UI
+    (() => {
+      // Frequency
+      freqSlider.value = String(freqToSlider(currentFreq));
+      freqInput.value = String(Math.round(currentFreq));
+      updateRangeFill(freqSlider);
+      applyFreqDisplay();
+
+      // Wave type
+      waveTabs.forEach(t => {
+        const active = t.dataset.wave === currentWave;
+        t.classList.toggle('active', active);
+        t.setAttribute('aria-pressed', String(active));
+      });
+
+      // Stereo
+      stereoTabs.forEach(t => {
+        const active = t.dataset.ch === stereoMode;
+        t.classList.toggle('active', active);
+        t.setAttribute('aria-pressed', String(active));
+      });
+
+      // Mode
+      if (appMode === 'sweep') {
+        modeTabs.forEach(t => {
+          const active = t.dataset.mode === 'sweep';
+          t.classList.toggle('active', active);
+          t.setAttribute('aria-selected', String(active));
+        });
+        toneControls.hidden = true;
+        sweepControls.hidden = false;
+        presetSection.hidden = true;
+        setPlayingState(false, 'Ready', '');
+
+        sweepStartSlider.value = String(freqToSlider(sweepStartFreq));
+        sweepStartInput.value = String(Math.round(sweepStartFreq));
+        sweepStartDisplay.textContent = formatFreq(sweepStartFreq).inline;
+        sweepEndSlider.value = String(freqToSlider(sweepEndFreq));
+        sweepEndInput.value = String(Math.round(sweepEndFreq));
+        sweepEndDisplay.textContent = formatFreq(sweepEndFreq).inline;
+        updateRangeFill(sweepStartSlider);
+        updateRangeFill(sweepEndSlider);
+      }
+
+      // Other sliders
+      updateRangeFill(volSlider);
+      updateRangeFill(fadeInSlider);
+      updateRangeFill(fadeOutSlider);
+      updateRangeFill(sweepDurSlider);
+    })();
+
+    requestAnimationFrame(() => initCanvas());
+
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(initCanvas, 150); });
+
+    new MutationObserver(() => { if (!isPlaying) drawFlat(); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    if (!window.AudioContext && !(window as any).webkitAudioContext) {
+      playBtn.disabled = true;
+      downloadBtn.disabled = true;
+      playLabel.textContent = 'Web Audio API not supported';
+    }
+  })();
+</script>
+
+<style>
+  /* ── Mode tabs ── */
+  .mode-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--canvas-soft-2);
+    border-radius: var(--r-md);
+    padding: 3px;
+  }
+  .mode-tab {
+    flex: 1;
+    height: 32px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .02em;
+    border: none;
+    border-radius: var(--r-sm);
+    background: transparent;
+    color: var(--mute);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .mode-tab:hover { color: var(--ink); }
+  .mode-tab.active { background: var(--canvas); color: var(--ink); box-shadow: var(--shadow-2); }
+
+  /* ── Frequency display ── */
+  .fg-freq-display {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    justify-content: center;
+    padding: var(--s-xs) 0;
+  }
+  .fg-freq-num {
+    font-family: var(--font-mono);
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -3px;
+    color: var(--ink);
+  }
+  .fg-freq-unit {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--mute);
+  }
+
+  /* ── Canvas ── */
+  .fg-canvas {
+    width: 100%;
+    height: 72px;
+    border-radius: var(--r-sm);
+    display: block;
+    background: var(--canvas-soft-2);
+  }
+
+  /* ── Control groups ── */
+  .ctrl-group { display: flex; flex-direction: column; gap: var(--s-xs); }
+  .ctrl-row { display: flex; justify-content: space-between; align-items: center; }
+  .ctrl-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--mute);
+  }
+  .ctrl-value {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ── Range input ── */
+  .fg-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: var(--r-full);
+    background: linear-gradient(to right, var(--link) 0%, var(--link) var(--pct,0%), var(--canvas-soft-2) var(--pct,0%), var(--canvas-soft-2) 100%);
+    outline: none;
+    cursor: pointer;
+    box-shadow: var(--shadow-1);
+  }
+  .fg-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--canvas);
+    border: 2px solid var(--link);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,.15);
+    transition: transform .1s, box-shadow .1s;
+  }
+  .fg-range::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(0,112,243,.3);
+  }
+  .fg-range::-moz-range-thumb {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--canvas);
+    border: 2px solid var(--link);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,.15);
+  }
+  .fg-range:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+  .range-bounds {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--mute);
+    padding: 0 2px;
+  }
+
+  /* ── Exact Hz input ── */
+  .freq-input-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-xs);
+  }
+  .fg-number-input {
+    flex: 1;
+    height: 40px;
+    background: var(--canvas-soft);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-md);
+    padding: 0 var(--s-sm);
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    -moz-appearance: textfield;
+  }
+  .fg-number-input::-webkit-inner-spin-button,
+  .fg-number-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .fg-number-input:focus { border-color: var(--link); box-shadow: 0 0 0 3px var(--focus-ring); }
+  .freq-input-unit { font-family: var(--font-mono); font-size: 13px; color: var(--mute); white-space: nowrap; }
+
+  /* ── Sweep grid ── */
+  .sweep-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-md);
+  }
+
+  /* ── Sweep progress ── */
+  .sweep-track {
+    position: relative;
+    height: 6px;
+    background: var(--canvas-soft-2);
+    border-radius: var(--r-full);
+    overflow: hidden;
+    box-shadow: var(--shadow-1);
+  }
+  .sweep-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: var(--r-full);
+    background: linear-gradient(to right, #60a5fa, #818cf8, #a78bfa, #f472b6);
+    transition: width .1s linear;
+  }
+  .sweep-progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--mute);
+    margin-top: 4px;
+    padding: 0 2px;
+  }
+
+  /* ── Wave type tabs ── */
+  .wave-tabs {
+    display: flex;
+    gap: var(--s-xs);
+    flex-wrap: wrap;
+  }
+  .wave-tab {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 13px;
+    border-radius: var(--r-full);
+    border: 1px solid var(--hairline);
+    background: var(--canvas-soft);
+    color: var(--body-text);
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .wave-tab:hover { background: var(--canvas-soft-2); color: var(--ink); }
+  .wave-tab.active { background: var(--ink); color: var(--canvas); border-color: transparent; }
+
+  /* ── Stereo tabs ── */
+  .stereo-tabs {
+    display: flex;
+    gap: 4px;
+    width: fit-content;
+  }
+  .stereo-tab {
+    width: 44px;
+    height: 32px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-md);
+    background: var(--canvas-soft);
+    color: var(--body-text);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .stereo-tab:hover { background: var(--canvas-soft-2); color: var(--ink); }
+  .stereo-tab.active { background: var(--grad-develop); color: var(--on-gradient); border-color: transparent; }
+
+  /* ── Volume row ── */
+  .vol-row { display: flex; align-items: center; gap: var(--s-sm); }
+  .vol-row .fg-range { flex: 1; }
+
+  /* ── Mute button ── */
+  .mute-btn {
+    width: 36px; height: 36px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-md);
+    background: var(--canvas-soft);
+    color: var(--body-text);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background .15s, color .15s;
+  }
+  .mute-btn:hover { background: var(--canvas-soft-2); color: var(--ink); }
+  .mute-btn.muted { background: var(--grade-poor-bg); color: var(--grade-poor-fg); border-color: transparent; }
+
+  /* ── Fade row ── */
+  .fade-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-md);
+  }
+
+  /* ── Play / Stop button ── */
+  .fg-play-btn { min-width: 180px; }
+  .btn-stop-tone {
+    background: #ef4444; color: #fff;
+    font-size: 16px; line-height: 24px;
+    border-radius: var(--r-pill);
+    padding: 0 var(--s-xl); height: 48px;
+    font-weight: 600; border: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--s-xs);
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(239,68,68,.3);
+    transition: opacity .15s, transform .1s;
+  }
+  .btn-stop-tone:hover { opacity: .9; }
+  .btn-stop-tone:active { transform: scale(.97); }
+
+  /* ── Presets ── */
+  .presets-section {
+    display: flex; flex-direction: column; gap: var(--s-md);
+    border-top: 1px solid var(--hairline); padding-top: var(--s-md);
+  }
+  .presets-group { display: flex; flex-direction: column; gap: var(--s-xs); }
+  .presets-label {
+    font-family: var(--font-mono);
+    font-size: 10px; text-transform: uppercase; letter-spacing: .07em; color: var(--mute);
+  }
+  .presets-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .preset-chip {
+    font-family: var(--font-mono); font-size: 12px;
+    padding: 4px 11px; border-radius: var(--r-full);
+    border: 1px solid var(--hairline); background: var(--canvas-soft);
+    color: var(--body-text); cursor: pointer; transition: all .15s; white-space: nowrap;
+  }
+  .preset-chip:hover { background: var(--canvas-soft-2); border-color: var(--hairline-strong); color: var(--ink); }
+  .preset-chip.active { background: var(--link); border-color: var(--link); color: #fff; }
+
+  /* ── Export section ── */
+  .export-section {
+    display: flex; flex-direction: column; gap: var(--s-sm);
+    border-top: 1px solid var(--hairline); padding-top: var(--s-md);
+  }
+  .export-header { display: flex; justify-content: space-between; align-items: center; }
+  .export-hint { font-size: 11px; color: var(--mute); font-family: var(--font-mono); }
+  .duration-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--s-xs); }
+  .dur-chip {
+    font-family: var(--font-mono); font-size: 12px;
+    padding: 4px 11px; border-radius: var(--r-full);
+    border: 1px solid var(--hairline); background: var(--canvas-soft);
+    color: var(--body-text); cursor: pointer; transition: all .15s;
+  }
+  .dur-chip:hover { background: var(--canvas-soft-2); color: var(--ink); }
+  .dur-chip.active { background: var(--ink); border-color: transparent; color: var(--canvas); }
+  .download-btn {
+    width: 100%; height: 40px;
+    display: flex; align-items: center; justify-content: center; gap: var(--s-xs);
+    font-size: 14px; font-weight: 500;
+  }
+  .download-btn:disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
+
+  /* ── Disclaimer ── */
+  .fg-disclaimer {
+    display: flex; align-items: flex-start; gap: 6px;
+    font-size: 12px; color: var(--mute); line-height: 1.6;
+    background: var(--canvas-soft); border-radius: var(--r-sm); padding: var(--s-sm) var(--s-md);
+  }
+
+  /* ── Educational ── */
+  .edu-section {
+    max-width: 680px; margin-inline: auto;
+    padding: 0 var(--container-pad); margin-bottom: var(--s-3xl);
+  }
+  .edu-section h2 {
+    font-size: 22px; font-weight: 600; letter-spacing: -0.8px;
+    margin-bottom: var(--s-md); margin-top: var(--s-3xl); color: var(--ink);
+  }
+  .edu-section h2:first-child { margin-top: 0; }
+  .edu-section p { font-size: 15px; color: var(--body-text); line-height: 1.75; margin-bottom: var(--s-md); }
+  .edu-section strong { color: var(--ink); font-weight: 500; }
+  .edu-section a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+
+  .freq-table { width: 100%; border-collapse: collapse; margin-bottom: var(--s-lg); font-size: 14px; }
+  .freq-table th {
+    text-align: left; padding: var(--s-xs) var(--s-sm);
+    border-bottom: 2px solid var(--hairline);
+    font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--mute);
+  }
+  .freq-table td { padding: var(--s-xs) var(--s-sm); border-bottom: 1px solid var(--hairline); color: var(--body-text); }
+  .freq-table tr:last-child td { border-bottom: none; }
+  .freq-table tbody tr:hover td { background: var(--canvas-soft); }
+
+  /* ── Mobile ── */
+  @media (max-width: 520px) {
+    .sweep-grid { grid-template-columns: 1fr; }
+    .fade-row { grid-template-columns: 1fr; }
+    .fg-freq-num { font-size: 48px; }
+    .fg-freq-unit { font-size: 20px; }
+    .fg-play-btn, .btn-stop-tone { width: 100%; }
+    .wave-tab { font-size: 11px; padding: 4px 10px; }
+  }
+</style>
