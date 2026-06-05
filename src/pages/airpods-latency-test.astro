@@ -1,0 +1,544 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "AirPods Latency Test",
+      "url": "https://onlineaudiotest.com/airpods-latency-test/",
+      "description": "Free AirPods latency test. Measure the audio delay your AirPods, AirPods Pro, or AirPods Max introduce when connected via Bluetooth. No download required.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires Web Audio API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Latency Test", "item": "https://onlineaudiotest.com/latency-test/" },
+        { "@type": "ListItem", "position": 3, "name": "AirPods Latency Test", "item": "https://onlineaudiotest.com/airpods-latency-test/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why do AirPods have audio latency?",
+          "acceptedAnswer": { "@type": "Answer", "text": "AirPods transmit audio over Bluetooth using the AAC codec. The codec compresses audio on your iPhone or Mac, transmits it wirelessly, and decompresses it inside the AirPods — each step adds delay. The total Bluetooth pipeline typically introduces 100–200 ms of latency. This is unavoidable with any wireless Bluetooth audio device; the exact amount depends on your device, iOS/macOS version, and RF conditions." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do AirPods Pro have lower latency than regular AirPods?",
+          "acceptedAnswer": { "@type": "Answer", "text": "AirPods Pro and AirPods Pro 2 use the same AAC Bluetooth codec as regular AirPods, so the underlying wireless latency is similar. AirPods Pro 2 introduced the H2 chip which improves audio processing efficiency, but this does not dramatically reduce the Bluetooth codec delay. For latency-critical tasks, the difference between AirPods models is smaller than the difference between Bluetooth and wired audio." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use AirPods for gaming?",
+          "acceptedAnswer": { "@type": "Answer", "text": "AirPods work for casual mobile gaming where audio feedback timing is not critical. However, for competitive gaming or any game where hearing sounds before reacting matters — gunshots, footsteps, timing-based mechanics — the 100–200 ms Bluetooth delay will put you at a measurable disadvantage. Wired earbuds or a 2.4 GHz wireless gaming headset (which achieves under 20 ms latency) are better choices for gaming." }
+        },
+        {
+          "@type": "Question",
+          "name": "My AirPods latency test shows a low number but video still looks out of sync. Why?",
+          "acceptedAnswer": { "@type": "Answer", "text": "This test measures your system's reported audio output latency, which reflects the Bluetooth buffer as seen by your operating system. Some OS versions and browsers underreport actual latency. Additionally, if you are watching video in a browser tab, the browser may apply its own audio buffering independently. Try the Round-Trip Test (microphone required) for a more direct measurement of acoustic delay." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I fix AirPods audio delay on Mac?",
+          "acceptedAnswer": { "@type": "Answer", "text": "AirPods delay on Mac is most often caused by the Bluetooth codec falling back to SCO (a phone-call codec) when the microphone is active. To avoid this: disconnect from AirPods as a microphone input in System Settings → Sound → Input, and set a different device (like the built-in mic) as your input. This allows AirPods to stay in high-quality A2DP output mode, which has significantly lower audio latency." }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="AirPods Latency Test - Check Your AirPods Audio Delay Online"
+  description="Test AirPods latency in your browser. Measure audio delay from AirPods, AirPods Pro, or AirPods Max via Bluetooth. Free, instant, no download."
+  keywords="airpods latency test, airpods audio delay, airpods lag test, airpods pro latency, airpods delay checker, bluetooth airpods latency"
+  canonical="https://onlineaudiotest.com/airpods-latency-test/"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>AirPods Latency Test</h1>
+    <p>Connect your AirPods first, then run the test. This measures the actual audio output delay your AirPods introduce via Bluetooth — in milliseconds, instantly in your browser.</p>
+  </section>
+
+  <!-- TOOL -->
+  <div class="tool-card-wrap">
+    <div class="tool-card" id="latency-tool">
+
+      <div class="status-bar">
+        <div class="status-pill">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Connect AirPods, then measure</span>
+        </div>
+        <span class="eyebrow caption-mono" id="phase-label"></span>
+      </div>
+
+      <div class="result-panel" id="result-panel" hidden>
+        <div class="latency-display">
+          <span class="latency-num" id="latency-num">-</span>
+          <span class="latency-unit">ms</span>
+        </div>
+        <div class="grade-badge" id="grade-badge"></div>
+        <div class="latency-breakdown" id="latency-breakdown" hidden>
+          <span class="breakdown-item">Base <strong id="base-ms">-</strong> ms</span>
+          <span class="breakdown-sep">·</span>
+          <span class="breakdown-item">Output <strong id="output-ms">-</strong> ms</span>
+        </div>
+        <p class="latency-advice" id="latency-advice"></p>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-primary btn-lg" id="btn-measure" style="min-width:200px">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M7 4v3.2l2 1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Test AirPods Latency
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btn-roundtrip">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <rect x="4.5" y="1" width="3" height="6" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M2.5 6a3.5 3.5 0 007 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            <line x1="6" y1="9.5" x2="6" y2="11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          Round-Trip Test (mic)
+        </button>
+      </div>
+
+      <p class="result-note" id="result-note">Make sure AirPods are set as your output device before measuring.</p>
+    </div>
+  </div>
+
+  <!-- WHAT YOUR RESULT MEANS -->
+  <div class="how-section">
+    <h2>What your AirPods latency result means</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Under 40 ms</strong> — Either your AirPods are not the active output, or your OS is reporting a compressed buffer value. Run the Round-Trip Test to confirm the actual acoustic delay.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>40–130 ms</strong> — Normal for AirPods using AAC on a recent iPhone or Mac. Fine for video calls, music, and streaming. You may notice subtle lip-sync drift in fast-paced video.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>130–250 ms</strong> — Typical Bluetooth AAC or SBC fallback. Noticeable in mobile games where sound should match on-screen action. Not recommended for competitive gaming or live audio monitoring.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Over 250 ms</strong> — High delay. Often caused by the Bluetooth codec falling back to SCO (happens when AirPods are also used as a microphone input). See the FAQ below for how to fix this on Mac.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- USE CASES -->
+  <div class="how-section">
+    <h2>AirPods latency by use case</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">✓</span>
+        <p class="step-body"><strong>Streaming video (Netflix, YouTube)</strong> — Fine. Apps automatically sync audio to video with a small buffer, so Bluetooth delay is compensated. You won't notice the lag.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">✓</span>
+        <p class="step-body"><strong>Video calls (FaceTime, Zoom, Teams)</strong> — Generally fine. AirPods have a microphone close to your mouth, and Apple's audio pipeline handles echo cancellation. The other person does not hear your AirPods latency.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">~</span>
+        <p class="step-body"><strong>Casual mobile gaming</strong> — Acceptable for games where timing isn't critical. Puzzle games, card games, and casual titles are fine. Rhythm games and anything requiring precise audio cues will feel off.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">✗</span>
+        <p class="step-body"><strong>Competitive gaming / live monitoring</strong> — Not recommended. A 150 ms delay means you hear gunshots, footsteps, or hits nearly two-tenths of a second after they happen. For gaming, use a wired connection or a 2.4 GHz wireless gaming headset (under 20 ms).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- REDUCE LATENCY -->
+  <div class="how-section">
+    <h2>How to reduce AirPods latency</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Stop using AirPods as your mic input on Mac.</strong> When AirPods are active as both input and output, macOS switches to the SCO codec for the microphone — which drags the audio output latency up to 200–300 ms. Set your Mac's input to the built-in microphone (System Settings → Sound → Input) and keep AirPods for output only.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Stay close to your device.</strong> Weak Bluetooth signal forces the codec to retransmit packets, adding unpredictable spikes to latency. Keep your iPhone or Mac within 3–5 metres and away from physical obstructions.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Reduce Wi-Fi interference.</strong> Bluetooth and 2.4 GHz Wi-Fi share the same frequency band. If you're in a congested environment (crowded office, many devices), consider switching your router to 5 GHz or temporarily disabling Wi-Fi while testing.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Use wired for latency-critical tasks.</strong> AirPods Max supports USB-C audio, which bypasses Bluetooth entirely and delivers near-zero latency. For regular AirPods, a Lightning-to-3.5mm or USB-C-to-3.5mm adapter with standard wired earbuds is the lowest-latency option on iPhone.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATED TESTS -->
+  <div class="how-section">
+    <h2>Related latency tests</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/latency-test/"><strong>General Audio Latency Test</strong></a> — Measures system output delay for any device. Use this if you want to test speakers, a DAC, or a wired headset instead of AirPods.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/bluetooth-latency-test/"><strong>Bluetooth Latency Test</strong></a> — Focused on Bluetooth codecs: SBC, AAC, aptX, LDAC, and LC3. Use this for non-Apple Bluetooth headphones and to identify which codec is active on Android.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">Why do AirPods have audio latency?</p>
+      <p class="faq-a">AirPods transmit audio over Bluetooth using the AAC codec. The codec compresses audio on your device, transmits it wirelessly, and decompresses it inside the AirPods — each step adds delay. The total pipeline typically introduces 100–200 ms of latency. This is unavoidable with any wireless Bluetooth device; the exact amount depends on your device, iOS/macOS version, and RF conditions.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Do AirPods Pro have lower latency than regular AirPods?</p>
+      <p class="faq-a">AirPods Pro and AirPods Pro 2 use the same AAC Bluetooth codec as regular AirPods, so the underlying wireless latency is similar. The H2 chip in AirPods Pro 2 improves processing efficiency but does not dramatically reduce the codec's inherent wireless delay. For latency-critical work, the difference between AirPods generations is far smaller than switching from Bluetooth to wired audio entirely.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Can I use AirPods for gaming?</p>
+      <p class="faq-a">AirPods work fine for casual mobile games where audio timing is not critical. For competitive gaming — anything where hearing footsteps, shots, or cues before reacting matters — the 100–200 ms Bluetooth delay puts you at a measurable disadvantage. A wired connection or a dedicated 2.4 GHz wireless gaming headset (which typically achieves under 20 ms) is a significantly better choice.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">My AirPods latency test shows a low number but video still looks out of sync. Why?</p>
+      <p class="faq-a">This test measures your system's reported audio output latency, which reflects the Bluetooth buffer as seen by your operating system. Some OS versions underreport actual latency. Additionally, if you're watching video in a browser, the browser may apply its own audio buffering. Try the Round-Trip Test (microphone required) for a direct acoustic measurement. Also check that your video player's audio sync settings are set to default.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do I fix AirPods audio delay on Mac?</p>
+      <p class="faq-a">AirPods delay spikes on Mac are usually caused by the Bluetooth codec switching to SCO when AirPods are active as a microphone input. Fix it by going to System Settings → Sound → Input and selecting your Mac's built-in microphone instead of AirPods. This keeps AirPods in A2DP output-only mode, which has significantly lower latency than SCO.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  (() => {
+    type Phase = 'idle' | 'measuring' | 'result' | 'rt-requesting' | 'rt-running' | 'rt-result';
+
+    let phase: Phase = 'idle';
+    let audioCtx: AudioContext | null = null;
+
+    const btnMeasure   = document.getElementById('btn-measure') as HTMLButtonElement;
+    const btnRoundtrip = document.getElementById('btn-roundtrip') as HTMLButtonElement;
+    const statusDot    = document.getElementById('status-dot')!;
+    const statusText   = document.getElementById('status-text')!;
+    const phaseLabel   = document.getElementById('phase-label')!;
+    const resultPanel  = document.getElementById('result-panel')!;
+    const latencyNum   = document.getElementById('latency-num')!;
+    const gradeBadge   = document.getElementById('grade-badge')!;
+    const breakdown    = document.getElementById('latency-breakdown')!;
+    const baseMs       = document.getElementById('base-ms')!;
+    const outputMs     = document.getElementById('output-ms')!;
+    const latencyAdvice = document.getElementById('latency-advice')!;
+    const resultNote   = document.getElementById('result-note')!;
+
+    function getCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      return audioCtx;
+    }
+
+    function setStatus(active: boolean, warning: boolean, text: string) {
+      statusText.textContent = text;
+      statusDot.className = 'dot' + (active ? ' active' : warning ? ' warning' : '');
+    }
+
+    function grade(ms: number): { label: string; cls: string; advice: string } {
+      if (ms < 10) return {
+        label: 'Excellent — likely wired',
+        cls: 'grade-excellent',
+        advice: 'Near-zero latency. AirPods may not be the active output device, or your OS is reporting compressed buffer values. Confirm AirPods are selected as output.'
+      };
+      if (ms < 40) return {
+        label: 'Low latency',
+        cls: 'grade-excellent',
+        advice: 'Lower than typical Bluetooth. AirPods may be in a low-latency state on your device, or verify AirPods are the selected output.'
+      };
+      if (ms < 130) return {
+        label: 'Normal for AirPods',
+        cls: 'grade-good',
+        advice: 'Typical AirPods AAC latency on iPhone or Mac. Fine for streaming, video calls, and music. Noticeable in rhythm games or competitive gaming.'
+      };
+      if (ms < 250) return {
+        label: 'High — Bluetooth delay',
+        cls: 'grade-fair',
+        advice: 'Higher-than-ideal AirPods latency. May be caused by SBC codec fallback or the SCO codec being active (AirPods used as mic). See the FAQ to reduce this.'
+      };
+      return {
+        label: 'Very high — check settings',
+        cls: 'grade-poor',
+        advice: 'Unusually high latency. Most likely AirPods are also your microphone input, which forces the low-quality SCO codec. Switch Mac input to built-in mic to fix.'
+      };
+    }
+
+    function showResult(ms: number, label: string, baseVal?: number, outputVal?: number) {
+      const g = grade(ms);
+      latencyNum.textContent = ms < 1 ? '<1' : ms.toFixed(ms < 10 ? 1 : 0);
+      gradeBadge.textContent = g.label;
+      gradeBadge.className = 'grade-badge ' + g.cls;
+      latencyAdvice.textContent = g.advice;
+      phaseLabel.textContent = label;
+
+      if (baseVal !== undefined && outputVal !== undefined) {
+        baseMs.textContent = baseVal.toFixed(1);
+        outputMs.textContent = outputVal.toFixed(1);
+        breakdown.hidden = false;
+      } else {
+        breakdown.hidden = true;
+      }
+
+      resultPanel.hidden = false;
+    }
+
+    async function measureSystem() {
+      phase = 'measuring';
+      setStatus(true, false, 'Measuring AirPods latency…');
+      btnMeasure.disabled = true;
+      btnRoundtrip.disabled = true;
+      resultNote.textContent = 'Initializing audio context…';
+
+      const ctx = getCtx();
+      if (ctx.state === 'suspended') await ctx.resume();
+
+      const warmup = ctx.createBuffer(1, ctx.sampleRate * 0.1, ctx.sampleRate);
+      const src = ctx.createBufferSource();
+      src.buffer = warmup;
+      src.connect(ctx.destination);
+      src.start();
+
+      await new Promise<void>(r => setTimeout(r, 150));
+
+      const base   = (ctx.baseLatency   ?? 0) * 1000;
+      const output = (ctx.outputLatency ?? 0) * 1000;
+      const total  = base + output;
+
+      phase = 'result';
+      setStatus(false, false, 'Measurement complete');
+
+      if (total < 0.5) {
+        showResult(0, 'AirPods latency');
+        resultNote.textContent = 'Your browser does not expose latency values. Use the Round-Trip Test for a direct measurement.';
+        resultNote.className = 'result-note';
+      } else {
+        showResult(total, 'AirPods latency', base, output);
+        resultNote.textContent = 'Latency measured. Make sure AirPods were the active output device.';
+        resultNote.className = 'result-note success';
+      }
+
+      btnMeasure.textContent = 'Measure Again';
+      btnMeasure.disabled = false;
+      btnRoundtrip.disabled = false;
+    }
+
+    async function runRoundTrip() {
+      phase = 'rt-requesting';
+      setStatus(false, true, 'Requesting mic…');
+      btnMeasure.disabled = true;
+      btnRoundtrip.disabled = true;
+      resultNote.textContent = 'Allow microphone access to run the round-trip test.';
+      resultNote.className = 'result-note';
+
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+        });
+      } catch {
+        setStatus(false, false, 'Mic access denied');
+        resultNote.textContent = 'Microphone access is required for the round-trip test.';
+        resultNote.className = 'result-note error';
+        btnMeasure.disabled = false;
+        btnRoundtrip.disabled = false;
+        phase = 'result';
+        return;
+      }
+
+      phase = 'rt-running';
+      setStatus(true, false, 'Running round-trip test…');
+      resultNote.textContent = 'Keep your microphone near your AirPods or speakers. Running test…';
+
+      const ctx = getCtx();
+      if (ctx.state === 'suspended') await ctx.resume();
+
+      const micSrc  = ctx.createMediaStreamSource(stream);
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 256;
+      micSrc.connect(analyser);
+
+      const baseline = await measureBaseline(analyser, 400);
+
+      const clickDelay = 0.3;
+      const clickAt = ctx.currentTime + clickDelay;
+      playImpulse(ctx, clickAt, 0.85);
+      const clickWallMs = Date.now() + clickDelay * 1000;
+
+      const latencyMs = await detectImpulse(analyser, baseline, clickWallMs);
+
+      stream.getTracks().forEach(t => t.stop());
+      micSrc.disconnect();
+
+      phase = 'rt-result';
+      setStatus(false, false, 'Test complete');
+
+      if (latencyMs === null) {
+        resultNote.textContent = 'Could not detect the test click. Make sure your speakers are audible and try in a quieter environment.';
+        resultNote.className = 'result-note error';
+      } else {
+        showResult(latencyMs, 'Round-trip latency');
+        resultNote.textContent = 'Round-trip latency measured. This includes AirPods speaker → air → mic delay.';
+        resultNote.className = 'result-note success';
+      }
+
+      btnMeasure.disabled = false;
+      btnRoundtrip.disabled = false;
+    }
+
+    function measureBaseline(analyser: AnalyserNode, durationMs: number): Promise<number> {
+      return new Promise(resolve => {
+        const buf = new Uint8Array(analyser.frequencyBinCount);
+        let sum = 0, count = 0;
+        const start = Date.now();
+        const tick = () => {
+          analyser.getByteTimeDomainData(buf);
+          let s = 0;
+          for (let i = 0; i < buf.length; i++) s += ((buf[i] / 128) - 1) ** 2;
+          sum += Math.sqrt(s / buf.length);
+          count++;
+          if (Date.now() - start < durationMs) requestAnimationFrame(tick);
+          else resolve(count > 0 ? sum / count : 0);
+        };
+        tick();
+      });
+    }
+
+    function playImpulse(ctx: AudioContext, when: number, gain: number) {
+      const duration = 0.01;
+      const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * duration), ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1);
+
+      const gainNode = ctx.createGain();
+      gainNode.gain.value = gain;
+      gainNode.connect(ctx.destination);
+
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(gainNode);
+      src.start(when);
+    }
+
+    function detectImpulse(analyser: AnalyserNode, baseline: number, clickWallMs: number): Promise<number | null> {
+      return new Promise(resolve => {
+        const threshold = Math.max(baseline * 3.5, 0.05);
+        const buf = new Uint8Array(analyser.frequencyBinCount);
+        const giveUpAt = clickWallMs + 3000;
+
+        const poll = () => {
+          const now = Date.now();
+          if (now > giveUpAt) { resolve(null); return; }
+
+          analyser.getByteTimeDomainData(buf);
+          let s = 0;
+          for (let i = 0; i < buf.length; i++) s += ((buf[i] / 128) - 1) ** 2;
+          const rms = Math.sqrt(s / buf.length);
+
+          if (now >= clickWallMs && rms > threshold) {
+            resolve(now - clickWallMs);
+            return;
+          }
+
+          setTimeout(poll, 4);
+        };
+
+        const waitMs = Math.max(0, clickWallMs - Date.now() - 50);
+        setTimeout(poll, waitMs);
+      });
+    }
+
+    btnMeasure.addEventListener('click', measureSystem);
+    btnRoundtrip.addEventListener('click', runRoundTrip);
+  })();
+</script>
+
+<style>
+  .result-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-sm);
+    padding: var(--s-lg) 0;
+  }
+
+  .latency-display {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .latency-num {
+    font-family: var(--font-mono);
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -2px;
+  }
+  .latency-unit {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--mute);
+  }
+
+  .grade-badge {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: var(--r-full);
+  }
+  .grade-excellent { background: var(--grade-excellent-bg); color: var(--grade-excellent-fg); }
+  .grade-good      { background: var(--grade-good-bg); color: var(--grade-good-fg); }
+  .grade-fair      { background: var(--grade-fair-bg); color: var(--grade-fair-fg); }
+  .grade-poor      { background: var(--grade-poor-bg); color: var(--grade-poor-fg); }
+
+  .latency-breakdown {
+    display: flex;
+    align-items: center;
+    gap: var(--s-sm);
+    font-size: 12px;
+    color: var(--mute);
+    font-family: var(--font-mono);
+  }
+  .breakdown-item strong { color: var(--ink); }
+  .breakdown-sep { color: var(--hairline-strong); }
+
+  .latency-advice {
+    font-size: 13px;
+    color: var(--body-text);
+    text-align: center;
+    max-width: 420px;
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>
