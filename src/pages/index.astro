@@ -31,7 +31,10 @@ const schema = {
         { "@type": "ListItem", "position": 4, "url": "https://onlineaudiotest.com/hearing-test/",               "name": "Online Hearing Test — Check Your Hearing Range & Frequency Limit" },
         { "@type": "ListItem", "position": 5, "url": "https://onlineaudiotest.com/audio-spectrum-analyzer/",    "name": "Audio Spectrum Analyzer — Real-Time FFT Microphone Frequency Visualizer" },
         { "@type": "ListItem", "position": 6, "url": "https://onlineaudiotest.com/voice-recorder/",             "name": "Online Voice Recorder — Free Browser Audio Recorder with WAV Download" },
-        { "@type": "ListItem", "position": 7, "url": "https://onlineaudiotest.com/mic-quality-test/",           "name": "Microphone Quality Test — Noise Floor, SNR, Clipping & Quality Score" }
+        { "@type": "ListItem", "position": 7, "url": "https://onlineaudiotest.com/mic-quality-test/",           "name": "Microphone Quality Test — Noise Floor, SNR, Clipping & Quality Score" },
+        { "@type": "ListItem", "position": 8, "url": "https://onlineaudiotest.com/bpm-detector/",               "name": "BPM Detector — Find the Tempo of Any Song Online" },
+        { "@type": "ListItem", "position": 9, "url": "https://onlineaudiotest.com/key-detector/",               "name": "Song Key Detector — Find the Musical Key of Any Song" },
+        { "@type": "ListItem", "position": 10, "url": "https://onlineaudiotest.com/key-and-bpm-detector/",      "name": "Key and BPM Detector — Find Key and Tempo Together" }
       ]
     },
   ]
@@ -93,6 +96,30 @@ const tools = [
     desc: 'Speak for 10 seconds and get a full diagnostic: noise floor, signal-to-noise ratio, clipping count, dynamic range, and a quality score from 0–100 with personalized recommendations.',
     gradClass: 'develop',
     cta: 'Test mic quality →',
+  },
+  {
+    href: '/bpm-detector/',
+    eyebrow: 'Tempo Finder',
+    title: 'BPM Detector',
+    desc: 'Upload any MP3 or WAV and instantly detect the BPM of any song. Find the beats per minute for DJ mixing, music production, or workout playlists — no download required.',
+    gradClass: 'preview',
+    cta: 'Detect BPM →',
+  },
+  {
+    href: '/key-detector/',
+    eyebrow: 'Musical Key Finder',
+    title: 'Song Key Detector',
+    desc: 'Upload any audio file and find its musical key and scale. Get the Camelot code for harmonic DJ mixing. Supports MP3, WAV, OGG, and FLAC — fully browser-based.',
+    gradClass: 'ship',
+    cta: 'Find the key →',
+  },
+  {
+    href: '/key-and-bpm-detector/',
+    eyebrow: 'DJ Analysis Tool',
+    title: 'Key + BPM Detector',
+    desc: 'Get the musical key, Camelot code, and BPM of any song in one analysis. The fastest way to prepare tracks for harmonic mixing, sample matching, and DJ sets.',
+    gradClass: 'develop',
+    cta: 'Analyze track →',
   },
 ];
 ---

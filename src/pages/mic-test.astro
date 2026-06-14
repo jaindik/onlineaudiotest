@@ -3,23 +3,64 @@ import Layout from '../layouts/Layout.astro';
 
 const schema = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Mic Check Online - Free Microphone & Earphone Mic Test",
-  "url": "https://onlineaudiotest.com/mic-test/",
-  "description": "Free mic check online. Test your microphone, earphone mic, or headset mic instantly in your browser. Real-time waveform, input level meter, audio recording and playback. No download.",
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "Any",
-  "browserRequirements": "Requires getUserMedia API support",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "featureList": ["Microphone detection", "Earphone mic test", "Real-time waveform display", "Input level monitoring", "Audio recording", "Playback audio test"],
-  "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Microphone Test Online — Free Mic Check",
+      "url": "https://onlineaudiotest.com/mic-test/",
+      "description": "Free microphone test online. Test your mic, earphone mic, or headset in your browser. Real-time waveform, input level meter, audio recording and playback. No download.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires getUserMedia API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": ["Microphone detection", "Earphone mic test", "Real-time waveform display", "Input level monitoring", "Audio recording", "Playback audio test"],
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Microphone Test Online", "item": "https://onlineaudiotest.com/mic-test/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why isn't my microphone being detected?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Check that your microphone is connected and set as the default input device in your OS sound settings. On Windows: Settings → Sound → Input. On Mac: System Preferences → Sound → Input. Also ensure no other app has exclusive access to the mic — close any running video call or recording apps and try again." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my voice recorded or stored anywhere?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. All audio processing happens entirely in your browser using the Web Audio API and MediaRecorder API. No audio data is transmitted to any server. Your voice never leaves your device." }
+        },
+        {
+          "@type": "Question",
+          "name": "The microphone level meter isn't moving — what should I do?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Make sure you clicked Allow when the browser asked for microphone permission. Check your system volume mixer isn't muting the microphone input. On Windows, right-click the speaker icon → Open Sound settings → Input → check the device is selected. Try a different browser (Chrome or Edge recommended) if the issue persists." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does my microphone recording sound echo-y or distorted?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Echo usually means your speakers are feeding back into your open microphone — use headphones while recording to break this loop. Distortion typically indicates your input gain is too high. Lower the microphone sensitivity in OS settings (Windows: Recording Devices → Properties → Levels; Mac: System Settings → Sound → Input volume)." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I test my headset microphone online?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Connect your headset, then open the Mic Test page and click 'Test My Microphone.' Allow browser microphone access when prompted. Select your headset's microphone from the browser permission dropdown if multiple input devices are detected. Speak into the headset mic — the waveform and level meter should respond in real time, confirming the headset mic is working." }
+        }
+      ]
+    }
+  ]
 };
 ---
 
 <Layout
-  title="Mic Check Online - Free Microphone Test & Earphone Mic Check"
-  description="Free mic check online. Test your microphone, earphone mic, or headset instantly in your browser. See real-time input levels, record a clip, and play it back. No download."
-  keywords="mic check, mic check online, earphone mic test, microphone test online, headset mic test, online mic test, microphone check"
+  title="Microphone Test Online — Free Mic Check & Headset Tester"
+  description="Test your microphone online in seconds — see live waveform, input levels, and record a clip to play back. Works with USB mics, headsets, AirPods, and earphone mics. Free, no download."
+  keywords="microphone test online, mic test online, online mic test, mic check online, test my microphone, headset mic test, check microphone online, earphone mic test, online microphone check, mic check"
   schema={schema}
   sidebar={true}
 >

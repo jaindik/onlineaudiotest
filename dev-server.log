@@ -1,0 +1,40 @@
+
+> onlineaudiotest@0.0.1 dev
+> astro dev
+
+(node:14120) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[2m21:12:47[22m [34m[@astrojs/cloudflare][39m Enabling image processing with Cloudflare Images for production with the "IMAGES" Images binding.
+[2m21:12:47[22m [34m[@astrojs/cloudflare][39m Enabling sessions with Cloudflare KV with the "SESSION" KV binding.
+[33m[1m21:12:48[22m [WARN] [vite][39m [2mDefault inspector port 9229 not available, using 9230 instead
+[22m
+[2m21:12:50[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:13:19[22m [34m[types][39m Generated [2m3ms[22m
+[2m21:13:20[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:13:20[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[42m[1m astro [22m[49m [32mv6.4.2[39m [2mready in[22m 45151 [2mms[22m
+[2m┃[22m Local    [36mhttp://localhost:4321/[39m
+[2m┃[22m Network  [2muse --host to expose[22m
+[2m21:13:23[22m [32mwatching for file changes...[39m
+[2m21:19:27[22m Configuration file updated. Restarting...
+[2m21:19:27[22m [34m[@astrojs/cloudflare][39m Enabling image processing with Cloudflare Images for production with the "IMAGES" Images binding.
+[2m21:19:27[22m [34m[@astrojs/cloudflare][39m Enabling sessions with Cloudflare KV with the "SESSION" KV binding.
+[2m21:19:27[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:19:49[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:19:49[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:19:55[22m [34m[vite][39m server restarted.
+[2m21:20:44[22m Configuration file updated. Restarting...
+[2m21:20:44[22m [34m[@astrojs/cloudflare][39m Enabling image processing with Cloudflare Images for production with the "IMAGES" Images binding.
+[2m21:20:44[22m [34m[@astrojs/cloudflare][39m Enabling sessions with Cloudflare KV with the "SESSION" KV binding.
+[2m21:20:45[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:21:10[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:21:10[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:21:16[22m [34m[vite][39m server restarted.
+[33m[1m21:21:17[22m [WARN] [vite][39m [33mThe file does not exist at "C:/Users/WELCOME/Desktop/code/onlineaudiotest/node_modules/.vite/deps/astro_runtime_client_dev-toolbar_entrypoint__js.js?v=e154095a" which is in the optimize deps directory. The dependency might be incompatible with the dep optimizer. Try adding it to `optimizeDeps.exclude`.[39m
+[2m21:25:03[22m Configuration file updated. Restarting...
+[2m21:25:03[22m [34m[@astrojs/cloudflare][39m Enabling image processing with Cloudflare Images for production with the "IMAGES" Images binding.
+[2m21:25:03[22m [34m[@astrojs/cloudflare][39m Enabling sessions with Cloudflare KV with the "SESSION" KV binding.
+[2m21:25:03[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:25:27[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:25:27[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:25:33[22m [34m[vite][39m server restarted.

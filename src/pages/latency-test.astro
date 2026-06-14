@@ -3,23 +3,64 @@ import Layout from '../layouts/Layout.astro';
 
 const schema = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Audio Latency Test - Bluetooth & AirPods Delay Checker",
-  "url": "https://onlineaudiotest.com/latency-test/",
-  "description": "Free audio latency test online. Measure Bluetooth audio delay, AirPods latency, and system output lag in milliseconds. Bluetooth audio test and AirPods test — instant, no download.",
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "Any",
-  "browserRequirements": "Requires Web Audio API support",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "featureList": ["Audio latency test", "Bluetooth audio test", "AirPods latency test", "System output lag measurement", "Round-trip loopback test", "Output & base latency breakdown"],
-  "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Audio Latency Test — Bluetooth & AirPods Delay Checker",
+      "url": "https://onlineaudiotest.com/latency-test/",
+      "description": "Free audio latency test online. Measure Bluetooth audio delay, AirPods latency, and system output lag in milliseconds. Bluetooth audio test and AirPods test — instant, no download.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires Web Audio API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": ["Audio latency test", "Bluetooth audio test", "AirPods latency test", "System output lag measurement", "Round-trip loopback test", "Output & base latency breakdown"],
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Audio Latency Test", "item": "https://onlineaudiotest.com/latency-test/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does my audio sound delayed on Bluetooth?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Bluetooth audio codecs compress audio before transmitting it wirelessly. The default codec (SBC) introduces 150–250 ms of delay. Two codecs genuinely reduce this: aptX Low Latency achieves approximately 40 ms, and LC3 (used in Bluetooth LE Audio) targets around 20–40 ms. LDAC is a high-quality codec, not a low-latency one — its latency is similar to SBC. Some headphones advertise a 'game mode' which switches to a low-latency protocol to reduce delay." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between base latency and output latency?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Base latency is the fixed delay your browser's audio engine adds to process audio in chunks (typically 5–20 ms). Output latency is the additional delay introduced by your audio driver and hardware — this is where Bluetooth delay shows up. Together they form your total audio output latency, which this test measures." }
+        },
+        {
+          "@type": "Question",
+          "name": "My Zoom calls have echo — is that a latency issue?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Echo is different from latency. Echo happens when your microphone picks up audio from your speakers and retransmits it. Latency is when you hear your own voice with a delay. If you hear yourself delayed, your total round-trip is above 50 ms. Use wired headphones or enable echo cancellation in Zoom settings to fix both issues." }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I reduce audio latency for gaming?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Use a wired connection rather than Bluetooth. In Windows, switch from 'High Definition Audio' to an ASIO driver (via apps like ASIO4ALL) for sub-10 ms latency. On Mac, use Core Audio which already has low-latency drivers built in. For Bluetooth gaming headsets, enable Game Mode or aptX Low Latency if available, and avoid USB audio hubs — connect directly to your motherboard's audio jack." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a good audio latency for video calls?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Under 40 ms is generally imperceptible during a call. 40–100 ms may cause minor lip-sync issues in video. Above 100 ms becomes noticeably disruptive during back-and-forth conversation — you'll hear yourself or others with a clear, distracting lag. Wired audio typically achieves under 20 ms; Bluetooth SBC can exceed 200 ms." }
+        }
+      ]
+    }
+  ]
 };
 ---
 
 <Layout
-  title="Audio Latency Test - Bluetooth Audio & AirPods Delay Checker"
-  description="Free audio latency test online. Measure Bluetooth audio delay, AirPods latency, and output lag in milliseconds. Bluetooth audio test. No download."
-  keywords="audio latency test, bluetooth audio test, airpods test, bluetooth latency checker, audio delay test, airpods latency, wireless audio latency"
+  title="Audio Latency Test — Measure Bluetooth & Audio Delay in ms"
+  description="Measure your audio output delay in milliseconds — free, instant, in your browser. Test Bluetooth headphone lag, AirPods delay, gaming latency, or wired audio. No download or microphone required."
+  keywords="audio latency test, sound latency test, latency test audio, bluetooth audio test, audio delay test, airpods latency test, bluetooth latency checker, audio lag test, airpods latency, wireless audio latency"
   schema={schema}
   sidebar={true}
 >
@@ -105,7 +146,7 @@ const schema = {
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <p class="faq-q">Why does my audio sound delayed on Bluetooth?</p>
-      <p class="faq-a">Bluetooth audio codecs compress audio before transmitting it wirelessly. The default codec (SBC) introduces 150–250 ms of delay. Upgrading codecs reduces this significantly — <a href="https://www.qualcomm.com/products/features/aptx" target="_blank" rel="noopener noreferrer">according to Qualcomm</a>, aptX Low Latency achieves latency below 40 ms, compared to SBC's 150–250 ms. LDAC (Sony) and LC3 (Bluetooth LE Audio) also offer lower latency than SBC. Some headphones also advertise a "game mode" which bypasses extra codec processing.</p>
+      <p class="faq-a">Bluetooth audio codecs compress audio before transmitting it wirelessly. The default codec (SBC) introduces 150–250 ms of delay. Two codecs genuinely reduce this: <a href="https://www.aptx.com/aptx-low-latency" target="_blank" rel="noopener noreferrer">aptX Low Latency (Qualcomm)</a> achieves approximately 40 ms, and LC3 (used in Bluetooth LE Audio) targets around 20–40 ms. LDAC is a high-quality codec, not a low-latency one — its latency is similar to SBC. Some headphones advertise a "game mode" which switches to a low-latency protocol to reduce delay.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">What is base latency vs output latency?</p>
@@ -121,7 +162,7 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">What is a good latency for video calls?</p>
-      <p class="faq-a">Under 30 ms is imperceptible during a call. 30–100 ms may cause minor lip-sync issues in video. Above 100 ms becomes noticeably annoying during back-and-forth conversation - you'll hear yourself or others with a clear lag.</p>
+      <p class="faq-a">Under 40 ms is generally imperceptible during a call. 40–100 ms may cause minor lip-sync issues in video. Above 100 ms becomes noticeably annoying during back-and-forth conversation — you'll hear yourself or others with a clear lag.</p>
     </div>
   </div>
 

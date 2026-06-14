@@ -155,6 +155,21 @@ const ogImage = `${site}/ogImage.webp`;
           </svg>
           Mic Quality
         </a>
+        <a href="/bpm-detector/" class:list={['nav-tool', { 'nav-active': currentPath === '/bpm-detector' }]}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 6v4.2l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          BPM Detector
+        </a>
+        <a href="/key-detector/" class:list={['nav-tool', { 'nav-active': currentPath === '/key-detector' || currentPath === '/key-and-bpm-detector' }]}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M9 19V6l12-3v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="6" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          Key Detector
+        </a>
       </div>
     </div>
 
@@ -277,6 +292,48 @@ const ogImage = `${site}/ogImage.webp`;
             </div>
           </a>
 
+          <a href="/bpm-detector/" class:list={['sidebar-item', { active: currentPath === '/bpm-detector' }]}>
+            <div class="sidebar-icon">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10 6v4.2l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="sidebar-text">
+              <span class="sidebar-item-title">BPM Detector</span>
+              <span class="sidebar-item-desc">Find the tempo of any song</span>
+            </div>
+          </a>
+
+          <a href="/key-detector/" class:list={['sidebar-item', { active: currentPath === '/key-detector' }]}>
+            <div class="sidebar-icon">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M9 19V6l12-3v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="6" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="sidebar-text">
+              <span class="sidebar-item-title">Key Detector</span>
+              <span class="sidebar-item-desc">Find the musical key of a song</span>
+            </div>
+          </a>
+
+          <a href="/key-and-bpm-detector/" class:list={['sidebar-item', { active: currentPath === '/key-and-bpm-detector' }]}>
+            <div class="sidebar-icon">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M9 19V6l12-3v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="6" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M15 7.5l3-1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="sidebar-text">
+              <span class="sidebar-item-title">Key + BPM Detector</span>
+              <span class="sidebar-item-desc">Key and tempo in one analysis</span>
+            </div>
+          </a>
+
         </div>
       </aside>
     </div>
@@ -311,6 +368,9 @@ const ogImage = `${site}/ogImage.webp`;
           <a href="/audio-spectrum-analyzer/" class="footer-link">Audio Spectrum Analyzer</a>
           <a href="/voice-recorder/" class="footer-link">Online Voice Recorder</a>
           <a href="/mic-quality-test/" class="footer-link">Microphone Quality Test</a>
+          <a href="/bpm-detector/" class="footer-link">BPM Detector</a>
+          <a href="/key-detector/" class="footer-link">Song Key Detector</a>
+          <a href="/key-and-bpm-detector/" class="footer-link">Key and BPM Detector</a>
         </div>
         <div class="footer-col">
           <span class="footer-col-label">Company</span>

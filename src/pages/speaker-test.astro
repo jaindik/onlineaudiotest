@@ -3,23 +3,64 @@ import Layout from '../layouts/Layout.astro';
 
 const schema = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Left Right Audio Test - Stereo, Speaker & Headphone Check",
-  "url": "https://onlineaudiotest.com/speaker-test/",
-  "description": "Free left right audio test for speakers, headphones, and earphones. Stereo audio test, headphone check, earphone test left right, lossless pink noise playback audio test. No download.",
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "Any",
-  "browserRequirements": "Requires Web Audio API support",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "featureList": ["Left right audio test", "Stereo audio test", "Headphone check", "Left right headphone test", "Earphone test left right", "Pink noise lossless audio test", "Playback audio test", "Headphone test music tones", "100 Hz woofer test", "Cable reversal diagnostic"],
-  "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Left Right Audio Test — Stereo, Speaker & Headphone Check",
+      "url": "https://onlineaudiotest.com/speaker-test/",
+      "description": "Free left right audio test for speakers, headphones, and earphones. Stereo audio test, headphone check, earphone test left right, lossless pink noise playback audio test. No download.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires Web Audio API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": ["Left right audio test", "Stereo audio test", "Headphone check", "Left right headphone test", "Earphone test left right", "Pink noise lossless audio test", "Playback audio test", "Headphone test music tones", "100 Hz woofer test", "Cable reversal diagnostic"],
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Left Right Audio Test", "item": "https://onlineaudiotest.com/speaker-test/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does sound come from the wrong speaker?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Your speaker cables are physically reversed at the amplifier or binding posts. Swap the L/R cables to correct the stereo image. This is the single most common wiring mistake with passive speakers and is easy to fix — simply switch which cable plugs into which terminal." }
+        },
+        {
+          "@type": "Question",
+          "name": "One speaker produces no sound at all — where do I start?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Work backwards: (1) Check the cable is fully seated at both ends. (2) Swap L/R cables — if the dead side moves to the other speaker, your amp channel is at fault; if the same physical speaker stays silent, the driver or crossover is damaged. (3) Verify OS audio balance isn't set fully to one side in System Settings → Sound." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is pink noise and why is it better than a sine tone for speaker testing?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A sine tone only exercises one frequency at a time. Pink noise has equal energy per octave, so it simultaneously drives your tweeter, midrange, and woofer. This makes it ideal for comparing left/right tonal balance in a single listen — a muffled or darker-sounding side points to a degraded driver or a blown tweeter." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this left right audio test work with headphones and earphones?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes — the test works identically for headphones, earphones, AirPods, and desktop speakers. Click 'Left only' and confirm you hear sound only in your left ear. Click 'Right only' and confirm your right ear. If audio plays from the wrong ear, your stereo channels are swapped at the OS level. Check System Settings → Sound → Balance to confirm it is centered." }
+        },
+        {
+          "@type": "Question",
+          "name": "My speakers distort during the sine tone test — is that a problem?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Distortion at high volumes usually means the amplifier is clipping — being pushed beyond its rated wattage. Lower the test volume slider. Distortion at low volumes is more serious: it indicates the speaker cone or voice coil is physically damaged and the driver likely needs replacement." }
+        }
+      ]
+    }
+  ]
 };
 ---
 
 <Layout
-  title="Left Right Speaker Test - Online Stereo & Headphone Audio Check"
-  description="Check if your left and right audio channels are working. Free stereo speaker test for headphones and earphones - runs in your browser, no download needed."
-  keywords="left right audio test, stereo audio test, left and right audio test, headphone test, left right headphone test, headphone check, earphone test left right, headphone test music, lossless audio test, playback audio test, online speaker test"
+  title="Left Right Audio Test — Free Speaker & Headphone Stereo Check"
+  description="Check your left and right speakers or headphones in seconds. Play pink noise on each channel separately — instantly find dead channels, reversed cables, or driver imbalance. Free, no download."
+  keywords="left right audio test, stereo audio test, left and right audio test, speaker test left and right, headphone test, left right headphone test, headphone check, earphone test left right, check headphones, online speaker test, left right stereo test"
   schema={schema}
   sidebar={true}
 >

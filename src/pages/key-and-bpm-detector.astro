@@ -1,0 +1,529 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Key and BPM Detector Online",
+      "url": "https://onlineaudiotest.com/key-and-bpm-detector/",
+      "description": "Free online key and BPM detector. Upload an MP3 or WAV to instantly find the musical key, scale, and tempo of any song. Perfect for DJs and producers.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires Web Audio API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": ["BPM detection", "Musical key detection", "Camelot code display", "Harmonic mixing reference"],
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Key and BPM Detector", "item": "https://onlineaudiotest.com/key-and-bpm-detector/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why detect both key and BPM together?",
+          "acceptedAnswer": { "@type": "Answer", "text": "DJs use both pieces of information simultaneously when mixing. BPM determines whether two tracks can be beatmatched — they need similar tempos or a 2:1 ratio. Key determines whether the tracks will sound harmonically compatible when played together. Uploading one file and getting both results in a single analysis saves time and ensures the BPM and key were analyzed from the same audio." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is harmonic mixing?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Harmonic mixing is the technique of choosing tracks to mix that are in compatible musical keys. When two songs in clashing keys are mixed together, the result sounds dissonant and unpleasant. By choosing tracks in the same key or a closely related key (a fifth apart, or the relative major/minor), the transition sounds musical and smooth. The Camelot Wheel makes this easy — mix tracks with the same number, adjacent numbers, or between A and B at the same number." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I use the Camelot code for mixing?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The Camelot code is a number from 1–12 plus a letter (A for minor, B for major). To mix harmonically: same code = perfect match (e.g., 8B into 8B); adjacent number, same letter = a fifth apart, blends smoothly (8B into 9B); same number, different letter = relative key, also works well (8B into 8A). Moving more than 2 steps risks tonal clash." }
+        },
+        {
+          "@type": "Question",
+          "name": "What if my track detects an unusual key or low confidence?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Low confidence means the track does not have a strong tonal center — common in ambient, experimental, heavily processed electronic music, or very percussive tracks. In that case, the key result is a best guess rather than a definitive answer. BPM detection is generally more reliable across genres since it only needs a rhythmic pulse rather than harmonic content." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this tool work with live DJ sets or just single tracks?",
+          "acceptedAnswer": { "@type": "Answer", "text": "This tool analyzes single audio files only. For live DJ sets or long mixes, the key and BPM will reflect the dominant content of the full file, not individual tracks within it. For best results, analyze individual tracks before your set rather than analyzing the recorded mix after." }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="Key and BPM Detector - Find Key and Tempo of Any Song"
+  description="Upload any MP3 or WAV to detect the musical key and BPM together. Free online tool for DJs and producers. Get Camelot code for harmonic mixing."
+  keywords="key and bpm detector, song key bpm finder, bpm key detector, harmonic mixing tool, camelot wheel finder, dj key bpm, tempo key detector"
+  canonical="https://onlineaudiotest.com/key-and-bpm-detector/"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>Key and BPM Detector</h1>
+    <p>Upload any audio file and get the musical key, Camelot code, and BPM in one pass. Ideal for DJs doing harmonic mixing, producers matching samples, and anyone who wants tempo and tonality in a single click.</p>
+  </section>
+
+  <!-- TOOL -->
+  <div class="tool-card-wrap">
+    <div class="tool-card" id="keybpm-tool">
+
+      <div class="status-bar">
+        <div class="status-pill">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Upload a file to analyze</span>
+        </div>
+        <span class="eyebrow caption-mono" id="phase-label"></span>
+      </div>
+
+      <!-- Upload zone -->
+      <div class="upload-zone" id="upload-zone" role="button" tabindex="0" aria-label="Upload audio file">
+        <input type="file" id="file-input" accept="audio/*,.mp3,.wav,.ogg,.flac,.aac,.m4a" />
+        <svg class="upload-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 19V6l12-3v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="6" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <p class="upload-main">Drop audio file here</p>
+        <p class="upload-sub">or <span class="upload-link">click to browse</span></p>
+        <p class="upload-hint">MP3 · WAV · OGG · FLAC</p>
+      </div>
+
+      <!-- File selected -->
+      <div class="file-selected" id="file-selected" hidden>
+        <div class="file-info">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 19V6l12-3v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="6" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span class="file-name" id="file-name"></span>
+        </div>
+        <div class="action-row">
+          <button class="btn btn-primary btn-lg" id="btn-analyze">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Detect Key + BPM
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btn-reset">Choose another file</button>
+        </div>
+      </div>
+
+      <!-- Analyzing -->
+      <div class="analyzing-state" id="analyzing-state" hidden>
+        <div class="spinner"></div>
+        <p class="analyzing-text">Analyzing audio...</p>
+        <p class="upload-hint">Running both BPM and key analysis</p>
+      </div>
+
+      <!-- Result -->
+      <div class="result-panel" id="result-panel" hidden>
+        <div class="dual-results">
+          <!-- Key -->
+          <div class="result-block">
+            <div class="result-block-label">Key</div>
+            <div class="result-block-primary">
+              <span class="result-big" id="res-key">C</span>
+              <span class="result-sub" id="res-scale">Major</span>
+            </div>
+            <div class="result-block-meta">
+              <span class="meta-chip" id="res-camelot">8B</span>
+              <span class="meta-secondary" id="res-relative">Rel: A minor</span>
+            </div>
+            <div class="conf-bar-wrap">
+              <div class="conf-bar">
+                <div class="conf-fill" id="key-conf-fill" style="width:0%"></div>
+              </div>
+              <span class="conf-label" id="key-conf-label">0%</span>
+            </div>
+          </div>
+
+          <div class="result-divider"></div>
+
+          <!-- BPM -->
+          <div class="result-block">
+            <div class="result-block-label">BPM</div>
+            <div class="result-block-primary">
+              <span class="result-big" id="res-bpm">128</span>
+              <span class="result-sub">BPM</span>
+            </div>
+            <div class="result-block-meta">
+              <span class="meta-chip grade-badge" id="res-tempo-grade">Upbeat</span>
+            </div>
+            <div class="conf-bar-wrap">
+              <div class="conf-bar">
+                <div class="conf-fill" id="bpm-conf-fill" style="width:0%"></div>
+              </div>
+              <span class="conf-label" id="bpm-conf-label">0%</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btn-again" style="margin-top:var(--s-md)">Test another file</button>
+      </div>
+
+      <!-- Error -->
+      <div class="error-state" id="error-state" hidden>
+        <p class="error-text" id="error-text"></p>
+        <button class="btn btn-secondary btn-sm" id="btn-retry">Try again</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- HARMONIC MIXING GUIDE -->
+  <div class="how-section">
+    <h2>Using key and BPM for harmonic mixing</h2>
+    <p>Harmonic mixing means choosing tracks that are musically compatible — same or related keys so they do not clash when played together. Combined with BPM matching, it is the foundation of smooth, professional DJ mixes.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Match the tempo first.</strong> Two tracks need to be within a few BPM of each other, or at a 2:1 ratio (e.g., 75 BPM and 150 BPM work together at double-speed). Most DJ software lets you nudge tempo slightly with no audible pitch change.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Check the Camelot code.</strong> Tracks with the same Camelot number (e.g., 8B) share the same key — perfect harmonic compatibility. Adjacent numbers (8B and 9B) are a fifth apart and also blend well. Moving between A and B at the same number (8B to 8A) switches between the relative major and minor — usually sounds smooth.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Listen before committing.</strong> Even with matching Camelot codes, arrangement, register, and instrumentation affect how two tracks blend. The Camelot Wheel is a guide, not a guarantee — always test the transition with your ears.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <h2>How the analysis works</h2>
+    <p>Both analyses run on the same decoded audio in a single pass. Key detection uses a 45-second chromagram analysis (FFT with Hann windowing, Krumhansl-Schmuckler profiles). BPM detection uses a 60-second energy flux and autocorrelation pass. The two algorithms are independent — one does not affect the other's accuracy.</p>
+  </div>
+
+  <!-- RELATED -->
+  <div class="how-section">
+    <h2>Related tools</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/bpm-detector/"><strong>BPM Detector</strong></a> - Just the tempo. Useful when you only need the BPM and want the genre reference table.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/key-detector/"><strong>Key Detector</strong></a> - Just the key. Includes the full Camelot Wheel reference table for all 24 keys.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/frequency-generator/"><strong>Frequency Generator</strong></a> - Generate pure tones at any frequency. Useful for tuning instruments and checking speaker response.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">Why detect both key and BPM together?</p>
+      <p class="faq-a">DJs need both to mix tracks. BPM determines whether two tracks can be beatmatched. Key determines whether they will sound harmonic when played together. Getting both from the same analysis in one click is faster than running two separate tools, and ensures both values came from the same audio.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is harmonic mixing?</p>
+      <p class="faq-a">Harmonic mixing is the technique of choosing tracks that are in compatible musical keys so that transitions sound smooth and musical rather than clashing. The Camelot Wheel system makes it easy: mix tracks with the same Camelot number (same key), adjacent numbers (a fifth apart), or switch between A and B at the same number (relative major/minor). The difference between harmonic and non-harmonic mixing is immediately audible even to non-musicians.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">My BPM shows 64 but the track clearly sounds faster. What happened?</p>
+      <p class="faq-a">This is a half-time artifact where the algorithm found beats at twice the expected interval. If the result seems too slow, double it. If it seems too fast, halve it. This is especially common in tracks with sparse kick drum patterns or heavy syncopation. The true musical tempo is usually the value that places the song in a familiar genre BPM range.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">The key confidence is low. Should I trust the result?</p>
+      <p class="faq-a">Low confidence (below 50%) means the algorithm did not find a clear tonal center. This is common for very percussive tracks, ambient music, atonal electronic music, and recordings with a lot of noise. In that case, the key result is a best guess — verify it by ear before relying on it for harmonic mixing. BPM confidence tends to be more reliable across genres.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Does analysis happen in my browser or on a server?</p>
+      <p class="faq-a">Everything runs in your browser using the Web Audio API. Your audio file is never uploaded to any server. This means the tool works offline once the page is loaded, and there are no file size limits imposed by upload restrictions — only your browser's memory sets the limit.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  import { detectBPM, detectKey } from '../lib/audioAnalysis';
+
+  type Phase = 'idle' | 'ready' | 'analyzing' | 'result' | 'error';
+
+  const uploadZone     = document.getElementById('upload-zone')!;
+  const fileInput      = document.getElementById('file-input') as HTMLInputElement;
+  const fileSelected   = document.getElementById('file-selected')!;
+  const fileName       = document.getElementById('file-name')!;
+  const btnAnalyze     = document.getElementById('btn-analyze') as HTMLButtonElement;
+  const btnReset       = document.getElementById('btn-reset') as HTMLButtonElement;
+  const analyzingState = document.getElementById('analyzing-state')!;
+  const resultPanel    = document.getElementById('result-panel')!;
+  const resKey         = document.getElementById('res-key')!;
+  const resScale       = document.getElementById('res-scale')!;
+  const resCamelot     = document.getElementById('res-camelot')!;
+  const resRelative    = document.getElementById('res-relative')!;
+  const keyConfFill    = document.getElementById('key-conf-fill') as HTMLElement;
+  const keyConfLabel   = document.getElementById('key-conf-label')!;
+  const resBpm         = document.getElementById('res-bpm')!;
+  const resTempoGrade  = document.getElementById('res-tempo-grade')!;
+  const bpmConfFill    = document.getElementById('bpm-conf-fill') as HTMLElement;
+  const bpmConfLabel   = document.getElementById('bpm-conf-label')!;
+  const btnAgain       = document.getElementById('btn-again') as HTMLButtonElement;
+  const errorState     = document.getElementById('error-state')!;
+  const errorText      = document.getElementById('error-text')!;
+  const btnRetry       = document.getElementById('btn-retry') as HTMLButtonElement;
+  const statusDot      = document.getElementById('status-dot')!;
+  const statusText     = document.getElementById('status-text')!;
+
+  let currentFile: File | null = null;
+
+  const CAMELOT: Record<string, string> = {
+    'C major': '8B', 'G major': '9B', 'D major': '10B', 'A major': '11B',
+    'E major': '12B', 'B major': '1B', 'F# major': '2B', 'C# major': '3B',
+    'G# major': '4B', 'D# major': '5B', 'A# major': '6B', 'F major': '7B',
+    'A minor': '8A', 'E minor': '9A', 'B minor': '10A', 'F# minor': '11A',
+    'C# minor': '12A', 'G# minor': '1A', 'D# minor': '2A', 'A# minor': '3A',
+    'F minor': '4A', 'C minor': '5A', 'G minor': '6A', 'D minor': '7A',
+  };
+
+  const RELATIVE: Record<string, string> = {
+    'C major': 'A minor', 'G major': 'E minor', 'D major': 'B minor',
+    'A major': 'F# minor', 'E major': 'C# minor', 'B major': 'G# minor',
+    'F# major': 'D# minor', 'C# major': 'A# minor', 'G# major': 'F minor',
+    'D# major': 'C minor', 'A# major': 'G minor', 'F major': 'D minor',
+    'A minor': 'C major', 'E minor': 'G major', 'B minor': 'D major',
+    'F# minor': 'A major', 'C# minor': 'E major', 'G# minor': 'B major',
+    'D# minor': 'F# major', 'A# minor': 'C# major', 'F minor': 'G# major',
+    'C minor': 'D# major', 'G minor': 'A# major', 'D minor': 'F major',
+  };
+
+  function gradeForBPM(bpm: number): string {
+    if (bpm < 70)  return 'Very Slow';
+    if (bpm < 90)  return 'Slow';
+    if (bpm < 120) return 'Mid-Tempo';
+    if (bpm < 140) return 'Upbeat';
+    if (bpm < 170) return 'Fast';
+    return 'Very Fast';
+  }
+
+  function setPhase(phase: Phase) {
+    uploadZone.hidden     = phase !== 'idle';
+    fileSelected.hidden   = phase !== 'ready';
+    analyzingState.hidden = phase !== 'analyzing';
+    resultPanel.hidden    = phase !== 'result';
+    errorState.hidden     = phase !== 'error';
+    statusDot.className   = 'dot' + (phase === 'analyzing' ? ' active' : phase === 'error' ? ' warning' : '');
+    statusText.textContent = {
+      idle:      'Upload a file to analyze',
+      ready:     'Ready to analyze',
+      analyzing: 'Analyzing audio...',
+      result:    'Analysis complete',
+      error:     'Error',
+    }[phase];
+  }
+
+  function handleFile(file: File) {
+    currentFile = file;
+    fileName.textContent = file.name;
+    setPhase('ready');
+  }
+
+  async function analyze() {
+    if (!currentFile) return;
+    setPhase('analyzing');
+    await new Promise<void>(r => setTimeout(r, 60));
+
+    try {
+      const arrayBuffer = await currentFile.arrayBuffer();
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      let audioBuffer: AudioBuffer;
+      try {
+        audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      } catch {
+        throw new Error('Could not read this file. Make sure it is a valid audio file (MP3, WAV, OGG, or FLAC).');
+      } finally {
+        audioCtx.close();
+      }
+
+      if (audioBuffer.duration < 10) {
+        throw new Error('File is too short. Analysis needs at least 10 seconds of audio.');
+      }
+
+      // Run both analyses
+      const [bpmResult, keyResult] = [detectBPM(audioBuffer), detectKey(audioBuffer)];
+
+      const { bpm, confidence: bpmConf } = bpmResult;
+      const { key, scale, confidence: keyConf } = keyResult;
+      const fullKey = `${key} ${scale}`;
+      const camelot = CAMELOT[fullKey] ?? '—';
+      const relative = RELATIVE[fullKey] ?? '—';
+      const relDisplay = relative.replace(/\b\w/g, c => c.toUpperCase());
+
+      resKey.textContent = key;
+      resScale.textContent = scale.charAt(0).toUpperCase() + scale.slice(1);
+      resCamelot.textContent = camelot;
+      resRelative.textContent = 'Rel: ' + relDisplay;
+
+      const keyPct = Math.round(keyConf * 100);
+      keyConfFill.style.width = keyPct + '%';
+      keyConfLabel.textContent = keyPct + '%';
+
+      resBpm.textContent = String(bpm);
+      resTempoGrade.textContent = gradeForBPM(bpm);
+
+      const bpmPct = Math.round(bpmConf * 100);
+      bpmConfFill.style.width = bpmPct + '%';
+      bpmConfLabel.textContent = bpmPct + '%';
+
+      setPhase('result');
+    } catch (err) {
+      errorText.textContent = err instanceof Error ? err.message : 'An unexpected error occurred.';
+      setPhase('error');
+    }
+  }
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+  });
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    const file = e.dataTransfer?.files[0];
+    if (file) handleFile(file);
+  });
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files?.[0];
+    if (file) handleFile(file);
+  });
+
+  btnAnalyze.addEventListener('click', analyze);
+  btnReset.addEventListener('click',   () => { currentFile = null; fileInput.value = ''; setPhase('idle'); });
+  btnAgain.addEventListener('click',   () => { currentFile = null; fileInput.value = ''; setPhase('idle'); });
+  btnRetry.addEventListener('click',   () => { currentFile = null; fileInput.value = ''; setPhase('idle'); });
+</script>
+
+<style>
+  /* Upload zone */
+  .upload-zone {
+    border: 2px dashed var(--hairline-strong);
+    border-radius: var(--r-lg);
+    padding: var(--s-xl) var(--s-lg);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .18s, background .18s;
+    outline: none;
+    margin: var(--s-sm) 0;
+  }
+  .upload-zone:hover, .upload-zone:focus-visible, .upload-zone.drag-over {
+    border-color: var(--ink);
+    background: var(--surface);
+  }
+  .upload-icon { color: var(--mute); margin-bottom: var(--s-sm); }
+  .upload-main { font-weight: 600; font-size: 15px; margin: 0 0 4px; color: var(--ink); }
+  .upload-sub  { font-size: 13px; color: var(--mute); margin: 0 0 var(--s-xs); }
+  .upload-link { color: var(--ink); font-weight: 600; text-decoration: underline; }
+  .upload-hint { font-size: 12px; color: var(--mute); margin: 0; font-family: var(--font-mono); letter-spacing: .04em; }
+  #file-input  { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+  /* File selected */
+  .file-info {
+    display: flex; align-items: center; gap: var(--s-sm);
+    padding: var(--s-sm) 0; color: var(--mute);
+  }
+  .file-name {
+    font-size: 13px; font-family: var(--font-mono);
+    color: var(--body-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 300px;
+  }
+
+  /* Analyzing */
+  .analyzing-state { text-align: center; padding: var(--s-xl) 0; }
+  .analyzing-text  { font-size: 14px; color: var(--body-text); margin: 0 0 4px; }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--hairline-strong);
+    border-top-color: var(--ink);
+    border-radius: 50%;
+    margin: 0 auto var(--s-md);
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Dual result layout */
+  .result-panel {
+    display: flex; flex-direction: column; align-items: center;
+    gap: var(--s-sm); padding: var(--s-md) 0;
+  }
+  .dual-results {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: var(--s-lg); width: 100%; align-items: start;
+  }
+  .result-divider {
+    width: 1px; background: var(--hairline); align-self: stretch; margin: var(--s-sm) 0;
+  }
+  .result-block {
+    display: flex; flex-direction: column; align-items: center; gap: var(--s-xs);
+    padding: var(--s-sm) 0;
+  }
+  .result-block-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .07em; color: var(--mute); font-family: var(--font-mono);
+  }
+  .result-block-primary { display: flex; align-items: baseline; gap: 6px; }
+  .result-big {
+    font-family: var(--font-mono); font-size: 64px; font-weight: 700;
+    line-height: 1; color: var(--ink); letter-spacing: -2px;
+  }
+  .result-sub {
+    font-family: var(--font-mono); font-size: 18px; font-weight: 500; color: var(--mute);
+  }
+  .result-block-meta {
+    display: flex; gap: var(--s-xs); align-items: center; flex-wrap: wrap; justify-content: center;
+  }
+  .meta-chip {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    padding: 2px 10px; border-radius: var(--r-full);
+    background: var(--grade-good-bg); color: var(--grade-good-fg);
+  }
+  .meta-secondary { font-size: 12px; color: var(--mute); font-family: var(--font-mono); }
+
+  /* Confidence bar */
+  .conf-bar-wrap { display: flex; align-items: center; gap: 6px; width: 100%; max-width: 140px; }
+  .conf-bar {
+    flex: 1; height: 4px; background: var(--hairline-strong);
+    border-radius: var(--r-full); overflow: hidden;
+  }
+  .conf-fill {
+    height: 100%; background: var(--ink); border-radius: var(--r-full);
+    transition: width .4s ease;
+  }
+  .conf-label { font-family: var(--font-mono); font-size: 11px; color: var(--mute); white-space: nowrap; }
+
+  /* Grade badge (reuse) */
+  .grade-badge {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    padding: 2px 10px; border-radius: var(--r-full);
+    background: var(--grade-good-bg); color: var(--grade-good-fg);
+  }
+
+  /* Error */
+  .error-state { text-align: center; padding: var(--s-lg) 0; }
+  .error-text  { font-size: 14px; color: var(--grade-poor-fg); margin: 0 0 var(--s-md); }
+
+  @media (max-width: 420px) {
+    .dual-results { grid-template-columns: 1fr; }
+    .result-divider { width: 100%; height: 1px; }
+    .result-big { font-size: 52px; }
+  }
+</style>

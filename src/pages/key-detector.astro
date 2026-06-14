@@ -1,0 +1,486 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Song Key Detector Online",
+      "url": "https://onlineaudiotest.com/key-detector/",
+      "description": "Free online key detector. Upload an MP3 or WAV to find the musical key and scale of any song. No download required.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires Web Audio API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": ["Musical key detection", "Major and minor scale detection", "Pitch class analysis", "Chromagram analysis"],
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Key Detector", "item": "https://onlineaudiotest.com/key-detector/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the musical key of a song?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The key of a song is the tonal center — the note or chord that feels like home. A song in C Major uses mostly the notes C, D, E, F, G, A, and B, and resolves back to C. Keys come in major (brighter sounding) and minor (darker sounding) varieties. Knowing the key lets you transpose songs, find compatible instruments, and mix tracks harmonically." }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate is this key detector?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Accuracy is good for tonal music — pop, rock, classical, jazz, electronic — typically correct within one or two closely related keys. It is less reliable for atonal music, heavy ambient soundscapes, or very percussive material with little harmonic content. The confidence percentage gives you an indication of how strongly the algorithm found a tonal center." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between major and minor?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Major and minor refer to the scale (or mode) used. Major scales have a bright, happy character. Minor scales have a darker, more melancholic quality. Both use the same 12 pitch classes, but arranged differently. The key 'C Major' and 'A Minor' actually share the same notes — they are relative keys. A minor is the relative minor of C Major." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a relative key?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Every major key has a relative minor that shares the same notes. For example, C Major and A Minor use the exact same notes. The difference is which note feels like the tonal center. If a song in C feels like it resolves to C, it is C Major. If it feels like it resolves to A, it is A Minor. This is why key detectors sometimes return the relative key rather than the intended one." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why use key detection for DJing or music production?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Harmonic mixing — the practice of mixing songs that are in compatible keys — creates smoother transitions without clashing chords. DJs use the Camelot Wheel system (based on the Circle of Fifths) to find compatible keys quickly. In music production, key detection helps you sample songs, match a vocal to a beat, or layer instruments in the same key to avoid dissonance." }
+        }
+      ]
+    }
+  ]
+};
+
+// Camelot wheel mapping
+const CAMELOT: Record<string, string> = {
+  'C major': '8B', 'G major': '9B', 'D major': '10B', 'A major': '11B',
+  'E major': '12B', 'B major': '1B', 'F# major': '2B', 'C# major': '3B',
+  'G# major': '4B', 'D# major': '5B', 'A# major': '6B', 'F major': '7B',
+  'A minor': '8A', 'E minor': '9A', 'B minor': '10A', 'F# minor': '11A',
+  'C# minor': '12A', 'G# minor': '1A', 'D# minor': '2A', 'A# minor': '3A',
+  'F minor': '4A', 'C minor': '5A', 'G minor': '6A', 'D minor': '7A',
+};
+---
+
+<Layout
+  title="Song Key Detector - Find the Musical Key of Any Song"
+  description="Upload any MP3 or WAV to detect the musical key and scale. Free online key detector — find whether a song is in C Major, A Minor, and more."
+  keywords="key detector, song key detector, find key of song, musical key finder, what key is this song, key finder mp3, chord key detector"
+  canonical="https://onlineaudiotest.com/key-detector/"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>Song Key Detector</h1>
+    <p>Upload any audio file and find the musical key and scale in seconds. Works with MP3, WAV, OGG, and FLAC — processed entirely in your browser, nothing uploaded.</p>
+  </section>
+
+  <!-- TOOL -->
+  <div class="tool-card-wrap">
+    <div class="tool-card" id="key-tool">
+
+      <div class="status-bar">
+        <div class="status-pill">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Upload a file to detect the key</span>
+        </div>
+        <span class="eyebrow caption-mono" id="phase-label"></span>
+      </div>
+
+      <!-- Upload zone -->
+      <div class="upload-zone" id="upload-zone" role="button" tabindex="0" aria-label="Upload audio file">
+        <input type="file" id="file-input" accept="audio/*,.mp3,.wav,.ogg,.flac,.aac,.m4a" />
+        <svg class="upload-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 12H3M3 12L6 9M3 12L6 15M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="upload-main">Drop audio file here</p>
+        <p class="upload-sub">or <span class="upload-link">click to browse</span></p>
+        <p class="upload-hint">MP3 · WAV · OGG · FLAC</p>
+      </div>
+
+      <!-- File selected -->
+      <div class="file-selected" id="file-selected" hidden>
+        <div class="file-info">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 19V6l12-3v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="6" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span class="file-name" id="file-name"></span>
+        </div>
+        <div class="action-row">
+          <button class="btn btn-primary btn-lg" id="btn-analyze">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Detect Key
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btn-reset">Choose another file</button>
+        </div>
+      </div>
+
+      <!-- Analyzing -->
+      <div class="analyzing-state" id="analyzing-state" hidden>
+        <div class="spinner"></div>
+        <p class="analyzing-text">Analyzing audio...</p>
+        <p class="upload-hint">May take a few seconds for large files</p>
+      </div>
+
+      <!-- Result -->
+      <div class="result-panel" id="result-panel" hidden>
+        <div class="key-display">
+          <span class="key-note" id="key-note">C</span>
+          <span class="key-scale" id="key-scale">Major</span>
+        </div>
+        <div class="key-meta">
+          <div class="key-meta-item">
+            <span class="key-meta-label">Camelot</span>
+            <span class="key-meta-val camelot-badge" id="camelot-val">8B</span>
+          </div>
+          <div class="key-meta-item">
+            <span class="key-meta-label">Confidence</span>
+            <span class="key-meta-val" id="confidence-val">—</span>
+          </div>
+          <div class="key-meta-item">
+            <span class="key-meta-label">Relative key</span>
+            <span class="key-meta-val" id="relative-val">A minor</span>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btn-again" style="margin-top:var(--s-sm)">Test another file</button>
+      </div>
+
+      <!-- Error -->
+      <div class="error-state" id="error-state" hidden>
+        <p class="error-text" id="error-text"></p>
+        <button class="btn btn-secondary btn-sm" id="btn-retry">Try again</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CIRCLE OF FIFTHS -->
+  <div class="how-section">
+    <h2>The Circle of Fifths and Camelot Wheel</h2>
+    <p>The Camelot Wheel is a DJ-friendly labeling system based on the Circle of Fifths. Keys that share a number (e.g., 8A and 8B) are relative pairs — they share the same notes. Adjacent numbers (7A and 8A) are a fifth apart and also mix harmonically. This tool shows you the Camelot code alongside the key name.</p>
+    <div class="camelot-table">
+      <div class="camelot-row camelot-header">
+        <span>Key</span>
+        <span>Scale</span>
+        <span>Camelot</span>
+        <span>Relative Key</span>
+      </div>
+      <div class="camelot-row"><span>C</span><span>Major</span><span class="mono-val">8B</span><span>A Minor</span></div>
+      <div class="camelot-row"><span>G</span><span>Major</span><span class="mono-val">9B</span><span>E Minor</span></div>
+      <div class="camelot-row"><span>D</span><span>Major</span><span class="mono-val">10B</span><span>B Minor</span></div>
+      <div class="camelot-row"><span>A</span><span>Major</span><span class="mono-val">11B</span><span>F# Minor</span></div>
+      <div class="camelot-row"><span>E</span><span>Major</span><span class="mono-val">12B</span><span>C# Minor</span></div>
+      <div class="camelot-row"><span>B</span><span>Major</span><span class="mono-val">1B</span><span>G# Minor</span></div>
+      <div class="camelot-row"><span>F#</span><span>Major</span><span class="mono-val">2B</span><span>D# Minor</span></div>
+      <div class="camelot-row"><span>C#</span><span>Major</span><span class="mono-val">3B</span><span>A# Minor</span></div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <h2>How key detection works</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Spectral analysis.</strong> The audio is split into overlapping frames. Each frame is multiplied by a Hann window (to reduce edge artifacts) and then analyzed using a Fast Fourier Transform to get the frequency content.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Chromagram.</strong> FFT bins are mapped to the 12 pitch classes (C through B). The energy in each pitch class is accumulated across all frames in a 45-second analysis window, producing a 12-element chroma vector that shows which notes dominate the track.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Krumhansl-Schmuckler profiles.</strong> The chroma vector is compared against 24 reference key profiles (12 major + 12 minor) using Pearson correlation. These profiles, developed by music cognition researcher Carol Krumhansl, describe how often each note appears in each key according to listener perception studies.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Best match wins.</strong> The key profile with the highest correlation to the track's chroma is returned as the detected key. The confidence score reflects how strongly that key profile matched relative to the others.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATED -->
+  <div class="how-section">
+    <h2>Related tools</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/bpm-detector/"><strong>BPM Detector</strong></a> - Find the tempo of any song. Upload the same file to get the exact beats-per-minute alongside the key.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/key-and-bpm-detector/"><strong>Key and BPM Detector</strong></a> - Get both the musical key and the BPM in one analysis. The ideal tool for DJs, producers, and harmonic mixing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">What is the musical key of a song?</p>
+      <p class="faq-a">The key is the tonal center of a song — the note that everything resolves to. A song in C Major uses mostly C, D, E, F, G, A, and B, and feels "at home" on C. Keys come in major (brighter, happier) and minor (darker, more melancholic) varieties. Knowing the key lets you transpose songs, find compatible chord progressions, or mix tracks harmonically without clashing.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How accurate is the key detector?</p>
+      <p class="faq-a">Good for tonal music — pop, rock, electronic, jazz, and classical. It typically returns the correct key or the relative key (e.g., C Major when the answer is A Minor). Accuracy is lower for atonal music, heavy ambient soundscapes, mostly-percussive tracks, and short clips under 15 seconds. The confidence score tells you how clearly the algorithm found a tonal center — below 50% means the result is a best guess.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is the difference between major and minor?</p>
+      <p class="faq-a">Major and minor are modes — different arrangements of the same 12 pitch classes. Major scales have a characteristic bright, uplifting sound. Minor scales sound darker and more tense. Every major key has a relative minor that uses exactly the same notes — C Major and A Minor share all seven notes, just with a different tonal center. This is why a detector may sometimes return the relative key instead of the intended one.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is the Camelot Wheel?</p>
+      <p class="faq-a">The Camelot Wheel is a system DJs use for harmonic mixing. It maps all 24 keys to a clock face numbered 1–12, with major keys labeled B and minor keys labeled A. Keys at the same number (e.g., 8A and 8B) are relative pairs and mix perfectly. Adjacent numbers (8A and 9A, for example) are a fifth apart and also blend well. This tool shows you the Camelot code so you can use the result directly in your DJ software.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Does the file get uploaded anywhere?</p>
+      <p class="faq-a">No. All analysis runs entirely in your browser using the Web Audio API and JavaScript. Your file never leaves your device. This also means the tool works offline once the page is loaded — useful for studio or live DJ work without an internet connection.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  import { detectKey } from '../lib/audioAnalysis';
+
+  type Phase = 'idle' | 'ready' | 'analyzing' | 'result' | 'error';
+
+  const uploadZone     = document.getElementById('upload-zone')!;
+  const fileInput      = document.getElementById('file-input') as HTMLInputElement;
+  const fileSelected   = document.getElementById('file-selected')!;
+  const fileName       = document.getElementById('file-name')!;
+  const btnAnalyze     = document.getElementById('btn-analyze') as HTMLButtonElement;
+  const btnReset       = document.getElementById('btn-reset') as HTMLButtonElement;
+  const analyzingState = document.getElementById('analyzing-state')!;
+  const resultPanel    = document.getElementById('result-panel')!;
+  const keyNote        = document.getElementById('key-note')!;
+  const keyScale       = document.getElementById('key-scale')!;
+  const camelotVal     = document.getElementById('camelot-val')!;
+  const confidenceVal  = document.getElementById('confidence-val')!;
+  const relativeVal    = document.getElementById('relative-val')!;
+  const btnAgain       = document.getElementById('btn-again') as HTMLButtonElement;
+  const errorState     = document.getElementById('error-state')!;
+  const errorText      = document.getElementById('error-text')!;
+  const btnRetry       = document.getElementById('btn-retry') as HTMLButtonElement;
+  const statusDot      = document.getElementById('status-dot')!;
+  const statusText     = document.getElementById('status-text')!;
+
+  let currentFile: File | null = null;
+
+  // Camelot lookup
+  const CAMELOT: Record<string, string> = {
+    'C major': '8B', 'G major': '9B', 'D major': '10B', 'A major': '11B',
+    'E major': '12B', 'B major': '1B', 'F# major': '2B', 'C# major': '3B',
+    'G# major': '4B', 'D# major': '5B', 'A# major': '6B', 'F major': '7B',
+    'A minor': '8A', 'E minor': '9A', 'B minor': '10A', 'F# minor': '11A',
+    'C# minor': '12A', 'G# minor': '1A', 'D# minor': '2A', 'A# minor': '3A',
+    'F minor': '4A', 'C minor': '5A', 'G minor': '6A', 'D minor': '7A',
+  };
+
+  // Relative key map (major → relative minor, minor → relative major)
+  const RELATIVE: Record<string, string> = {
+    'C major': 'A minor', 'G major': 'E minor', 'D major': 'B minor',
+    'A major': 'F# minor', 'E major': 'C# minor', 'B major': 'G# minor',
+    'F# major': 'D# minor', 'C# major': 'A# minor', 'G# major': 'F minor',
+    'D# major': 'C minor', 'A# major': 'G minor', 'F major': 'D minor',
+    'A minor': 'C major', 'E minor': 'G major', 'B minor': 'D major',
+    'F# minor': 'A major', 'C# minor': 'E major', 'G# minor': 'B major',
+    'D# minor': 'F# major', 'A# minor': 'C# major', 'F minor': 'G# major',
+    'C minor': 'D# major', 'G minor': 'A# major', 'D minor': 'F major',
+  };
+
+  function setPhase(phase: Phase) {
+    uploadZone.hidden     = phase !== 'idle';
+    fileSelected.hidden   = phase !== 'ready';
+    analyzingState.hidden = phase !== 'analyzing';
+    resultPanel.hidden    = phase !== 'result';
+    errorState.hidden     = phase !== 'error';
+    statusDot.className   = 'dot' + (phase === 'analyzing' ? ' active' : phase === 'error' ? ' warning' : '');
+    statusText.textContent = {
+      idle:      'Upload a file to detect the key',
+      ready:     'Ready to analyze',
+      analyzing: 'Analyzing audio...',
+      result:    'Analysis complete',
+      error:     'Error',
+    }[phase];
+  }
+
+  function handleFile(file: File) {
+    currentFile = file;
+    fileName.textContent = file.name;
+    setPhase('ready');
+  }
+
+  async function analyze() {
+    if (!currentFile) return;
+    setPhase('analyzing');
+    await new Promise<void>(r => setTimeout(r, 60));
+
+    try {
+      const arrayBuffer = await currentFile.arrayBuffer();
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      let audioBuffer: AudioBuffer;
+      try {
+        audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      } catch {
+        throw new Error('Could not read this file. Make sure it is a valid audio file (MP3, WAV, OGG, or FLAC).');
+      } finally {
+        audioCtx.close();
+      }
+
+      if (audioBuffer.duration < 10) {
+        throw new Error('File is too short. Key detection needs at least 10 seconds of audio.');
+      }
+
+      const { key, scale, confidence } = detectKey(audioBuffer);
+      const fullKey = `${key} ${scale}`;
+      const camelot = CAMELOT[fullKey] ?? '—';
+      const relative = RELATIVE[fullKey] ?? '—';
+
+      keyNote.textContent = key;
+      keyScale.textContent = scale.charAt(0).toUpperCase() + scale.slice(1);
+      camelotVal.textContent = camelot;
+      confidenceVal.textContent = Math.round(confidence * 100) + '%';
+      relativeVal.textContent = relative.replace(/\b\w/g, c => c.toUpperCase());
+
+      setPhase('result');
+    } catch (err) {
+      errorText.textContent = err instanceof Error ? err.message : 'An unexpected error occurred.';
+      setPhase('error');
+    }
+  }
+
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+  });
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    const file = e.dataTransfer?.files[0];
+    if (file) handleFile(file);
+  });
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files?.[0];
+    if (file) handleFile(file);
+  });
+
+  btnAnalyze.addEventListener('click', analyze);
+  btnReset.addEventListener('click',   () => { currentFile = null; fileInput.value = ''; setPhase('idle'); });
+  btnAgain.addEventListener('click',   () => { currentFile = null; fileInput.value = ''; setPhase('idle'); });
+  btnRetry.addEventListener('click',   () => { currentFile = null; fileInput.value = ''; setPhase('idle'); });
+</script>
+
+<style>
+  /* Upload zone */
+  .upload-zone {
+    border: 2px dashed var(--hairline-strong);
+    border-radius: var(--r-lg);
+    padding: var(--s-xl) var(--s-lg);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .18s, background .18s;
+    outline: none;
+    margin: var(--s-sm) 0;
+  }
+  .upload-zone:hover, .upload-zone:focus-visible, .upload-zone.drag-over {
+    border-color: var(--ink);
+    background: var(--surface);
+  }
+  .upload-icon { color: var(--mute); margin-bottom: var(--s-sm); }
+  .upload-main { font-weight: 600; font-size: 15px; margin: 0 0 4px; color: var(--ink); }
+  .upload-sub  { font-size: 13px; color: var(--mute); margin: 0 0 var(--s-xs); }
+  .upload-link { color: var(--ink); font-weight: 600; text-decoration: underline; }
+  .upload-hint { font-size: 12px; color: var(--mute); margin: 0; font-family: var(--font-mono); letter-spacing: .04em; }
+  #file-input  { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+  /* File selected */
+  .file-info {
+    display: flex; align-items: center; gap: var(--s-sm);
+    padding: var(--s-sm) 0; color: var(--mute);
+  }
+  .file-name {
+    font-size: 13px; font-family: var(--font-mono);
+    color: var(--body-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 300px;
+  }
+
+  /* Analyzing */
+  .analyzing-state { text-align: center; padding: var(--s-xl) 0; }
+  .analyzing-text  { font-size: 14px; color: var(--body-text); margin: 0 0 4px; }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--hairline-strong);
+    border-top-color: var(--ink);
+    border-radius: 50%;
+    margin: 0 auto var(--s-md);
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Result */
+  .result-panel {
+    display: flex; flex-direction: column; align-items: center;
+    gap: var(--s-sm); padding: var(--s-lg) 0;
+  }
+  .key-display {
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .key-note {
+    font-family: var(--font-mono); font-size: 80px; font-weight: 700;
+    line-height: 1; color: var(--ink); letter-spacing: -2px;
+  }
+  .key-scale {
+    font-family: var(--font-mono); font-size: 22px; font-weight: 500; color: var(--mute);
+  }
+  .key-meta {
+    display: flex; gap: var(--s-lg); flex-wrap: wrap; justify-content: center;
+    margin-top: var(--s-sm);
+  }
+  .key-meta-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .key-meta-label { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--mute); font-family: var(--font-mono); }
+  .key-meta-val { font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--ink); }
+  .camelot-badge {
+    background: var(--grade-good-bg);
+    color: var(--grade-good-fg);
+    padding: 2px 10px; border-radius: var(--r-full);
+  }
+
+  /* Error */
+  .error-state { text-align: center; padding: var(--s-lg) 0; }
+  .error-text  { font-size: 14px; color: var(--grade-poor-fg); margin: 0 0 var(--s-md); }
+
+  /* Camelot table */
+  .camelot-table {
+    display: flex; flex-direction: column;
+    border: 1px solid var(--hairline); border-radius: var(--r-md); overflow: hidden;
+    font-size: 13px;
+  }
+  .camelot-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1.5fr;
+    gap: var(--s-sm); padding: 9px var(--s-md);
+    border-bottom: 1px solid var(--hairline); align-items: center;
+  }
+  .camelot-row:last-child { border-bottom: none; }
+  .camelot-header {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--mute);
+    background: var(--surface);
+  }
+  .mono-val { font-family: var(--font-mono); font-size: 12px; color: var(--ink); }
+</style>

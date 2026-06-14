@@ -29,7 +29,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "Which Bluetooth codec has the lowest latency?",
-          "acceptedAnswer": { "@type": "Answer", "text": "aptX Low Latency achieves approximately 32–40 ms, the lowest of the widely supported codecs. LC3 (Bluetooth LE Audio) targets 20–50 ms with better efficiency. For comparison: AAC is typically 80–180 ms, aptX is 70–120 ms, LDAC is 80–150 ms, and SBC (the fallback used by all devices) is 150–250 ms. Note that both your phone and headphones must support the same codec for it to be used." }
+          "acceptedAnswer": { "@type": "Answer", "text": "aptX Low Latency achieves approximately 40 ms, the lowest of the widely supported codecs. LC3 (Bluetooth LE Audio) targets around 20–40 ms. For comparison: SBC (the universal fallback) is typically 150–250 ms; AAC is typically 120–200 ms; standard aptX is typically 100–200 ms. LDAC is primarily a high-quality codec, not a low-latency one — its latency is in the 150–200 ms range, similar to SBC. Both your phone and headphones must support the same codec for it to be used." }
         },
         {
           "@type": "Question",
@@ -49,7 +49,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "Why is Bluetooth audio delayed on iPhone?",
-          "acceptedAnswer": { "@type": "Answer", "text": "iPhone supports AAC for Bluetooth audio, which typically delivers 80–180 ms of latency with Apple and compatible devices. iOS does not expose codec selection — it negotiates AAC automatically with supported headphones, falling back to SBC otherwise. Unlike Android, you cannot manually select a codec on iPhone. If you need lower latency on iPhone, use wired audio via a Lightning or USB-C adapter, or use AirPods which are optimized for Apple's AAC implementation." }
+          "acceptedAnswer": { "@type": "Answer", "text": "iPhone supports AAC for Bluetooth audio, which typically delivers 120–200 ms of latency with Apple and compatible devices. iOS does not expose codec selection — it negotiates AAC automatically with supported headphones, falling back to SBC otherwise. Unlike Android, you cannot manually select a codec on iPhone. If you need lower latency on iPhone, use wired audio via a Lightning or USB-C adapter, or use AirPods which are optimized for Apple's AAC implementation." }
         }
       ]
     }
@@ -58,9 +58,9 @@ const schema = {
 ---
 
 <Layout
-  title="Bluetooth Latency Test - Measure Wireless Audio Delay Online"
-  description="Measure your Bluetooth headphone or speaker latency in ms. See which codec is active and how to reduce wireless audio lag. Free, browser-based, no download."
-  keywords="bluetooth latency test, bluetooth audio delay, wireless audio latency, bluetooth headphone latency, bluetooth codec latency, audio lag test bluetooth"
+  title="Bluetooth Latency Test — Measure Wireless Audio Delay in ms"
+  description="Measure your Bluetooth headphone or speaker delay in milliseconds. See whether you're using SBC, AAC, aptX, or LDAC — and how much latency each adds. Free, instant, no download."
+  keywords="bluetooth latency test, bluetooth audio delay, wireless audio latency, bluetooth headphone latency, bluetooth 5.0 latency test, bluetooth audio lag test, aptx latency test, sbc latency test"
   canonical="https://onlineaudiotest.com/bluetooth-latency-test/"
   schema={schema}
   sidebar={true}

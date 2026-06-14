@@ -1,0 +1,449 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "BPM Detector Online",
+      "url": "https://onlineaudiotest.com/bpm-detector/",
+      "description": "Free online BPM detector. Upload an MP3 or WAV file and instantly get the tempo (beats per minute) of any song. No download required.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires Web Audio API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": ["BPM detection from MP3", "BPM detection from WAV", "Tempo analysis", "Genre tempo reference"],
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "BPM Detector", "item": "https://onlineaudiotest.com/bpm-detector/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is BPM in music?",
+          "acceptedAnswer": { "@type": "Answer", "text": "BPM stands for Beats Per Minute. It measures the tempo of a piece of music — how many steady beats occur in one minute. A higher BPM means a faster song. A slow ballad might be 60–70 BPM, while a fast dance track could be 128–145 BPM. DJs, producers, and fitness instructors all rely on BPM to match tempos or set energy levels." }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate is this BPM detector?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The detector is accurate within 1–2 BPM for most mainstream music with a clear, steady beat — pop, dance, hip-hop, rock, and electronic genres. Accuracy is lower for music with variable tempo (live recordings, classical, jazz with rubato), very short clips under 10 seconds, or tracks with no consistent rhythmic pulse. If the result looks like exactly half or double the expected BPM, that is a known half-time artifact — the true tempo is likely double the shown value." }
+        },
+        {
+          "@type": "Question",
+          "name": "What audio formats does this BPM detector support?",
+          "acceptedAnswer": { "@type": "Answer", "text": "MP3 and WAV files are supported in all browsers. OGG and FLAC files work in Chrome and Firefox. AAC and M4A files work in Safari and Chrome. If your file is not supported, convert it to MP3 first using a free tool like Audacity or CloudConvert." }
+        },
+        {
+          "@type": "Question",
+          "name": "My BPM result shows 64 instead of 128. Why?",
+          "acceptedAnswer": { "@type": "Answer", "text": "This is a common half-time artifact in beat detection. The algorithm found the beat at a period twice as long as the true beat, producing half the correct BPM. If your result seems unusually low (under 80 BPM for a clearly fast track), try doubling it. Similarly, if the result seems too high, halving it may give the correct tempo." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I detect the BPM of a live recording or microphone input?",
+          "acceptedAnswer": { "@type": "Answer", "text": "This tool analyzes uploaded audio files only. For live BPM detection via microphone, you would need a dedicated app such as Tap Tempo tools or DAW plugins. File-based analysis tends to be more accurate since it processes the full audio without microphone noise." }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="BPM Detector - Find the Tempo of Any Song Online"
+  description="Upload an MP3 or WAV and instantly detect the BPM of any song. Free online BPM detector — no download, no account, works in your browser."
+  keywords="bpm detector, bpm detector mp3, song bpm detector, find bpm of song, tempo detector, beats per minute detector, bpm finder"
+  canonical="https://onlineaudiotest.com/bpm-detector/"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>BPM Detector</h1>
+    <p>Upload any audio file and get the tempo (beats per minute) instantly. Works with MP3, WAV, OGG, and FLAC — directly in your browser, nothing to install.</p>
+  </section>
+
+  <!-- TOOL -->
+  <div class="tool-card-wrap">
+    <div class="tool-card" id="bpm-tool">
+
+      <div class="status-bar">
+        <div class="status-pill">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Upload a file to detect BPM</span>
+        </div>
+        <span class="eyebrow caption-mono" id="phase-label"></span>
+      </div>
+
+      <!-- Upload zone -->
+      <div class="upload-zone" id="upload-zone" role="button" tabindex="0" aria-label="Upload audio file">
+        <input type="file" id="file-input" accept="audio/*,.mp3,.wav,.ogg,.flac,.aac,.m4a" />
+        <svg class="upload-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 19V6l12-3v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="6" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <p class="upload-main">Drop audio file here</p>
+        <p class="upload-sub">or <span class="upload-link">click to browse</span></p>
+        <p class="upload-hint">MP3 · WAV · OGG · FLAC</p>
+      </div>
+
+      <!-- File selected -->
+      <div class="file-selected" id="file-selected" hidden>
+        <div class="file-info">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 19V6l12-3v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="6" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span class="file-name" id="file-name"></span>
+        </div>
+        <div class="action-row">
+          <button class="btn btn-primary btn-lg" id="btn-analyze">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M7 4v3.2l2 1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Detect BPM
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btn-reset">Choose another file</button>
+        </div>
+      </div>
+
+      <!-- Analyzing -->
+      <div class="analyzing-state" id="analyzing-state" hidden>
+        <div class="spinner"></div>
+        <p class="analyzing-text">Analyzing audio...</p>
+        <p class="upload-hint">May take a few seconds for large files</p>
+      </div>
+
+      <!-- Result -->
+      <div class="result-panel" id="result-panel" hidden>
+        <div class="bpm-display">
+          <span class="bpm-num" id="bpm-num">128</span>
+          <span class="bpm-unit">BPM</span>
+        </div>
+        <div class="grade-badge" id="grade-badge"></div>
+        <p class="result-desc" id="result-desc"></p>
+        <button class="btn btn-secondary btn-sm" id="btn-again" style="margin-top:var(--s-sm)">Test another file</button>
+      </div>
+
+      <!-- Error -->
+      <div class="error-state" id="error-state" hidden>
+        <p class="error-text" id="error-text"></p>
+        <button class="btn btn-secondary btn-sm" id="btn-retry">Try again</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BPM BY GENRE -->
+  <div class="how-section">
+    <h2>BPM ranges by genre</h2>
+    <p style="font-size:14px;color:var(--mute);margin-bottom:var(--s-md)">Most music falls between 60 and 200 BPM. Here are typical ranges for common genres.</p>
+    <div class="bpm-genre-table">
+      <div class="bpm-row bpm-header">
+        <span>Genre</span>
+        <span>Typical BPM</span>
+        <span>Feel</span>
+      </div>
+      <div class="bpm-row"><span>Ambient / Downtempo</span><span class="mono-val">60–80</span><span>Calm, slow</span></div>
+      <div class="bpm-row"><span>Hip-Hop / R&amp;B</span><span class="mono-val">70–100</span><span>Relaxed groove</span></div>
+      <div class="bpm-row"><span>Pop / Rock</span><span class="mono-val">100–130</span><span>Mid-tempo, driving</span></div>
+      <div class="bpm-row"><span>House / Disco</span><span class="mono-val">120–130</span><span>Dance floor energy</span></div>
+      <div class="bpm-row"><span>Techno / Trance</span><span class="mono-val">130–150</span><span>High energy</span></div>
+      <div class="bpm-row"><span>Drum &amp; Bass</span><span class="mono-val">160–180</span><span>Intense, frenetic</span></div>
+      <div class="bpm-row"><span>Hardcore / Speedcore</span><span class="mono-val">180–300</span><span>Extreme</span></div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <h2>How BPM detection works</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Your file is decoded locally.</strong> The audio is read directly in your browser using the Web Audio API. No data is uploaded to any server — your file stays on your device.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Onset detection.</strong> The tool measures how much the audio energy changes frame by frame. Sudden spikes in energy correspond to beats — drum hits, bass notes, and rhythmic accents.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Autocorrelation finds the period.</strong> By comparing the onset signal with a time-shifted version of itself, the algorithm finds the time interval that repeats most consistently — that interval is the beat period. BPM = 60 / beat period.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Half-time correction.</strong> The algorithm checks whether doubling or halving the raw result lands in the most common musical tempo range (80–160 BPM) and prefers that value to avoid reporting 64 BPM for a 128 BPM track.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATED -->
+  <div class="how-section">
+    <h2>Related tools</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/key-detector/"><strong>Key Detector</strong></a> - Find the musical key of any song. Upload the same file to detect whether it is in C Major, A Minor, F# Major, and so on.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/key-and-bpm-detector/"><strong>Key and BPM Detector</strong></a> - Get both the tempo and musical key in a single analysis. Useful for DJs doing harmonic mixing and producers matching samples.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">What is BPM in music?</p>
+      <p class="faq-a">BPM stands for Beats Per Minute — the tempo of a piece of music. It counts how many steady rhythmic beats occur in one minute. A slow ballad runs around 60–70 BPM. A typical house track is 126–128 BPM. Drum &amp; bass sits around 170 BPM. Knowing the BPM lets DJs beatmatch tracks, helps producers match loops, and tells fitness instructors whether music fits a workout pace.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How accurate is this BPM detector?</p>
+      <p class="faq-a">Within 1–2 BPM for most mainstream music with a clear, steady beat — pop, dance, hip-hop, rock, and electronic genres. Accuracy drops for music with variable tempo (live recordings, jazz, classical with rubato), very short clips under 10 seconds, and tracks with no consistent rhythmic pulse. For anything where precision matters, verify the result by tapping along to the track.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">My result shows 64 BPM but the track feels much faster. Why?</p>
+      <p class="faq-a">This is a half-time artifact. The algorithm found beats at twice the expected interval, giving half the true BPM. If your result is below 80 BPM and the track clearly feels faster, double the number — the true tempo is almost certainly around that value. This is common in tracks where the kick drum pattern is sparse or syncopated.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What audio formats are supported?</p>
+      <p class="faq-a">MP3 and WAV work in all modern browsers. OGG and FLAC work in Chrome and Firefox. AAC and M4A work in Chrome and Safari. If your file format is not supported, convert it to MP3 using Audacity (free, offline) or any online converter first.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Does the file get uploaded anywhere?</p>
+      <p class="faq-a">No. All audio processing happens entirely in your browser using the Web Audio API. Your file is never sent to a server. This also means the tool works offline once the page is loaded.</p>
+    </div>
+  </div>
+
+</Layout>
+
+<script>
+  import { detectBPM } from '../lib/audioAnalysis';
+
+  type Phase = 'idle' | 'ready' | 'analyzing' | 'result' | 'error';
+
+  const uploadZone    = document.getElementById('upload-zone')!;
+  const fileInput     = document.getElementById('file-input') as HTMLInputElement;
+  const fileSelected  = document.getElementById('file-selected')!;
+  const fileName      = document.getElementById('file-name')!;
+  const btnAnalyze    = document.getElementById('btn-analyze') as HTMLButtonElement;
+  const btnReset      = document.getElementById('btn-reset') as HTMLButtonElement;
+  const analyzingState = document.getElementById('analyzing-state')!;
+  const resultPanel   = document.getElementById('result-panel')!;
+  const bpmNum        = document.getElementById('bpm-num')!;
+  const gradeBadge    = document.getElementById('grade-badge')!;
+  const resultDesc    = document.getElementById('result-desc')!;
+  const btnAgain      = document.getElementById('btn-again') as HTMLButtonElement;
+  const errorState    = document.getElementById('error-state')!;
+  const errorText     = document.getElementById('error-text')!;
+  const btnRetry      = document.getElementById('btn-retry') as HTMLButtonElement;
+  const statusDot     = document.getElementById('status-dot')!;
+  const statusText    = document.getElementById('status-text')!;
+  const phaseLabel    = document.getElementById('phase-label')!;
+
+  let currentFile: File | null = null;
+
+  function setPhase(phase: Phase) {
+    uploadZone.hidden    = phase !== 'idle';
+    fileSelected.hidden  = phase !== 'ready';
+    analyzingState.hidden = phase !== 'analyzing';
+    resultPanel.hidden   = phase !== 'result';
+    errorState.hidden    = phase !== 'error';
+
+    statusDot.className = 'dot' + (phase === 'analyzing' ? ' active' : phase === 'error' ? ' warning' : '');
+    statusText.textContent = {
+      idle:      'Upload a file to detect BPM',
+      ready:     'Ready to analyze',
+      analyzing: 'Analyzing audio...',
+      result:    'Analysis complete',
+      error:     'Error',
+    }[phase];
+    phaseLabel.textContent = '';
+  }
+
+  function gradeForBPM(bpm: number): { label: string; cls: string; desc: string } {
+    if (bpm < 70)  return { label: 'Very Slow', cls: 'grade-poor',      desc: 'Ambient, downtempo, ballads' };
+    if (bpm < 90)  return { label: 'Slow',      cls: 'grade-fair',      desc: 'Hip-hop, R&B, soul' };
+    if (bpm < 120) return { label: 'Mid-Tempo', cls: 'grade-good',      desc: 'Pop, rock, jazz, funk' };
+    if (bpm < 140) return { label: 'Upbeat',    cls: 'grade-excellent', desc: 'House, dance, disco' };
+    if (bpm < 170) return { label: 'Fast',      cls: 'grade-excellent', desc: 'Techno, trance, punk' };
+    return           { label: 'Very Fast',       cls: 'grade-fair',      desc: 'Drum & bass, hardcore' };
+  }
+
+  function handleFile(file: File) {
+    currentFile = file;
+    fileName.textContent = file.name;
+    setPhase('ready');
+  }
+
+  async function analyze() {
+    if (!currentFile) return;
+    setPhase('analyzing');
+
+    await new Promise<void>(r => setTimeout(r, 60)); // let UI update
+
+    try {
+      const arrayBuffer = await currentFile.arrayBuffer();
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      let audioBuffer: AudioBuffer;
+      try {
+        audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      } catch {
+        throw new Error('Could not read this file. Make sure it is a valid audio file (MP3, WAV, OGG, or FLAC).');
+      } finally {
+        audioCtx.close();
+      }
+
+      if (audioBuffer.duration < 5) {
+        throw new Error('File is too short. Please use an audio file that is at least 5 seconds long.');
+      }
+
+      const { bpm } = detectBPM(audioBuffer);
+      const g = gradeForBPM(bpm);
+
+      bpmNum.textContent = String(bpm);
+      gradeBadge.textContent = g.label;
+      gradeBadge.className = 'grade-badge ' + g.cls;
+      resultDesc.textContent = g.desc;
+
+      setPhase('result');
+    } catch (err) {
+      errorText.textContent = err instanceof Error ? err.message : 'An unexpected error occurred.';
+      setPhase('error');
+    }
+  }
+
+  // Upload zone interactions
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+  });
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    const file = e.dataTransfer?.files[0];
+    if (file) handleFile(file);
+  });
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files?.[0];
+    if (file) handleFile(file);
+  });
+
+  btnAnalyze.addEventListener('click', analyze);
+  btnReset.addEventListener('click',   () => { currentFile = null; fileInput.value = ''; setPhase('idle'); });
+  btnAgain.addEventListener('click',   () => { currentFile = null; fileInput.value = ''; setPhase('idle'); });
+  btnRetry.addEventListener('click',   () => { currentFile = null; fileInput.value = ''; setPhase('idle'); });
+</script>
+
+<style>
+  /* Upload zone */
+  .upload-zone {
+    border: 2px dashed var(--hairline-strong);
+    border-radius: var(--r-lg);
+    padding: var(--s-xl) var(--s-lg);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .18s, background .18s;
+    outline: none;
+    margin: var(--s-sm) 0;
+  }
+  .upload-zone:hover, .upload-zone:focus-visible, .upload-zone.drag-over {
+    border-color: var(--ink);
+    background: var(--surface);
+  }
+  .upload-icon { color: var(--mute); margin-bottom: var(--s-sm); }
+  .upload-main { font-weight: 600; font-size: 15px; margin: 0 0 4px; color: var(--ink); }
+  .upload-sub  { font-size: 13px; color: var(--mute); margin: 0 0 var(--s-xs); }
+  .upload-link { color: var(--ink); font-weight: 600; text-decoration: underline; }
+  .upload-hint { font-size: 12px; color: var(--mute); margin: 0; font-family: var(--font-mono); letter-spacing: .04em; }
+  #file-input  { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+  /* File selected */
+  .file-info {
+    display: flex; align-items: center; gap: var(--s-sm);
+    padding: var(--s-sm) 0; color: var(--mute);
+  }
+  .file-name {
+    font-size: 13px; font-family: var(--font-mono);
+    color: var(--body-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 300px;
+  }
+
+  /* Analyzing */
+  .analyzing-state { text-align: center; padding: var(--s-xl) 0; }
+  .analyzing-text  { font-size: 14px; color: var(--body-text); margin: 0 0 4px; }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--hairline-strong);
+    border-top-color: var(--ink);
+    border-radius: 50%;
+    margin: 0 auto var(--s-md);
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Result */
+  .result-panel {
+    display: flex; flex-direction: column; align-items: center;
+    gap: var(--s-sm); padding: var(--s-lg) 0;
+  }
+  .bpm-display { display: flex; align-items: baseline; gap: 8px; }
+  .bpm-num {
+    font-family: var(--font-mono); font-size: 80px; font-weight: 700;
+    line-height: 1; color: var(--ink); letter-spacing: -3px;
+  }
+  .bpm-unit {
+    font-family: var(--font-mono); font-size: 24px; font-weight: 500; color: var(--mute);
+  }
+  .result-desc { font-size: 13px; color: var(--mute); margin: 0; }
+
+  /* Grade badge — reuse existing color tokens */
+  .grade-badge {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    padding: 3px 12px; border-radius: var(--r-full);
+  }
+  .grade-excellent { background: var(--grade-excellent-bg); color: var(--grade-excellent-fg); }
+  .grade-good      { background: var(--grade-good-bg);      color: var(--grade-good-fg);      }
+  .grade-fair      { background: var(--grade-fair-bg);      color: var(--grade-fair-fg);      }
+  .grade-poor      { background: var(--grade-poor-bg);      color: var(--grade-poor-fg);      }
+
+  /* Error */
+  .error-state { text-align: center; padding: var(--s-lg) 0; }
+  .error-text  { font-size: 14px; color: var(--grade-poor-fg); margin: 0 0 var(--s-md); }
+
+  /* Genre table */
+  .bpm-genre-table {
+    display: flex; flex-direction: column;
+    border: 1px solid var(--hairline); border-radius: var(--r-md); overflow: hidden;
+    font-size: 13px;
+  }
+  .bpm-row {
+    display: grid; grid-template-columns: 2fr 1fr 1.5fr;
+    gap: var(--s-sm); padding: 9px var(--s-md);
+    border-bottom: 1px solid var(--hairline); align-items: center;
+  }
+  .bpm-row:last-child { border-bottom: none; }
+  .bpm-header {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--mute);
+    background: var(--surface);
+  }
+  .mono-val { font-family: var(--font-mono); font-size: 12px; color: var(--ink); }
+</style>
