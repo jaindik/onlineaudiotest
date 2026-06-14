@@ -50,6 +50,26 @@ const schema = {
           "@type": "Question",
           "name": "How do I test my headset microphone online?",
           "acceptedAnswer": { "@type": "Answer", "text": "Connect your headset, then open the Mic Test page and click 'Test My Microphone.' Allow browser microphone access when prompted. Select your headset's microphone from the browser permission dropdown if multiple input devices are detected. Speak into the headset mic — the waveform and level meter should respond in real time, confirming the headset mic is working." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does my microphone sound quiet?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The most common cause is low input gain. On Windows: right-click the volume icon → Open Sound settings → Input → select your device → Device Properties → raise Input Volume. On Mac: System Settings → Sound → Input → drag Input Volume up. Also speak close to the microphone and ensure nothing is obstructing it." }
+        },
+        {
+          "@type": "Question",
+          "name": "My microphone works in this test but not in Discord or Zoom. Why?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Those apps maintain their own microphone selection separate from your OS default. In Discord: User Settings → Voice & Video → Input Device — select the mic that works in this test. In Zoom: Settings → Audio → Microphone. If the device is already correct, review the app's microphone processing and noise suppression settings, which occasionally prevent audio from being detected correctly." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I test my AirPods microphone?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Connect your AirPods via Bluetooth first, then open this test and click 'Test My Microphone.' When the browser asks for permission, select 'AirPods' or 'AirPods Microphone' as the input device. Speak into the AirPods and watch the waveform. Note: when AirPods are used as a microphone, your device switches to a lower-quality Bluetooth codec (SCO), which is why audio quality drops during calls compared to music playback." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I test my microphone before a Zoom or Teams meeting?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Click 'Test My Microphone,' speak for a few seconds, then click 'Stop & Play Back' to hear exactly how you sound. If playback is clear with strong signal and no clipping, you are ready. No download or account needed — works directly in Chrome, Firefox, Edge, and Safari." }
         }
       ]
     }
@@ -178,6 +198,130 @@ const schema = {
     <div class="faq-item">
       <p class="faq-q">Why does my recording sound echo-y or distorted?</p>
       <p class="faq-a">Echo usually means your speakers are feeding back into your microphone. Use headphones while recording to eliminate this. Distortion typically indicates your input gain is too high - lower the mic sensitivity in your OS settings.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why does my microphone sound quiet?</p>
+      <p class="faq-a">The most common cause is low input gain. On Windows: right-click the volume icon → Open Sound settings → Input → select your device → Device Properties → raise Input Volume. On Mac: System Settings → Sound → Input → drag Input Volume up. Also speak close to the microphone and ensure nothing is obstructing it.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">My microphone works here but not in Discord or Zoom. Why?</p>
+      <p class="faq-a">Those apps maintain their own microphone selection separate from your OS default. In Discord: User Settings → Voice & Video → Input Device — select the mic that works in this test. In Zoom: Settings → Audio → Microphone. If the device is already correct, review the app's microphone processing and noise suppression settings, which occasionally prevent audio from being detected correctly.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do I test my AirPods microphone?</p>
+      <p class="faq-a">Connect your AirPods via Bluetooth first, then open this test and click "Test My Microphone." When the browser asks for permission, select "AirPods" or "AirPods Microphone" as the input device. Speak into the AirPods and watch the waveform. Note: when AirPods are used as a microphone, your device switches to a lower-quality Bluetooth codec (SCO), which is why audio quality drops during calls compared to music playback.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do I test my mic before a Zoom or Teams meeting?</p>
+      <p class="faq-a">Click "Test My Microphone," speak for a few seconds, then click "Stop &amp; Play Back" to hear exactly how you sound. If playback is clear with strong signal and no clipping, you're ready. No download or account needed — works in Chrome, Firefox, Edge, and Safari.</p>
+    </div>
+  </div>
+
+  <!-- HOW THE TEST WORKS (TECH) -->
+  <div class="how-section">
+    <h2>How this microphone test works</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Browser permission request</strong> — When you click "Test My Microphone," your browser asks for microphone access using the standard <code>getUserMedia</code> API. You can revoke this permission at any time from the browser's address bar.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Audio stays on your device</strong> — All processing happens inside your browser tab using the Web Audio API. No audio data is transmitted to any server. Your voice never leaves your device.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Live waveform and level meter</strong> — The waveform and input level meter use the Web Audio API's AnalyserNode to visualize your microphone signal in real time. The level reflects the RMS amplitude of the input.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Playback recording</strong> — The recording clip is created using the browser's MediaRecorder API and stored as a local Blob URL. When you close or refresh the page, it is automatically discarded.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- READING LEVELS -->
+  <div class="how-section">
+    <h2>Reading your microphone levels</h2>
+    <p class="section-intro">The level meter shows your microphone's signal strength. Aim for a strong, steady signal that avoids hitting the maximum — that's the sweet spot for calls and recordings.</p>
+    <div class="level-table-wrap">
+      <table class="level-table">
+        <thead>
+          <tr>
+            <th>Signal</th>
+            <th>Meter appearance</th>
+            <th>What it means</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Too quiet</td>
+            <td>Barely moves when you speak</td>
+            <td>Gain too low, mic too far away, or connection issue</td>
+          </tr>
+          <tr>
+            <td>Good</td>
+            <td>Steady peaks with headroom above</td>
+            <td>Clean signal — ideal for calls and recordings</td>
+          </tr>
+          <tr>
+            <td>Hot</td>
+            <td>Peaks reaching the top</td>
+            <td>Close to clipping — lower your input gain slightly</td>
+          </tr>
+          <tr>
+            <td>Clipping</td>
+            <td>Hits maximum, meter turns red</td>
+            <td>Distortion will occur — reduce mic gain immediately</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- COMMON ISSUES -->
+  <div class="how-section">
+    <h2>Common microphone problems and fixes</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">!</span>
+        <p class="step-body"><strong>Mic not detected</strong> — If the browser didn't ask for permission, you may have previously clicked "Block." Reset the microphone permission in your browser's site settings, then refresh the page. Also close any app that may have exclusive mic access (Teams, Discord, Zoom).</p>
+      </div>
+      <div class="step">
+        <span class="step-num">!</span>
+        <p class="step-body"><strong>Level meter not moving</strong> — The mic is connected but silent. On Windows: right-click the volume icon → Open Sound settings → Input — check the device is selected and input volume isn't zero. On Mac: System Settings → Sound → Input. Speak close to the microphone and ensure nothing is obstructing it.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">!</span>
+        <p class="step-body"><strong>Echo in playback</strong> — Your speakers are feeding back into the microphone. Put on headphones before recording. If you're using AirPods as both input and output, move to a quieter space or use push-to-talk in your apps.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">!</span>
+        <p class="step-body"><strong>Distorted or clipping audio</strong> — Input gain is too high. On Windows: Recording Devices → Properties → Levels → lower to 70–80%. On Mac: System Settings → Sound → Input → drag Input Volume left. USB mics with a physical gain dial — turn it down.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">!</span>
+        <p class="step-body"><strong>Works here but not in Discord or Zoom</strong> — Those apps maintain their own microphone selection. In Discord: User Settings → Voice &amp; Video → Input Device. In Zoom: Settings → Audio → Microphone. Set the same device that works in this test.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATED TESTS -->
+  <div class="how-section">
+    <h2>Related audio tests</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/speaker-test/"><strong>Speaker Test</strong></a> — Check if your speakers or headphones output sound correctly, including left/right channel balance.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/hearing-test/"><strong>Hearing Test</strong></a> — Check your hearing range across frequencies up to 20,000 Hz.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/latency-test/"><strong>Audio Latency Test</strong></a> — Measure how much output delay your audio device has in milliseconds — useful for Bluetooth headphones and gaming headsets.</p>
+      </div>
     </div>
   </div>
 
@@ -443,5 +587,52 @@ const schema = {
     height: 36px;
     border-radius: var(--r-full);
     accent-color: var(--ink);
+  }
+
+  .section-intro {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.6;
+    margin: 0 0 var(--s-md);
+  }
+
+  .level-table-wrap {
+    overflow-x: auto;
+  }
+
+  .level-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .level-table th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--mute);
+    padding: var(--s-xs) var(--s-sm);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .level-table td {
+    padding: var(--s-xs) var(--s-sm);
+    border-bottom: 1px solid var(--hairline);
+    color: var(--body-text);
+    vertical-align: top;
+  }
+
+  .level-table td:first-child {
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .level-table tbody tr:last-child td {
+    border-bottom: none;
   }
 </style>

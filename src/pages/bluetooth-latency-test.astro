@@ -29,7 +29,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "Which Bluetooth codec has the lowest latency?",
-          "acceptedAnswer": { "@type": "Answer", "text": "aptX Low Latency achieves approximately 40 ms, the lowest of the widely supported codecs. LC3 (Bluetooth LE Audio) targets around 20–40 ms. For comparison: SBC (the universal fallback) is typically 150–250 ms; AAC is typically 120–200 ms; standard aptX is typically 100–200 ms. LDAC is primarily a high-quality codec, not a low-latency one — its latency is in the 150–200 ms range, similar to SBC. Both your phone and headphones must support the same codec for it to be used." }
+          "acceptedAnswer": { "@type": "Answer", "text": "aptX Low Latency and LC3 (Bluetooth LE Audio) are the codecs designed specifically for low latency. SBC is the universal fallback and introduces higher latency than aptX or AAC. LDAC prioritizes audio quality rather than minimizing latency. Actual latency varies significantly by device, implementation, and conditions. Both your phone and headphones must support the same codec for it to activate." }
         },
         {
           "@type": "Question",
@@ -49,7 +49,12 @@ const schema = {
         {
           "@type": "Question",
           "name": "Why is Bluetooth audio delayed on iPhone?",
-          "acceptedAnswer": { "@type": "Answer", "text": "iPhone supports AAC for Bluetooth audio, which typically delivers 120–200 ms of latency with Apple and compatible devices. iOS does not expose codec selection — it negotiates AAC automatically with supported headphones, falling back to SBC otherwise. Unlike Android, you cannot manually select a codec on iPhone. If you need lower latency on iPhone, use wired audio via a Lightning or USB-C adapter, or use AirPods which are optimized for Apple's AAC implementation." }
+          "acceptedAnswer": { "@type": "Answer", "text": "iPhone supports AAC for Bluetooth audio, negotiating it automatically with compatible headphones and falling back to SBC otherwise. iOS does not expose codec selection — unlike Android, you cannot manually override the codec. For lower latency on iPhone, use a wired connection via a USB-C or Lightning adapter. AirPods are generally well optimized for Apple's ecosystem, but actual latency depends on the device, application, and audio pipeline." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I know which Bluetooth codec I'm using?",
+          "acceptedAnswer": { "@type": "Answer", "text": "On Android, go to Developer Options → Bluetooth Audio Codec — it shows the codec currently negotiated with your connected headphones. Some manufacturer companion apps (Sony Headphones Connect, Jabra Sound+) also display the active codec. On iPhone, iOS does not expose this information. There is no built-in way to check the active Bluetooth codec on iOS." }
         }
       ]
     }
@@ -123,41 +128,41 @@ const schema = {
   <!-- CODEC COMPARISON -->
   <div class="how-section">
     <h2>Bluetooth codec latency comparison</h2>
-    <p style="font-size:14px;color:var(--mute);margin-bottom:var(--s-md)">The codec active between your phone and headphones is the single biggest factor in Bluetooth audio latency. Both devices must support the same codec for it to be used — otherwise the connection falls back to SBC.</p>
+    <p style="font-size:14px;color:var(--mute);margin-bottom:var(--s-md)">The codec active between your phone and headphones is the single biggest factor in Bluetooth audio latency. Both devices must support the same codec for it to be used — otherwise the connection falls back to SBC. <a href="/bluetooth-codec-guide/">Learn how every Bluetooth codec works →</a></p>
     <div class="codec-table">
       <div class="codec-row codec-header">
         <span>Codec</span>
-        <span>Typical Latency</span>
+        <span>Relative Latency</span>
         <span>Common Devices</span>
       </div>
       <div class="codec-row">
         <span><strong>SBC</strong></span>
-        <span class="latency-poor">150–250 ms</span>
+        <span class="latency-poor">Higher</span>
         <span>All Bluetooth devices (universal fallback)</span>
       </div>
       <div class="codec-row">
         <span><strong>AAC</strong></span>
-        <span class="latency-fair">80–180 ms</span>
+        <span class="latency-fair">Moderate</span>
         <span>iPhone, AirPods, many Android phones</span>
       </div>
       <div class="codec-row">
         <span><strong>aptX</strong></span>
-        <span class="latency-fair">70–120 ms</span>
+        <span class="latency-fair">Moderate</span>
         <span>Android phones, Qualcomm-based headsets</span>
       </div>
       <div class="codec-row">
         <span><strong>aptX Low Latency</strong></span>
-        <span class="latency-good">32–40 ms</span>
+        <span class="latency-good">Lower</span>
         <span>Select Qualcomm headsets + phones</span>
       </div>
       <div class="codec-row">
         <span><strong>LDAC</strong></span>
-        <span class="latency-fair">80–150 ms</span>
+        <span class="latency-fair">Quality-focused</span>
         <span>Sony headphones, Android 8+</span>
       </div>
       <div class="codec-row">
         <span><strong>LC3 (LE Audio)</strong></span>
-        <span class="latency-good">20–50 ms</span>
+        <span class="latency-good">Lower</span>
         <span>Bluetooth 5.2+ devices (2023 onward)</span>
       </div>
     </div>
@@ -229,27 +234,12 @@ const schema = {
     </div>
   </div>
 
-  <!-- RELATED TESTS -->
-  <div class="how-section">
-    <h2>Related latency tests</h2>
-    <div class="steps">
-      <div class="step">
-        <span class="step-num">→</span>
-        <p class="step-body"><a href="/latency-test/"><strong>General Audio Latency Test</strong></a> — Measures system output delay for any audio device. Use this as a baseline before and after changing your Bluetooth codec settings.</p>
-      </div>
-      <div class="step">
-        <span class="step-num">→</span>
-        <p class="step-body"><a href="/airpods-latency-test/"><strong>AirPods Latency Test</strong></a> — Specific guidance for AirPods, AirPods Pro, and AirPods Max. Covers the SCO codec issue that spikes latency when AirPods are used as a microphone on Mac.</p>
-      </div>
-    </div>
-  </div>
-
   <!-- FAQ -->
   <div class="faq-section">
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <p class="faq-q">Which Bluetooth codec has the lowest latency?</p>
-      <p class="faq-a">aptX Low Latency achieves approximately 32–40 ms, the lowest of the widely supported codecs. LC3 (Bluetooth LE Audio) targets 20–50 ms with better efficiency. For comparison: AAC is typically 80–180 ms, aptX is 70–120 ms, LDAC is 80–150 ms, and SBC (the universal fallback) is 150–250 ms. Both your phone and headphones must support the same codec for it to activate.</p>
+      <p class="faq-a">aptX Low Latency and LC3 (Bluetooth LE Audio) are the codecs designed specifically for low latency. SBC is the universal fallback and introduces higher latency than aptX or AAC. LDAC prioritizes audio quality rather than minimizing latency. Actual latency varies significantly by device, implementation, and conditions — both your phone and headphones must support the same codec for it to activate.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">How do I reduce Bluetooth audio delay on Android?</p>
@@ -265,7 +255,61 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">Why is Bluetooth audio delayed on iPhone?</p>
-      <p class="faq-a">iPhone supports AAC for Bluetooth audio, which delivers 80–180 ms with compatible devices. iOS does not expose codec selection — it negotiates automatically, falling back to SBC with incompatible headphones. Unlike Android, you cannot manually override the codec on iPhone. For lower latency on iPhone, use a wired connection via a USB-C or Lightning adapter.</p>
+      <p class="faq-a">iPhone supports AAC for Bluetooth audio, negotiating it automatically with compatible headphones and falling back to SBC otherwise. iOS does not expose codec selection — unlike Android, you cannot manually override it. For lower latency, use a wired connection via a USB-C or Lightning adapter. AirPods are generally well optimized for Apple's ecosystem, but actual latency depends on the device, application, and audio pipeline.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do I know which Bluetooth codec I'm using?</p>
+      <p class="faq-a">On Android: go to Settings → Developer Options → Bluetooth Audio Codec — it shows the codec currently negotiated with your headphones. Some headphone manufacturer apps (Sony Headphones Connect, Jabra Sound+, etc.) also display the active codec. On iPhone, iOS does not expose this information — there is no built-in way to check which Bluetooth codec is active.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Is LDAC better than aptX for low latency?</p>
+      <p class="faq-a">No. LDAC prioritizes audio quality rather than minimizing latency — it transmits audio at up to 990 kbps, which produces excellent sound quality but not a low-latency connection. If low latency is your priority, aptX Low Latency or LC3 (Bluetooth LE Audio) are the right choices. LDAC is best suited for audiophile listening where quality matters more than delay.</p>
+    </div>
+  </div>
+
+  <!-- WHY LATENCY MATTERS -->
+  <div class="how-section">
+    <h2>Why Bluetooth latency matters</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">!</span>
+        <p class="step-body"><strong>Gaming</strong> — In competitive games, Bluetooth latency means you hear gunshots, footsteps, or alerts after they happen. Even 100 ms of delay is enough to put you at a disadvantage. Wired audio or a 2.4 GHz wireless headset is the standard for serious gaming.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">~</span>
+        <p class="step-body"><strong>Watching movies and streaming video</strong> — Video players compensate for Bluetooth delay by buffering audio and video together, so you typically don't notice the latency. This is why AirPods and Bluetooth headphones work fine for Netflix and YouTube despite their delay.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">~</span>
+        <p class="step-body"><strong>Video calls (Zoom, FaceTime, Teams)</strong> — Bluetooth latency affects how quickly you hear the other person, but both sides are on Bluetooth so the conversation feels natural. The main issue is when the microphone causes a codec switch, degrading audio quality — not the latency itself.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">✓</span>
+        <p class="step-body"><strong>Music listening</strong> — Bluetooth latency is irrelevant for music. There's no reference event to sync against, so the delay is completely imperceptible. Codec choice for music should prioritize audio quality (LDAC, AAC, aptX HD) rather than latency.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">!</span>
+        <p class="step-body"><strong>Video editing and audio production</strong> — Bluetooth latency causes audible delay when monitoring recordings or editing audio to picture. For any production work, use wired headphones or wired monitors to avoid unreliable playback timing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATED TESTS -->
+  <div class="how-section">
+    <h2>Related audio tests</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/latency-test/"><strong>Audio Latency Test</strong></a> — Measures system output delay for any audio device. Use as a baseline before and after changing your Bluetooth codec settings.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/airpods-latency-test/"><strong>AirPods Latency Test</strong></a> — Specific latency measurement and guidance for all AirPods models, including the SCO codec issue during calls on Mac.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/mic-test/"><strong>Mic Test</strong></a> — Check if your Bluetooth headset microphone is working correctly, with real-time waveform and level monitoring.</p>
+      </div>
     </div>
   </div>
 

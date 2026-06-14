@@ -1,0 +1,358 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Bluetooth Audio Codecs Explained — SBC, AAC, aptX, LDAC, LC3",
+      "description": "A plain-English guide to every major Bluetooth audio codec — SBC, AAC, aptX, aptX HD, aptX Low Latency, aptX Adaptive, LDAC, and LC3. Learn what each one does, how they differ, and which to use.",
+      "url": "https://onlineaudiotest.com/bluetooth-codec-guide/",
+      "author": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" },
+      "publisher": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Bluetooth Latency Test", "item": "https://onlineaudiotest.com/bluetooth-latency-test/" },
+        { "@type": "ListItem", "position": 3, "name": "Bluetooth Codec Guide", "item": "https://onlineaudiotest.com/bluetooth-codec-guide/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I know which Bluetooth codec I'm currently using?",
+          "acceptedAnswer": { "@type": "Answer", "text": "On Android: go to Settings → Developer Options → Bluetooth Audio Codec — it shows the codec currently negotiated with your connected headphones. Some manufacturer apps (Sony Headphones Connect, Jabra Sound+) also display the active codec. On iPhone, iOS does not expose this information — there is no built-in way to check which Bluetooth codec is active." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does codec choice affect battery life?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Higher-bitrate codecs like LDAC require more processing than SBC, which can reduce headphone battery life slightly. The effect varies by headphone and implementation. LDAC in its highest-quality mode typically draws more power than AAC or SBC." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use LDAC on iPhone?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. LDAC is only available on Android 8 and later. iOS does not support LDAC. Apple devices use AAC for Bluetooth audio, which Apple has heavily optimized for its ecosystem." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between aptX and aptX HD?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Standard aptX and aptX HD are both Qualcomm codecs. aptX HD adds a higher maximum bitrate, aimed at higher-fidelity listening. Latency is similar between the two. If your headphones support aptX HD and you have a compatible Android device, aptX HD is the better choice for quality. Neither is a low-latency codec — that's aptX Low Latency." }
+        },
+        {
+          "@type": "Question",
+          "name": "Will upgrading to Bluetooth 5.0 improve my audio quality?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Not directly. Bluetooth 5.0 increases range and bandwidth, but audio quality is determined by the codec, not the Bluetooth version. A Bluetooth 5.0 device using SBC will still produce SBC-quality audio. LC3 and LE Audio require Bluetooth 5.2 and above — that's where the Bluetooth version starts to matter for audio." }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="Bluetooth Audio Codecs Explained — SBC, AAC, aptX, LDAC, LC3"
+  description="A plain-English guide to every major Bluetooth audio codec — SBC, AAC, aptX, aptX HD, aptX Low Latency, LDAC, and LC3. Learn what each codec does, how they compare, and which to use."
+  keywords="bluetooth codec, sbc vs aac, aptx vs ldac, bluetooth audio codec comparison, lc3 bluetooth, ldac explained, bluetooth le audio, aptx low latency"
+  canonical="https://onlineaudiotest.com/bluetooth-codec-guide/"
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- HERO -->
+  <section class="tool-hero container">
+    <h1>Bluetooth Audio Codecs Explained</h1>
+    <p>When you connect Bluetooth headphones, your device and headphones negotiate which audio codec to use. That codec determines how your audio is compressed, transmitted, and decoded — and it is the single biggest factor in Bluetooth audio quality and latency.</p>
+  </section>
+
+  <!-- WHAT IS A CODEC -->
+  <div class="how-section">
+    <h2>What is a Bluetooth audio codec?</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Encode</strong> — Your device (phone, laptop, or tablet) compresses the audio signal using the codec algorithm, reducing the data size enough to transmit wirelessly in real time.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Transmit</strong> — The compressed audio is sent over the Bluetooth radio link to your headphones. The codec and its buffer requirements determine how much latency this step adds.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Decode</strong> — Your headphones decompress the audio and drive the speakers. The quality of this decoded signal is what you actually hear.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Negotiation</strong> — Every connection automatically selects the best codec both devices share. If no premium codec matches, the connection falls back to SBC — the universal mandatory baseline that every Bluetooth audio device supports.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODEC TABLE -->
+  <div class="how-section">
+    <h2>Bluetooth codec comparison</h2>
+    <p class="section-intro">Quick reference for every major Bluetooth audio codec. Both your source device and headphones must support the same codec for it to activate — a mismatch always falls back to SBC.</p>
+    <div class="level-table-wrap">
+      <table class="level-table">
+        <thead>
+          <tr>
+            <th>Codec</th>
+            <th>Developer</th>
+            <th>Audio quality</th>
+            <th>Relative latency</th>
+            <th>Where it works</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SBC</td>
+            <td>Bluetooth SIG</td>
+            <td>Adequate</td>
+            <td>Higher</td>
+            <td>All Bluetooth devices (universal)</td>
+          </tr>
+          <tr>
+            <td>AAC</td>
+            <td>MPEG / Apple</td>
+            <td>Good</td>
+            <td>Moderate</td>
+            <td>iPhone, iPad, Mac, many Android phones</td>
+          </tr>
+          <tr>
+            <td>aptX</td>
+            <td>Qualcomm</td>
+            <td>Good</td>
+            <td>Moderate</td>
+            <td>Android (Qualcomm chipsets), select headphones</td>
+          </tr>
+          <tr>
+            <td>aptX HD</td>
+            <td>Qualcomm</td>
+            <td>Very good</td>
+            <td>Moderate</td>
+            <td>Android (Qualcomm), aptX HD headphones</td>
+          </tr>
+          <tr>
+            <td>aptX Low Latency</td>
+            <td>Qualcomm</td>
+            <td>Good</td>
+            <td>Lower</td>
+            <td>Select gaming headsets and Android devices</td>
+          </tr>
+          <tr>
+            <td>aptX Adaptive</td>
+            <td>Qualcomm</td>
+            <td>Excellent</td>
+            <td>Variable (low in gaming mode)</td>
+            <td>Newer Qualcomm devices and headphones</td>
+          </tr>
+          <tr>
+            <td>LDAC</td>
+            <td>Sony</td>
+            <td>Excellent</td>
+            <td>Quality-focused</td>
+            <td>Android 8+, Sony headphones</td>
+          </tr>
+          <tr>
+            <td>LC3 / LE Audio</td>
+            <td>Bluetooth SIG</td>
+            <td>Excellent</td>
+            <td>Lower</td>
+            <td>Android 13+, Bluetooth 5.2+ devices</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CODEC DETAILS -->
+  <div class="how-section">
+    <h2>Each codec explained</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">SBC</span>
+        <p class="step-body"><strong>Subband Coding</strong> — The universal mandatory codec, supported by every Bluetooth audio device. Modern SBC implementations can provide good listening quality, though higher-end codecs may offer advantages depending on the device and headphones. When you see SBC selected in Developer Options, it typically means no premium codec is shared between your phone and headphones.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">AAC</span>
+        <p class="step-body"><strong>Advanced Audio Coding</strong> — Apple's preferred codec, used across iPhone, iPad, Mac, and AirPods. AAC delivers meaningfully better quality than SBC. Apple has optimized its AAC implementation extensively, which means AirPods connected to Apple devices often perform better than the same codec on Android — the codec is the same standard, but the implementation quality differs. AAC is the right choice for any Apple device and needs no manual setup.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">aptX</span>
+        <p class="step-body"><strong>aptX (Qualcomm)</strong> — Qualcomm's widely deployed codec for Android, often associated with a balance of audio quality and responsiveness. Supported on Android phones with Qualcomm processors and many third-party headphones. A good all-around choice for Android users whose headphones support it.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">aptX HD</span>
+        <p class="step-body"><strong>aptX HD (Qualcomm)</strong> — Extends standard aptX with a higher maximum bitrate, designed for higher-fidelity listening. Aimed at audiophiles rather than low-latency use cases. If your headphones support aptX HD and you have a compatible Android device, it's the better quality option over standard aptX.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">aptX LL</span>
+        <p class="step-body"><strong>aptX Low Latency (Qualcomm)</strong> — Specifically engineered to minimize delay, making it the best standard Bluetooth option for gaming and live audio monitoring. Requires both your phone and headphones to specifically support aptX LL — it's not as widely available as standard aptX. When supported, it's the best Bluetooth option for timing-sensitive use.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">aptX A</span>
+        <p class="step-body"><strong>aptX Adaptive (Qualcomm)</strong> — Qualcomm's newest codec, designed to adjust bitrate dynamically based on wireless conditions. Can deliver high-quality audio in clean environments and maintain stability in congested ones. Latency is variable but can be low in gaming mode. Requires compatible Qualcomm hardware on both the source device and headphones.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">LDAC</span>
+        <p class="step-body"><strong>LDAC (Sony)</strong> — Sony's high-fidelity codec, available on Android 8 and later. Its headline feature is high bitrate (up to 990 kbps), which delivers audio much closer to lossless quality than SBC or AAC. LDAC prioritizes audio quality rather than minimizing latency — it's the right choice for audiophile listening where quality matters more than delay. LDAC automatically scales down bitrate in congested wireless environments to maintain connection stability.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">LC3</span>
+        <p class="step-body"><strong>LC3 and Bluetooth LE Audio</strong> — The next-generation mandatory codec, replacing SBC as the baseline for Bluetooth LE Audio (the successor to classic Bluetooth audio). LC3 achieves better quality than SBC at significantly lower bitrates while also supporting lower latency. LE Audio also enables multi-stream audio (separate streams to each earbud) and broadcast audio (one source to many listeners). LE Audio adoption is still evolving, so support varies significantly across devices and operating systems.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO CHECK CODEC ON ANDROID -->
+  <div class="how-section">
+    <h2>How to check and change your codec on Android</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Enable Developer Options</strong> — Go to Settings → About Phone → tap Build Number 7 times. A message confirms Developer Options is unlocked.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Open Bluetooth Audio Codec</strong> — Go to Settings → System → Developer Options → scroll to Bluetooth Audio Codec. This shows the codec currently in use and lets you select a different one.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Select the best option your headphones support</strong> — Choose LDAC for quality, aptX LL for low latency, or aptX HD if available. If your headphones don't support the selected codec, the system automatically falls back to SBC.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Reconnect and verify</strong> — Disconnect and reconnect your headphones after changing. Use the <a href="/bluetooth-latency-test/">Bluetooth Latency Test</a> to confirm the new latency in real time.</p>
+      </div>
+    </div>
+    <p class="codec-note"><strong>On iPhone:</strong> iOS does not expose codec selection. The device negotiates AAC automatically with compatible hardware and falls back to SBC otherwise. There is no manual override.</p>
+  </div>
+
+  <!-- WHICH CODEC -->
+  <div class="how-section">
+    <h2>Which codec should I use?</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">✓</span>
+        <p class="step-body"><strong>Best quality on Android</strong> — LDAC if your headphones support it. aptX HD as the next best option. Both prioritize fidelity over latency.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">✓</span>
+        <p class="step-body"><strong>Best quality on Apple devices</strong> — AAC is already used automatically with AirPods and compatible headphones. No action needed on iOS or macOS.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">✓</span>
+        <p class="step-body"><strong>Lowest Bluetooth latency</strong> — aptX Low Latency if supported by both devices. aptX Adaptive in gaming mode is also an option. LC3 (LE Audio) is lower-latency on compatible hardware. For the lowest possible wireless latency, a 2.4 GHz gaming headset bypasses Bluetooth entirely.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">✓</span>
+        <p class="step-body"><strong>Maximum compatibility</strong> — SBC works everywhere, but always choose a better codec when available. If your headphones support aptX or AAC, there is no reason to use SBC.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">How do I know which Bluetooth codec I'm currently using?</p>
+      <p class="faq-a">On Android: go to Settings → Developer Options → Bluetooth Audio Codec — it shows the codec currently negotiated with your connected headphones. Some manufacturer apps (Sony Headphones Connect, Jabra Sound+) also display the active codec. On iPhone, iOS does not expose this information — there is no built-in way to check which Bluetooth codec is active.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Does codec choice affect battery life?</p>
+      <p class="faq-a">Higher-bitrate codecs like LDAC require more processing than SBC, which can reduce headphone battery life slightly. The effect varies by headphone and implementation. LDAC in its highest-quality mode typically draws more power than AAC or SBC.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Can I use LDAC on iPhone?</p>
+      <p class="faq-a">No. LDAC is only available on Android 8 and later. iOS does not support LDAC. Apple devices use AAC for Bluetooth audio, which Apple has heavily optimized for its ecosystem.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is the difference between aptX and aptX HD?</p>
+      <p class="faq-a">Both are Qualcomm codecs. aptX HD adds a higher maximum bitrate, aimed at higher-fidelity listening. Latency characteristics are similar between the two. If your headphones support aptX HD and you have a compatible Android device, aptX HD is the better quality choice. Neither is a low-latency codec — that's aptX Low Latency.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Will upgrading to Bluetooth 5.0 improve my audio?</p>
+      <p class="faq-a">Not directly. Bluetooth 5.0 increases range and bandwidth, but audio quality is determined by the codec, not the Bluetooth version. A Bluetooth 5.0 device using SBC still produces SBC-quality audio. LC3 and LE Audio require Bluetooth 5.2 and above — that's where the version starts to matter for audio.</p>
+    </div>
+  </div>
+
+  <!-- RELATED TESTS -->
+  <div class="how-section">
+    <h2>Test your Bluetooth audio</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/bluetooth-latency-test/"><strong>Bluetooth Latency Test</strong></a> — Measure your Bluetooth headphone delay in milliseconds and see how your current codec affects real-world latency.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/airpods-latency-test/"><strong>AirPods Latency Test</strong></a> — AirPods use AAC over Bluetooth. Measure the actual audio delay your AirPods introduce on iPhone or Mac.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/latency-test/"><strong>Audio Latency Test</strong></a> — General audio output latency for any device. Bluetooth codec choice is one of the biggest factors in this number.</p>
+      </div>
+    </div>
+  </div>
+
+</Layout>
+
+<style>
+  .section-intro {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.6;
+    margin: 0 0 var(--s-md);
+  }
+
+  .codec-note {
+    font-size: 13px;
+    color: var(--body-text);
+    line-height: 1.6;
+    margin: var(--s-md) 0 0;
+    padding: var(--s-sm) var(--s-md);
+    background: var(--canvas-soft);
+    border-radius: var(--r-sm);
+    border-left: 3px solid var(--hairline-strong);
+  }
+
+  .level-table-wrap { overflow-x: auto; }
+
+  .level-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .level-table th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--mute);
+    padding: var(--s-xs) var(--s-sm);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .level-table td {
+    padding: var(--s-xs) var(--s-sm);
+    border-bottom: 1px solid var(--hairline);
+    color: var(--body-text);
+    vertical-align: top;
+  }
+
+  .level-table td:first-child {
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .level-table tbody tr:last-child td { border-bottom: none; }
+</style>

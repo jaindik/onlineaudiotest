@@ -29,15 +29,18 @@ export default defineConfig({
         if (u === 'https://onlineaudiotest.com/') {
           item.priority = 1.0;
           item.changefreq = 'weekly';
-        } else if (/\/(mic-test|speaker-test|latency-test|hearing-test|frequency-generator|audio-spectrum-analyzer|voice-recorder|mic-quality-test)\/?$/.test(u)) {
+        } else if (/\/(mic-test|speaker-test|latency-test|hearing-test|frequency-generator|audio-spectrum-analyzer|voice-recorder|mic-quality-test|bluetooth-latency-test|airpods-latency-test)\/?$/.test(u)) {
           item.priority = 0.9;
           item.changefreq = 'weekly';
-        } else if (/\/(about|contact)\/?$/.test(u)) {
-          item.priority = 0.6;
+        } else if (/\/(bluetooth-codec-guide|bpm-detector|key-detector|key-and-bpm-detector)\/?$/.test(u)) {
+          item.priority = 0.8;
+          item.changefreq = 'monthly';
+        } else if (/\/(about|contact|privacy|terms)\/?$/.test(u)) {
+          item.priority = 0.5;
           item.changefreq = 'monthly';
         } else {
-          item.priority = 0.5;
-          item.changefreq = 'yearly';
+          item.priority = 0.6;
+          item.changefreq = 'monthly';
         }
         return item;
       },

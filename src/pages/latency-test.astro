@@ -50,6 +50,26 @@ const schema = {
           "@type": "Question",
           "name": "What is a good audio latency for video calls?",
           "acceptedAnswer": { "@type": "Answer", "text": "Under 40 ms is generally imperceptible during a call. 40–100 ms may cause minor lip-sync issues in video. Above 100 ms becomes noticeably disruptive during back-and-forth conversation — you'll hear yourself or others with a clear, distracting lag. Wired audio typically achieves under 20 ms; Bluetooth SBC can exceed 200 ms." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is considered good audio latency?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Lower latency is generally preferable. Wired connections and professional audio setups often achieve very low latency, while Bluetooth audio typically introduces more delay. Whether latency is noticeable depends on the activity, the listener, and the synchronization requirements. For gaming and audio production, minimizing latency matters more than for music listening or streaming video." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I reduce audio latency on Windows?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The biggest improvement on Windows is switching from the default consumer audio driver to an ASIO driver. ASIO4ALL is a free option that works with most built-in audio hardware; professional USB audio interfaces also ship with ASIO drivers. ASIO drivers can significantly reduce latency compared with standard consumer audio configurations, particularly in recording and production workflows. Also use a wired connection and keep your audio driver updated." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I reduce audio latency on Mac?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Apple's Core Audio architecture is designed for low-latency audio performance, especially when paired with wired audio devices. To reduce latency further: use a dedicated USB audio interface, lower the buffer size in your DAW or audio app if applicable, and use wired headphones rather than Bluetooth. The buffer size setting in professional audio software is usually the most effective adjustment." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is my audio out of sync with video?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Audio-video sync issues have several common causes. Bluetooth delay is the most frequent: if your headphones introduce significant audio latency and the video player doesn't compensate, you'll see lips moving before you hear the words. Most streaming apps (Netflix, YouTube) compensate automatically by buffering audio and video together — sync issues are more common in live streams, browser video calls, or local video files. Most media players (VLC, IINA, etc.) have an audio delay adjustment setting to manually offset the audio track." }
         }
       ]
     }
@@ -141,6 +161,96 @@ const schema = {
     </div>
   </div>
 
+  <!-- BENCHMARK TABLE -->
+  <div class="how-section">
+    <h2>Audio latency by connection type</h2>
+    <p class="section-intro">Connection type is the single biggest factor in audio latency. Wired audio has the lowest latency; standard Bluetooth has the highest. Relative values vary by device, driver, OS, and conditions.</p>
+    <div class="level-table-wrap">
+      <table class="level-table">
+        <thead>
+          <tr>
+            <th>Connection</th>
+            <th>Relative Latency</th>
+            <th>Best for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Wired (3.5mm / USB)</td>
+            <td>Very low</td>
+            <td>Gaming, production, live monitoring</td>
+          </tr>
+          <tr>
+            <td>2.4 GHz wireless (USB dongle)</td>
+            <td>Very low</td>
+            <td>Gaming headsets</td>
+          </tr>
+          <tr>
+            <td>Bluetooth aptX LL / LC3</td>
+            <td>Lower</td>
+            <td>Low-latency Bluetooth scenarios</td>
+          </tr>
+          <tr>
+            <td>Bluetooth AAC / aptX</td>
+            <td>Moderate</td>
+            <td>Calls, music, streaming</td>
+          </tr>
+          <tr>
+            <td>Bluetooth SBC</td>
+            <td>Higher</td>
+            <td>Universal fallback</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- WHAT CAUSES LATENCY -->
+  <div class="how-section">
+    <h2>What causes audio latency?</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Audio generation</strong> — Your software or app produces an audio signal. This is near-instantaneous but requires the processor to complete the current task first, adding a small variable delay that increases under CPU load.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Buffering</strong> — Audio systems collect samples into chunks (buffers) before sending them to the output. Larger buffers reduce the risk of glitches but increase latency. Buffer size is adjustable in professional audio software and is often the most impactful setting to tune.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Processing</strong> — Codecs, software effects, mixing, and DSP add processing time. On Bluetooth, codec compression on your device and decompression inside the headphones are the primary processing overhead. More complex codecs take more time.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Transmission</strong> — For wireless audio, the encoded signal must travel over Bluetooth or 2.4 GHz radio. This step adds delay determined largely by the codec's buffering requirements — the main reason Bluetooth latency differs so much between codecs.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">5</span>
+        <p class="step-body"><strong>Playback hardware</strong> — The audio driver and output hardware (DAC, amplifier, speaker, or headphone driver) introduce their own delay. This is the "output latency" reported by the Web Audio API and is where Bluetooth hardware delay is captured.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIRED VS BLUETOOTH -->
+  <div class="how-section">
+    <h2>Wired vs Bluetooth audio latency</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Wired audio</strong> — Signal travels through a physical cable directly to your headphones or speakers. There is no encoding, wireless transmission, or decoding — the audio path is nearly instantaneous. Best for: competitive gaming, music production, live vocal monitoring, and video editing where timing precision matters.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Bluetooth audio</strong> — Audio is encoded by a codec (SBC, AAC, aptX, LDAC, LC3), transmitted wirelessly, and decoded by the headphones. Each step adds delay; the codec and its buffer are the primary source of Bluetooth latency. Lower-latency codecs (aptX LL, LC3) significantly close the gap with wired, but Bluetooth always involves more steps than a direct cable connection. <a href="/bluetooth-codec-guide/">Bluetooth codec guide: SBC, AAC, aptX, LDAC, LC3 explained →</a></p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>2.4 GHz wireless</strong> — Many gaming headsets use a proprietary 2.4 GHz USB dongle instead of standard Bluetooth. This is a different radio technology with lower overhead, typically achieving latency much closer to wired. If your headset came with a USB dongle, it likely uses 2.4 GHz rather than standard Bluetooth.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- FAQ -->
   <div class="faq-section">
     <h2>Frequently asked questions</h2>
@@ -163,6 +273,22 @@ const schema = {
     <div class="faq-item">
       <p class="faq-q">What is a good latency for video calls?</p>
       <p class="faq-a">Under 40 ms is generally imperceptible during a call. 40–100 ms may cause minor lip-sync issues in video. Above 100 ms becomes noticeably annoying during back-and-forth conversation — you'll hear yourself or others with a clear lag.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is considered good audio latency?</p>
+      <p class="faq-a">Lower latency is generally preferable. Wired connections and professional audio setups often achieve very low latency, while Bluetooth audio typically introduces more delay. Whether latency is noticeable depends on the activity, the listener, and the synchronization requirements — gaming and audio production demand lower latency than music listening or video streaming.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do I reduce audio latency on Windows?</p>
+      <p class="faq-a">The biggest improvement on Windows is switching from the default consumer audio driver to an ASIO driver. ASIO4ALL is a free option that works with most built-in audio hardware; professional USB audio interfaces ship with their own ASIO drivers. ASIO drivers can significantly reduce latency compared with standard consumer audio configurations, particularly in recording and production workflows. Also use a wired connection and keep your audio driver updated.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do I reduce audio latency on Mac?</p>
+      <p class="faq-a">Apple's Core Audio architecture is designed for low-latency audio performance, especially when paired with wired audio devices. To reduce latency further: use a dedicated USB audio interface, lower the buffer size in your DAW or audio app if applicable, and use wired headphones rather than Bluetooth. Buffer size is usually the most effective setting to tune in professional audio software on Mac.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why is my audio out of sync with video?</p>
+      <p class="faq-a">Bluetooth delay is the most common cause — if your headphones introduce significant latency and the video player doesn't compensate, you'll see lips moving before you hear the words. Most streaming apps (Netflix, YouTube) compensate automatically by buffering both streams together, so sync issues are more common in live streams, browser video calls, or local video files. If you're watching a local file, most media players (VLC, IINA, etc.) have an audio delay adjustment setting that lets you manually offset the audio track to match the video.</p>
     </div>
   </div>
 
@@ -494,4 +620,47 @@ const schema = {
     line-height: 1.6;
     margin: 0;
   }
+
+  .section-intro {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.6;
+    margin: 0 0 var(--s-md);
+  }
+
+  .level-table-wrap { overflow-x: auto; }
+
+  .level-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .level-table th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--mute);
+    padding: var(--s-xs) var(--s-sm);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .level-table td {
+    padding: var(--s-xs) var(--s-sm);
+    border-bottom: 1px solid var(--hairline);
+    color: var(--body-text);
+    vertical-align: top;
+  }
+
+  .level-table td:first-child {
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .level-table tbody tr:last-child td { border-bottom: none; }
 </style>

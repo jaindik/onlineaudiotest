@@ -50,6 +50,21 @@ const schema = {
           "@type": "Question",
           "name": "How do I fix AirPods audio delay on Mac?",
           "acceptedAnswer": { "@type": "Answer", "text": "AirPods delay on Mac is most often caused by the Bluetooth codec falling back to SCO (a phone-call codec) when the microphone is active. To avoid this: disconnect from AirPods as a microphone input in System Settings → Sound → Input, and set a different device (like the built-in mic) as your input. This allows AirPods to stay in high-quality A2DP output mode, which has significantly lower audio latency." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is AirPods latency in milliseconds?",
+          "acceptedAnswer": { "@type": "Answer", "text": "AirPods typically show approximately 100–200+ ms of audio output latency when connected via Bluetooth using the AAC codec. The exact amount varies by device, iOS or macOS version, RF conditions, and whether the AirPods microphone is active. When the microphone is in use, latency often increases as the device switches to a two-way communication mode optimized for voice calls." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do AirPods Pro 2 have lower latency than AirPods 4?",
+          "acceptedAnswer": { "@type": "Answer", "text": "In real-world use, latency differences between recent AirPods models are generally small compared with the effect of device settings, software, and Bluetooth conditions. All current AirPods use the AAC codec over Bluetooth and operate in a similar latency range. The meaningful latency reduction comes from avoiding Bluetooth altogether — using wired audio when low latency is critical." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use AirPods for video editing?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For casual video review, AirPods Bluetooth latency is noticeable but manageable. For precision audio sync work — matching audio to video frame by frame or recording voice-over to picture — Bluetooth latency is not reliable. Use wired headphones to minimize latency for editing sessions." }
         }
       ]
     }
@@ -166,6 +181,62 @@ const schema = {
     </div>
   </div>
 
+  <!-- MODEL TABLE -->
+  <div class="how-section">
+    <h2>AirPods latency by model</h2>
+    <p class="section-intro">All AirPods models use the AAC codec over Bluetooth and share a similar latency range of approximately 100–200+ ms, depending on device, OS version, and conditions. The only model with a wired option that bypasses Bluetooth entirely is AirPods Max.</p>
+    <div class="level-table-wrap">
+      <table class="level-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Chip</th>
+            <th>Bluetooth codec</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AirPods 4</td>
+            <td>H2</td>
+            <td>AAC</td>
+            <td>Standard model</td>
+          </tr>
+          <tr>
+            <td>AirPods 4 (ANC)</td>
+            <td>H2</td>
+            <td>AAC</td>
+            <td>Active Noise Cancellation</td>
+          </tr>
+          <tr>
+            <td>AirPods Pro 2</td>
+            <td>H2</td>
+            <td>AAC</td>
+            <td>Noise cancellation + Transparency mode</td>
+          </tr>
+          <tr>
+            <td>AirPods Pro (1st gen)</td>
+            <td>H1</td>
+            <td>AAC</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>AirPods 3</td>
+            <td>H1</td>
+            <td>AAC</td>
+            <td>Spatial audio support</td>
+          </tr>
+          <tr>
+            <td>AirPods Max</td>
+            <td>H1</td>
+            <td>AAC (Bluetooth) / bypassed (wired)</td>
+            <td>Wired USB-C or Lightning mode eliminates Bluetooth latency</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- REDUCE LATENCY -->
   <div class="how-section">
     <h2>How to reduce AirPods latency</h2>
@@ -189,17 +260,67 @@ const schema = {
     </div>
   </div>
 
+  <!-- WHAT CAUSES LATENCY -->
+  <div class="how-section">
+    <h2>What causes AirPods latency?</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Bluetooth transmission</strong> — Audio is broadcast wirelessly from your device to the AirPods. The radio transmission itself adds a small but real delay to the pipeline.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Codec processing</strong> — Before transmission, audio is compressed using the AAC codec on your device. The AirPods decompress it on arrival. Both compression and decompression steps add delay. <a href="/bluetooth-codec-guide/">How AAC compares to other Bluetooth codecs →</a></p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Audio buffering</strong> — Bluetooth audio systems buffer incoming audio to handle wireless packet loss and retransmissions. This buffer accounts for the largest portion of perceived delay and is the main reason Bluetooth latency sits in the 100–200+ ms range.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Device synchronization</strong> — Your device and the AirPods synchronize clocks to maintain consistent playback. This synchronization layer adds a small, consistent overhead to the total latency.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- A2DP / SCO EXPLANATION -->
+  <div class="how-section">
+    <h2>Why AirPods audio gets worse during calls</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <p class="step-body"><strong>Music and video mode (A2DP)</strong> — During standard audio playback, AirPods use the A2DP Bluetooth profile with the AAC codec. This is a one-way, high-quality audio stream optimized for music and video.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <p class="step-body"><strong>Call mode (HFP)</strong> — When you use AirPods as a microphone during a call, Discord session, or voice recording, the device switches to HFP (Hands-Free Profile). When the microphone is active, Bluetooth switches to a two-way communication mode optimized for voice calls, which can reduce audio quality and increase latency.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <p class="step-body"><strong>Fix on Mac</strong> — Go to System Settings → Sound → Input and set a different device (like the built-in microphone) as your input. AirPods remain in A2DP output mode, preserving audio quality and lower latency.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">4</span>
+        <p class="step-body"><strong>Fix on iPhone</strong> — Some apps (FaceTime, Voice Memos) allow you to select the microphone independently. Where possible, route microphone input through the built-in iPhone mic while AirPods handle audio output.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- RELATED TESTS -->
   <div class="how-section">
-    <h2>Related latency tests</h2>
+    <h2>Related audio tests</h2>
     <div class="steps">
       <div class="step">
         <span class="step-num">→</span>
-        <p class="step-body"><a href="/latency-test/"><strong>General Audio Latency Test</strong></a> — Measures system output delay for any device. Use this if you want to test speakers, a DAC, or a wired headset instead of AirPods.</p>
+        <p class="step-body"><a href="/latency-test/"><strong>Audio Latency Test</strong></a> — Measures system output delay for any device. Use this to test speakers, a DAC, or a wired headset.</p>
       </div>
       <div class="step">
         <span class="step-num">→</span>
-        <p class="step-body"><a href="/bluetooth-latency-test/"><strong>Bluetooth Latency Test</strong></a> — Focused on Bluetooth codecs: SBC, AAC, aptX, LDAC, and LC3. Use this for non-Apple Bluetooth headphones and to identify which codec is active on Android.</p>
+        <p class="step-body"><a href="/bluetooth-latency-test/"><strong>Bluetooth Latency Test</strong></a> — Learn how Bluetooth codecs affect audio quality and latency. Covers SBC, AAC, aptX, LDAC, and LC3 with a comparison table.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">→</span>
+        <p class="step-body"><a href="/mic-test/"><strong>Mic Test</strong></a> — Check if your AirPods microphone is working correctly and see input levels in real time.</p>
       </div>
     </div>
   </div>
@@ -226,6 +347,18 @@ const schema = {
     <div class="faq-item">
       <p class="faq-q">How do I fix AirPods audio delay on Mac?</p>
       <p class="faq-a">AirPods delay spikes on Mac are usually caused by the Bluetooth codec switching to SCO when AirPods are active as a microphone input. Fix it by going to System Settings → Sound → Input and selecting your Mac's built-in microphone instead of AirPods. This keeps AirPods in A2DP output-only mode, which has significantly lower latency than SCO.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is AirPods latency in milliseconds?</p>
+      <p class="faq-a">AirPods typically show approximately 100–200+ ms of audio output latency when connected via Bluetooth using the AAC codec. The exact amount varies by device, iOS or macOS version, RF conditions, and whether the AirPods microphone is active. When the microphone is in use, latency often increases as the device switches to a two-way communication mode optimized for voice calls.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Do AirPods Pro 2 have lower latency than AirPods 4?</p>
+      <p class="faq-a">In real-world use, latency differences between recent AirPods models are generally small compared with the effect of device settings, software, and Bluetooth conditions. All current AirPods use the AAC codec over Bluetooth and operate in a similar latency range. The meaningful latency reduction comes from avoiding Bluetooth altogether — using wired headphones when low latency is critical.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Can I use AirPods for video editing?</p>
+      <p class="faq-a">For casual video review, AirPods Bluetooth latency is noticeable but manageable. For precision audio sync work — matching audio to video frame by frame or recording voice-over to picture — Bluetooth latency is not reliable. Use wired headphones to minimize latency for editing sessions.</p>
     </div>
   </div>
 
@@ -541,4 +674,47 @@ const schema = {
     line-height: 1.6;
     margin: 0;
   }
+
+  .section-intro {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.6;
+    margin: 0 0 var(--s-md);
+  }
+
+  .level-table-wrap { overflow-x: auto; }
+
+  .level-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .level-table th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--mute);
+    padding: var(--s-xs) var(--s-sm);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .level-table td {
+    padding: var(--s-xs) var(--s-sm);
+    border-bottom: 1px solid var(--hairline);
+    color: var(--body-text);
+    vertical-align: top;
+  }
+
+  .level-table td:first-child {
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .level-table tbody tr:last-child td { border-bottom: none; }
 </style>
