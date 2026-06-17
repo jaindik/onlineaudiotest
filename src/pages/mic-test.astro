@@ -79,7 +79,7 @@ const schema = {
 
 <Layout
   title="Microphone Test Online — Free Mic Check & Headset Tester"
-  description="Test your microphone online in seconds — see live waveform, input levels, and record a clip to play back. Works with USB mics, headsets, AirPods, and earphone mics. Free, no download."
+  description="Free microphone test online. Check input levels, record audio, and verify your mic works correctly. No download required."
   keywords="microphone test online, mic test online, online mic test, mic check online, test my microphone, headset mic test, check microphone online, earphone mic test, online microphone check, mic check"
   schema={schema}
   sidebar={true}
@@ -304,6 +304,64 @@ const schema = {
         <p class="step-body"><strong>Works here but not in Discord or Zoom</strong> — Those apps maintain their own microphone selection. In Discord: User Settings → Voice &amp; Video → Input Device. In Zoom: Settings → Audio → Microphone. Set the same device that works in this test.</p>
       </div>
     </div>
+  </div>
+
+  <!-- HOW TO USE -->
+  <div class="how-section">
+    <h2>How to Use This Microphone Test</h2>
+    <ol class="numbered-steps">
+      <li>Click Start Test.</li>
+      <li>Allow microphone access when prompted.</li>
+      <li>Speak normally into your microphone.</li>
+      <li>Watch the level meter react to your voice.</li>
+      <li>Record a short sample.</li>
+      <li>Play it back to confirm your microphone works correctly.</li>
+    </ol>
+  </div>
+
+  <!-- WHY NOT WORKING -->
+  <div class="how-section">
+    <h2>Why Is My Microphone Not Working?</h2>
+    <p class="section-intro">If the test cannot detect your microphone:</p>
+    <ul class="bullet-list">
+      <li>Check browser permissions.</li>
+      <li>Verify the correct microphone is selected.</li>
+      <li>Disconnect and reconnect USB devices.</li>
+      <li>Close apps that may be using the microphone.</li>
+      <li>Restart your browser.</li>
+    </ul>
+  </div>
+
+  <!-- TROUBLESHOOTING BY DEVICE -->
+  <div class="how-section">
+    <h2>Microphone Troubleshooting by Device</h2>
+    <div class="device-blocks">
+      <div class="device-block">
+        <p class="device-name">USB Microphones</p>
+        <p class="device-desc">USB microphones should appear automatically after connection.</p>
+      </div>
+      <div class="device-block">
+        <p class="device-name">Bluetooth Headsets</p>
+        <p class="device-desc">Bluetooth headsets often switch to a lower-quality profile when using the microphone.</p>
+      </div>
+      <div class="device-block">
+        <p class="device-name">Built-in Laptop Microphones</p>
+        <p class="device-desc">Check system privacy settings if the microphone isn't detected.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOD SIGNAL -->
+  <div class="how-section">
+    <h2>What Does a Good Microphone Signal Look Like?</h2>
+    <p class="section-intro">A healthy microphone should:</p>
+    <ul class="bullet-list">
+      <li>Respond instantly to speech.</li>
+      <li>Avoid clipping or distortion.</li>
+      <li>Maintain a consistent volume level.</li>
+      <li>Have minimal background noise.</li>
+    </ul>
+    <p class="section-intro" style="margin-top:var(--s-md)">If the waveform remains flat while speaking, the microphone is likely muted or disconnected.</p>
   </div>
 
   <!-- RELATED TESTS -->
@@ -634,5 +692,57 @@ const schema = {
 
   .level-table tbody tr:last-child td {
     border-bottom: none;
+  }
+
+  .numbered-steps {
+    padding-left: 1.5em;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  .numbered-steps li {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.6;
+    padding-left: var(--s-xs);
+  }
+
+  .bullet-list {
+    list-style: disc;
+    padding-left: 1.5em;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+  }
+  .bullet-list li {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.6;
+  }
+
+  .device-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-md);
+  }
+  .device-block {
+    padding: var(--s-md) var(--s-lg);
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    border-left: 3px solid var(--hairline);
+  }
+  .device-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 var(--s-xs);
+  }
+  .device-desc {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.6;
+    margin: 0;
   }
 </style>
