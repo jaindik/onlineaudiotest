@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 import cloudflare from '@astrojs/cloudflare';
 
 // Segments that should never appear in the sitemap (redirect stubs & error pages)
-const EXCLUDE_SEGMENTS = ['audio-test', 'headphone-test', '404', '500'];
+const EXCLUDE_SEGMENTS = ['audio-test', '404', '500'];
 
 export default defineConfig({
   site: 'https://onlineaudiotest.com',
@@ -29,7 +29,7 @@ export default defineConfig({
         if (u === 'https://onlineaudiotest.com/') {
           item.priority = 1.0;
           item.changefreq = 'weekly';
-        } else if (/\/(mic-test|speaker-test|latency-test|hearing-test|frequency-generator|audio-spectrum-analyzer|voice-recorder|mic-quality-test|bluetooth-latency-test|airpods-latency-test)\/?$/.test(u)) {
+        } else if (/\/(mic-test|speaker-test|headphone-test|latency-test|hearing-test|frequency-generator|audio-spectrum-analyzer|voice-recorder|mic-quality-test|bluetooth-latency-test|airpods-latency-test)\/?$/.test(u)) {
           item.priority = 0.9;
           item.changefreq = 'weekly';
         } else if (/\/(bluetooth-codec-guide|bpm-detector|key-detector|key-and-bpm-detector)\/?$/.test(u)) {

@@ -1,4 +1,4 @@
-﻿---
+---
 import Layout from '../layouts/Layout.astro';
 
 const schema = {
@@ -6,51 +6,53 @@ const schema = {
   "@graph": [
     {
       "@type": "WebApplication",
-      "name": "Left Right Audio Test — Stereo, Speaker & Headphone Check",
+      "name": "Left Right Speaker Test",
       "url": "https://onlineaudiotest.com/speaker-test/",
-      "description": "Free left right audio test for speakers, headphones, and earphones. Stereo audio test, headphone check, earphone test left right, lossless pink noise playback audio test. No download.",
+      "description": "Free online left and right speaker test. Detect dead channels, reversed cables, and balance issues in under two minutes. Works with speakers, headphones, soundbars, and Bluetooth devices.",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
-      "browserRequirements": "Requires Web Audio API support",
+      "browserRequirements": "Requires Web Audio API (Chrome, Firefox, Safari, Edge)",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "featureList": ["Left right audio test", "Stereo audio test", "Headphone check", "Left right headphone test", "Earphone test left right", "Pink noise lossless audio test", "Playback audio test", "Headphone test music tones", "100 Hz woofer test", "Cable reversal diagnostic"],
+      "featureList": ["Left channel isolation test", "Right channel isolation test", "Stereo balance check", "Pink noise full-spectrum test", "100 Hz woofer test", "440 Hz midrange test", "1 kHz high-mid test", "Works with headphones and earbuds", "No download required"],
       "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
     },
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Left Right Audio Test", "item": "https://onlineaudiotest.com/speaker-test/" }
+        { "@type": "ListItem", "position": 2, "name": "Left Right Speaker Test", "item": "https://onlineaudiotest.com/speaker-test/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "How to Test Left and Right Speakers Online",
+      "description": "Test your left and right speaker channels in under two minutes using a browser-based audio tool.",
+      "totalTime": "PT2M",
+      "step": [
+        { "@type": "HowToStep", "name": "Set volume", "text": "Adjust the volume slider to 50–70% so both speakers are clearly audible from your listening position." },
+        { "@type": "HowToStep", "name": "Test left channel", "text": "Click 'Left only.' Sound should come exclusively from your left speaker. If the right plays instead, your L/R cables are reversed." },
+        { "@type": "HowToStep", "name": "Test right channel", "text": "Click 'Right only.' Sound should come exclusively from your right speaker. Complete silence means a disconnected cable or failed driver." },
+        { "@type": "HowToStep", "name": "Run balance check", "text": "Click 'Both Speakers' with pink noise. Close your eyes — sound should appear centred between both speakers. If it pulls to one side, adjust your OS balance settings." }
       ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Why does sound come from the wrong speaker?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Your speaker cables are physically reversed at the amplifier or binding posts. Swap the L/R cables to correct the stereo image. This is the single most common wiring mistake with passive speakers and is easy to fix — simply switch which cable plugs into which terminal." }
-        },
-        {
-          "@type": "Question",
-          "name": "One speaker produces no sound at all — where do I start?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Work backwards: (1) Check the cable is fully seated at both ends. (2) Swap L/R cables — if the dead side moves to the other speaker, your amp channel is at fault; if the same physical speaker stays silent, the driver or crossover is damaged. (3) Verify OS audio balance isn't set fully to one side in System Settings → Sound." }
-        },
-        {
-          "@type": "Question",
-          "name": "What is pink noise and why is it better than a sine tone for speaker testing?",
-          "acceptedAnswer": { "@type": "Answer", "text": "A sine tone only exercises one frequency at a time. Pink noise has equal energy per octave, so it simultaneously drives your tweeter, midrange, and woofer. This makes it ideal for comparing left/right tonal balance in a single listen — a muffled or darker-sounding side points to a degraded driver or a blown tweeter." }
-        },
-        {
-          "@type": "Question",
-          "name": "Does this left right audio test work with headphones and earphones?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes — the test works identically for headphones, earphones, AirPods, and desktop speakers. Click 'Left only' and confirm you hear sound only in your left ear. Click 'Right only' and confirm your right ear. If audio plays from the wrong ear, your stereo channels are swapped at the OS level. Check System Settings → Sound → Balance to confirm it is centered." }
-        },
-        {
-          "@type": "Question",
-          "name": "My speakers distort during the sine tone test — is that a problem?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Distortion at high volumes usually means the amplifier is clipping — being pushed beyond its rated wattage. Lower the test volume slider. Distortion at low volumes is more serious: it indicates the speaker cone or voice coil is physically damaged and the driver likely needs replacement." }
-        }
+        { "@type": "Question", "name": "How do I test my left and right speakers?", "acceptedAnswer": { "@type": "Answer", "text": "Click 'Left only' — sound should come from your left speaker only. Then click 'Right only' — sound should come from your right speaker only. If a speaker is silent or the wrong speaker plays, check your cable connections and OS audio balance settings." } },
+        { "@type": "Question", "name": "Why is only one speaker working?", "acceptedAnswer": { "@type": "Answer", "text": "The most common causes are a loose cable at the amplifier terminal, a blown driver, or an OS balance setting shifted fully to one side. Swap the L/R cables at the amplifier to isolate whether the fault is in the amplifier channel or the physical speaker driver." } },
+        { "@type": "Question", "name": "How do I know if my speakers are balanced?", "acceptedAnswer": { "@type": "Answer", "text": "Play pink noise on both speakers and close your eyes. A balanced system creates a centred image — sound appears to come from a point equidistant between both speakers. If it pulls left or right, adjust the balance slider in your OS audio settings." } },
+        { "@type": "Question", "name": "What is a stereo speaker test?", "acceptedAnswer": { "@type": "Answer", "text": "A stereo speaker test plays audio through your left and right channels independently to confirm both channels are active, correctly routed, and equally loud." } },
+        { "@type": "Question", "name": "Why are my audio channels reversed?", "acceptedAnswer": { "@type": "Answer", "text": "For passive speakers, the cables are physically swapped at the amplifier binding posts — switch them. For USB or HDMI audio, check your OS for a channel swap setting. For Bluetooth, disconnect and re-pair in stereo mode." } },
+        { "@type": "Question", "name": "Can I test headphones with this tool?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The test works identically for headphones, earbuds, and AirPods. Click 'Left only' and confirm sound in your left ear only, then repeat for the right ear." } },
+        { "@type": "Question", "name": "What is pink noise and why use it for speaker testing?", "acceptedAnswer": { "@type": "Answer", "text": "Pink noise contains equal energy across every frequency octave, driving your tweeter, midrange, and woofer simultaneously. This lets you compare left and right tonal character in a single listen. A sine tone only tests one frequency at a time." } },
+        { "@type": "Question", "name": "What does the 100 Hz test check?", "acceptedAnswer": { "@type": "Answer", "text": "100 Hz exercises your bass drivers. In a 2.1 system the signal routes to the subwoofer. In bookshelf speakers, both woofer cones should produce equal bass output. Rattling or buzzing at this frequency usually means a damaged cone." } },
+        { "@type": "Question", "name": "What does 440 Hz test?", "acceptedAnswer": { "@type": "Answer", "text": "440 Hz tests the midrange driver — the frequency range most important for voice clarity and instruments. Differences in volume or tone between left and right at this frequency point to a midrange driver or crossover problem." } },
+        { "@type": "Question", "name": "Does Bluetooth affect the left right speaker test?", "acceptedAnswer": { "@type": "Answer", "text": "Bluetooth introduces latency but does not affect channel accuracy. If your Bluetooth speaker plays mono only, it connected in HFP voice mode rather than A2DP stereo mode. Reconnect in stereo mode." } },
+        { "@type": "Question", "name": "My speaker crackles during the test. Is it damaged?", "acceptedAnswer": { "@type": "Answer", "text": "Crackling at high volume usually means amplifier clipping — lower the volume slider. Crackling at low volume points to a damaged voice coil or loose cone, which requires driver replacement." } },
+        { "@type": "Question", "name": "How do I fix audio balance in Windows?", "acceptedAnswer": { "@type": "Answer", "text": "Go to Settings → System → Sound → click your output device → Properties → Balance slider → drag to centre (50/50)." } },
+        { "@type": "Question", "name": "How do I fix audio balance on Mac?", "acceptedAnswer": { "@type": "Answer", "text": "Go to System Settings → Sound → Output tab → select your output device → drag the Balance slider to the centre position." } },
+        { "@type": "Question", "name": "Why does my soundbar play both sides during the Left only test?", "acceptedAnswer": { "@type": "Answer", "text": "Soundbars apply internal DSP and stereo widening across all physical drivers. The signal your computer sent was correct (left channel only). The soundbar's processing caused both drivers to respond. This is expected behaviour, not a defect." } },
+        { "@type": "Question", "name": "Does the speaker test work on mobile phones?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. On a phone with stereo speakers the channels route to each side of the speaker grille. With headphones plugged in, each earbud receives its designated channel. The test behaves identically to the desktop version." } }
       ]
     }
   ]
@@ -58,24 +60,23 @@ const schema = {
 ---
 
 <Layout
-  title="Left Right Audio Test — Free Speaker & Headphone Stereo Check"
-  description="Check your left and right speakers or headphones in seconds. Play pink noise on each channel separately — instantly find dead channels, reversed cables, or driver imbalance. Free, no download."
-  keywords="left right audio test, stereo audio test, left and right audio test, speaker test left and right, headphone test, left right headphone test, headphone check, earphone test left right, check headphones, online speaker test, left right stereo test"
+  title="Left & Right Speaker Test Online — Free Stereo Check"
+  description="Test your left and right speakers in seconds. Detect dead channels, reversed cables, and balance issues free in your browser — no download needed."
+  keywords="left right speaker test, left right sound test, left right channel test, left right stereo test, speaker test left right, left and right speaker test, stereo speaker test, audio channel test, speaker balance test, online speaker test, headphone left right test"
   schema={schema}
   sidebar={true}
 >
 
   <!-- HERO -->
   <section class="tool-hero container">
-    <h1>Left Right Audio Test</h1>
-    <p>Stereo audio test for speakers, headphones, and earphones. Run a left right headphone test, earphone check, or lossless playback audio test with pink noise — instantly in your browser.</p>
+    <h1>Left &amp; Right Speaker Test Online</h1>
+    <p>Test your left and right speakers, headphones, or earbuds directly in your browser. Play audio through each channel separately to find dead channels, reversed cables, and balance problems. No download, no account required.</p>
   </section>
 
-  <!-- TOOL -->
+  <!-- TOOL — unchanged -->
   <div class="tool-card-wrap">
     <div class="tool-card" id="speaker-tool">
 
-      <!-- Status -->
       <div class="status-bar">
         <div class="status-pill">
           <span class="dot" id="status-dot"></span>
@@ -83,7 +84,6 @@ const schema = {
         </div>
       </div>
 
-      <!-- Speaker diagram -->
       <div class="speaker-diagram" aria-label="Speaker channel visualization">
         <div class="speaker-block" id="spk-left">
           <div class="speaker-icon" aria-hidden="true">
@@ -117,14 +117,12 @@ const schema = {
         </div>
       </div>
 
-      <!-- Volume -->
       <div class="vol-row">
         <span class="eyebrow">Room volume</span>
         <input type="range" id="vol-slider" min="0" max="100" value="60" class="vol-slider" aria-label="Test volume" />
         <span class="vol-hint caption-mono">Set a level you can clearly hear across the room</span>
       </div>
 
-      <!-- Tone selector - pink noise first, most prominent for speakers -->
       <div class="freq-row">
         <span class="eyebrow">Signal type</span>
         <div class="freq-chips">
@@ -137,7 +135,6 @@ const schema = {
         </div>
       </div>
 
-      <!-- Actions -->
       <div class="action-row">
         <button class="btn btn-secondary btn-sm" id="btn-left">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -157,56 +154,319 @@ const schema = {
     </div>
   </div>
 
-  <!-- HOW IT WORKS -->
+  <!-- HOW TO USE -->
   <div class="how-section">
-    <h2>How the speaker test works</h2>
+    <h2>How to Use the Left Right Speaker Test</h2>
     <div class="steps">
       <div class="step">
         <span class="step-num">1</span>
-        <p class="step-body"><strong>Set the room volume first.</strong> Adjust the slider until the tone will be clearly audible across the room - typically 50–70%. Low-power speakers can appear to fail simply because the volume is too low.</p>
+        <p class="step-body"><strong>Set your volume first.</strong> Use the slider to reach a level you can clearly hear from your listening position. Aim for 50–70%. Too low and a working speaker can appear silent.</p>
       </div>
       <div class="step">
         <span class="step-num">2</span>
-        <p class="step-body"><strong>Click "Left only"</strong> - sound should come from your LEFT physical speaker only. If you hear it from the right, your L/R cables are reversed. The tool flags this automatically after 1.5 seconds.</p>
+        <p class="step-body"><strong>Click "Left only."</strong> Sound should come exclusively from your left speaker or left earbud. If the right side plays instead, your L/R channels are swapped — either at the cable or in your OS settings.</p>
       </div>
       <div class="step">
         <span class="step-num">3</span>
-        <p class="step-body"><strong>Click "Right only"</strong> to verify the right channel. No sound at all means a dead driver, a blown fuse on the amp, or a disconnected cable at the speaker terminals.</p>
+        <p class="step-body"><strong>Click "Right only."</strong> Sound should come exclusively from your right speaker or right earbud. Complete silence means a disconnected cable, a blown driver, or a dead amplifier channel.</p>
       </div>
       <div class="step">
         <span class="step-num">4</span>
-        <p class="step-body"><strong>Switch to "Pink noise"</strong> and run both speakers. Listen for tonal differences between left and right - equal shushing means matched drivers. One side sounding darker or duller suggests a degraded tweeter.</p>
+        <p class="step-body"><strong>Click "Both Speakers" with pink noise.</strong> Close your eyes. Sound should appear centred between both speakers at equal volume. If it pulls to one side, you have a balance problem.</p>
       </div>
       <div class="step">
         <span class="step-num">5</span>
-        <p class="step-body"><strong>Use "100 Hz (woofer)"</strong> to test bass driver output. In a 2.1 system this should route to the subwoofer. In bookshelf speakers, both cones should produce equal low-frequency output.</p>
+        <p class="step-body"><strong>Switch signal types</strong> to target specific drivers — use 100 Hz to test your woofer, 440 Hz for midrange, 1 kHz for high-mids.</p>
       </div>
+    </div>
+  </div>
+
+  <!-- SIGNAL TYPES -->
+  <div class="how-section">
+    <h2>What Each Signal Type Tests</h2>
+    <p>Most speaker test tools play one tone and stop there. Each signal in this tool tells you something different about your speakers.</p>
+
+    <figure class="content-img">
+      <img
+        src="/images/speaker-test/pink-noise-vs-sine.jpg"
+        alt="Pink noise waveform vs sine wave comparison — pink noise covers full spectrum, sine wave tests single frequency"
+        width="680" height="680"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption>Left: pink noise (full spectrum, random). Right: structured periodic waveform (single frequency). Pink noise hits every driver at once — sine tones isolate one.</figcaption>
+    </figure>
+
+    <div class="signal-grid">
+      <div class="signal-card">
+        <div class="signal-name">Pink Noise</div>
+        <div class="signal-freq">Full spectrum</div>
+        <p class="signal-desc">Equal energy across every octave — exercises your tweeter, midrange, and woofer simultaneously. Best for left/right tonal comparison in a single listen.</p>
+        <span class="signal-result pass">Pass: both sides sound identical</span>
+        <span class="signal-result fail">Fail: one side darker, thinner, or quieter</span>
+      </div>
+      <div class="signal-card">
+        <div class="signal-name">100 Hz</div>
+        <div class="signal-freq">Woofer / bass driver</div>
+        <p class="signal-desc">Sits in the bass register. In a 2.1 setup routes to your subwoofer. In bookshelf speakers, both woofer cones should move with equal output.</p>
+        <span class="signal-result pass">Pass: equal bass on both sides</span>
+        <span class="signal-result fail">Fail: rattle, no bass, or missing on one side</span>
+      </div>
+      <div class="signal-card">
+        <div class="signal-name">440 Hz</div>
+        <div class="signal-freq">Midrange</div>
+        <p class="signal-desc">Concert A — squarely in the midrange, the frequency most critical for voice clarity and dialogue. Exercises the midrange driver or full-range cone.</p>
+        <span class="signal-result pass">Pass: same clarity and volume on both sides</span>
+        <span class="signal-result fail">Fail: one channel sounds hollow or thinner</span>
+      </div>
+      <div class="signal-card">
+        <div class="signal-name">1 kHz</div>
+        <div class="signal-freq">High-mid / tweeter handoff</div>
+        <p class="signal-desc">Tests the crossover between midrange and treble in a two-way or three-way speaker. Any asymmetry at this frequency is immediately audible in headphones.</p>
+        <span class="signal-result pass">Pass: identical clarity on both sides</span>
+        <span class="signal-result fail">Fail: one side dull, rolled off, or quieter</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEFT SPEAKER TEST -->
+  <div class="how-section">
+    <h2>Left Speaker Test</h2>
+    <p>Click <strong>"Left only"</strong> — sound should come from your left speaker or left earbud exclusively. The right side must be completely silent.</p>
+
+    <figure class="content-img">
+      <img
+        src="/images/speaker-test/left-channel-result.jpg"
+        alt="Left speaker test expected result — left speaker glowing blue and active, right speaker grey and silent"
+        width="640" height="640"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption>Expected result: left speaker active, right speaker silent.</figcaption>
+    </figure>
+
+    <p><strong>If the right speaker plays during the left test:</strong><br />Your L/R channels are reversed. For passive speakers, swap the cables at the amplifier binding posts. For USB/HDMI audio, check your OS for a channel swap setting. For Bluetooth, disconnect and re-pair.</p>
+
+    <p><strong>If the left speaker is completely silent:</strong></p>
+    <ol>
+      <li>Check the cable is fully seated at both the amplifier and the speaker terminal</li>
+      <li>Swap the L/R cables — if silence moves to the right speaker, the amplifier's left channel is faulty; if the same physical speaker stays silent, the driver is damaged</li>
+      <li>Check OS balance: Windows → Settings → System → Sound → device Properties → Balance. Mac → System Settings → Sound → Output → Balance</li>
+    </ol>
+
+    <p><strong>If the left speaker sounds faint or thin:</strong><br />OS balance is shifted right, or the left tweeter has degraded. Check balance first — if balance is centred and one side still sounds different, the driver needs inspection.</p>
+  </div>
+
+  <!-- RIGHT SPEAKER TEST -->
+  <div class="how-section">
+    <h2>Right Speaker Test</h2>
+    <p>Click <strong>"Right only"</strong> — sound should come from your right speaker or right earbud exclusively. The left side must be completely silent.</p>
+
+    <figure class="content-img">
+      <img
+        src="/images/speaker-test/right-channel-result.jpg"
+        alt="Right speaker test expected result — left speaker grey and silent, right speaker glowing blue and active"
+        width="640" height="640"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption>Expected result: left speaker silent, right speaker active.</figcaption>
+    </figure>
+
+    <p><strong>If the left speaker plays during the right test:</strong><br />Channels are reversed — same fix as above, swap L/R cables or check OS channel mapping.</p>
+
+    <p><strong>If the right speaker is completely silent:</strong><br />Same diagnostic as the left channel: check the cable, swap L/R to isolate the fault, then check OS balance.</p>
+
+    <p><strong>If right sounds different from left:</strong><br />Tonal differences between channels (one brighter, one duller) point to driver mismatch — either a tweeter has degraded on one side or the crossover has drifted. This is a hardware problem, not a software setting.</p>
+  </div>
+
+  <!-- SPEAKER BALANCE TEST -->
+  <div class="how-section">
+    <h2>Speaker Balance Test</h2>
+    <p>A balanced system means both channels produce the same output level. Even a 2–3 dB difference is audible as the stereo image pulling to one side.</p>
+
+    <figure class="content-img">
+      <img
+        src="/images/speaker-test/speaker-balance-check.jpg"
+        alt="Two matched speakers side by side with equal output — a balanced stereo pair"
+        width="640" height="640"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption>A balanced pair: both drivers receiving equal signal, equal output.</figcaption>
+    </figure>
+
+    <p><strong>How to detect imbalance:</strong><br />Play pink noise on both channels. Close your eyes. Listen to where the sound appears to come from:</p>
+    <ul>
+      <li><strong>Sound centred</strong> — system is balanced</li>
+      <li><strong>Sound pulls left</strong> — left channel is louder, or right channel is weaker</li>
+      <li><strong>Sound pulls right</strong> — right channel is louder, or left channel is weaker</li>
+    </ul>
+
+    <p><strong>Fix in Windows:</strong><br />Settings → System → Sound → click your output device → Properties → Balance → centre the slider (50/50).</p>
+
+    <p><strong>Fix on Mac:</strong><br />System Settings → Sound → Output → select your device → Balance → centre.</p>
+
+    <p><strong>Fix in Windows (legacy path):</strong><br />Right-click speaker icon in taskbar → Sounds → Playback tab → your device → Properties → Levels → Balance → set both to equal values.</p>
+
+    <p><strong>Other balance causes:</strong></p>
+    <ul>
+      <li>Speaker placed inside a corner — produces more bass and appears louder</li>
+      <li>Amplifier balance knob drifted off centre (if your amp has one)</li>
+      <li>App-level gain applied to one channel in a DAW or EQ — check the app's own settings, not the OS</li>
+    </ul>
+  </div>
+
+  <!-- HEADPHONE LEFT RIGHT TEST -->
+  <div class="how-section">
+    <h2>Headphone Left Right Test</h2>
+    <p>This tool works identically for headphones, earbuds, and AirPods. Click "Left only" and confirm sound in your left ear only. Click "Right only" and confirm your right ear. The result is binary — either the driver works or it does not.</p>
+
+    <p><strong>Wired headphones — channels reversed:</strong><br />The wiring inside the cable is crossed. This is a manufacturing defect or a bad repair. The cable needs replacement — no OS setting can fix reversed wiring at the jack.</p>
+
+    <p><strong>Bluetooth headphones — channels reversed:</strong><br />No physical wire to reverse. The issue is in Bluetooth audio routing or the OS. Disconnect and re-pair. On Windows, check Playback Devices → Spatial sound and disable any 3D audio processing that may be remapping channels.</p>
+
+    <p><strong>AirPods — channels reversed:</strong><br />Go to Settings → Accessibility → Audio/Visual → Balance and verify the slider is centred. AirPods use orientation sensors to assign L/R — if detected incorrectly, a re-pair usually fixes it.</p>
+
+    <p><strong>Only one earbud working:</strong><br />Try the earbud in your other ear to rule out the ear canal. If the driver is silent in both ears, the cable or driver on that bud is damaged (wired) or the firmware needs a reset (true wireless).</p>
+
+    <p>For a dedicated frequency sweep and driver quality test for headphones, see our <a href="/headphone-test/">Headphone Test</a>.</p>
+  </div>
+
+  <!-- COMMON SPEAKER PROBLEMS -->
+  <div class="how-section">
+    <h2>Common Speaker Problems</h2>
+
+    <div class="problem-block">
+      <h3>Sound only coming from left speaker</h3>
+      <p>The right channel has no output.</p>
+      <ol>
+        <li>Check the right speaker cable at both the amplifier terminal and the speaker terminal</li>
+        <li>Swap L/R cables at the amplifier — if the problem moves to the left speaker, the amplifier's right channel is dead; if the same physical right speaker stays silent, the driver is damaged</li>
+        <li>Open OS sound settings and verify balance is not shifted fully left</li>
+      </ol>
+    </div>
+
+    <div class="problem-block">
+      <h3>Sound only coming from right speaker</h3>
+      <p>Mirror of the above. Most common cause in consumer setups: a cable that has developed an open circuit on the left channel wire.</p>
+    </div>
+
+    <div class="problem-block">
+      <h3>One speaker quieter than the other</h3>
+      <p>Not a failure — an imbalance. Check in order:</p>
+      <ol>
+        <li>OS balance setting (most common cause)</li>
+        <li>Amplifier balance knob — if present, centre it</li>
+        <li>Room placement — a speaker pushed against a wall produces more bass and appears louder</li>
+        <li>If none of the above, one driver has lower sensitivity — uncommon but possible with age</li>
+      </ol>
+    </div>
+
+    <div class="problem-block">
+      <h3>Audio channels reversed</h3>
+      <p>Left speaker plays the right channel and vice versa.</p>
+      <ul>
+        <li><strong>Passive speakers:</strong> Swap L/R cables at the amplifier binding posts</li>
+        <li><strong>USB/HDMI audio:</strong> Check OS for channel swap option, or check the manufacturer's audio software (Realtek Audio Console, Nahimic, DTS Sound Unbound)</li>
+        <li><strong>Bluetooth:</strong> Disconnect and re-pair in stereo (A2DP) mode</li>
+        <li><strong>Headphones:</strong> Replace the cable if wired; re-pair and reset if wireless</li>
+      </ul>
+    </div>
+
+    <div class="problem-block">
+      <h3>Bluetooth speaker channel issues</h3>
+      <p>Bluetooth speakers determine L/R internally. If your speaker only plays mono, Windows may have connected it using the HFP voice profile (mono) instead of A2DP (stereo). Fix: in Bluetooth settings, remove the device, set it to stereo output mode, then reconnect. For measuring Bluetooth audio delay, see the <a href="/bluetooth-latency-test/">Bluetooth Latency Test</a>.</p>
+    </div>
+
+    <div class="problem-block">
+      <h3>Windows speaker configuration issues</h3>
+      <ul>
+        <li><strong>Mono audio enabled:</strong> Settings → Accessibility → Audio → Mono Audio toggle → off</li>
+        <li><strong>Balance shifted:</strong> Settings → System → Sound → device Properties → Balance → centre</li>
+        <li><strong>Wrong output device:</strong> Settings → System → Sound → select the correct output</li>
+        <li><strong>Spatial sound forcing remapping:</strong> Right-click speaker icon → Spatial sound → Off</li>
+        <li><strong>One app locking exclusive mode:</strong> Close the app holding exclusive audio access</li>
+      </ul>
+    </div>
+
+    <div class="problem-block">
+      <h3>Mac speaker configuration issues</h3>
+      <ul>
+        <li><strong>Balance shifted:</strong> System Settings → Sound → Output → Balance → centre</li>
+        <li><strong>Mono audio enabled:</strong> System Settings → Accessibility → Audio → Mono Audio → uncheck</li>
+        <li><strong>Wrong output selected:</strong> System Settings → Sound → Output → select the correct device</li>
+        <li><strong>App-level routing:</strong> Some Mac apps (DAWs, video editors) have independent L/R routing — check the app's own audio preferences</li>
+      </ul>
     </div>
   </div>
 
   <!-- FAQ -->
   <div class="faq-section">
     <h2>Frequently asked questions</h2>
+
     <div class="faq-item">
-      <p class="faq-q">Sound comes from the wrong speaker - why?</p>
-      <p class="faq-a">Your speaker cables are physically reversed at the amplifier or binding posts. Swap the L/R cables to correct the stereo image. This is the single most common wiring mistake with passive speakers.</p>
+      <p class="faq-q">How do I test my left and right speakers?</p>
+      <p class="faq-a">Click "Left only" on this tool — sound should come from your left speaker only. Then click "Right only" — sound should come from your right speaker only. If a speaker is silent or the wrong speaker plays, follow the troubleshooting steps above.</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q">One speaker produces no sound at all. Where do I start?</p>
-      <p class="faq-a">Work backwards: (1) Check the cable is fully seated at both ends. (2) Swap L/R cables - if the dead side moves to the other speaker, your amp channel is at fault; if the same physical speaker stays silent, the driver or crossover is damaged. (3) Verify OS audio balance isn't set fully to one side.</p>
+      <p class="faq-q">Why is only one speaker working?</p>
+      <p class="faq-a">Most common causes: a loose cable at the amplifier terminal, a blown driver on the silent speaker, or an OS balance setting shifted to one side. Swap the L/R cables at the amplifier to identify whether the fault is in the amplifier channel or the speaker driver.</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q">What is pink noise and why is it better than a sine tone for speaker testing?</p>
-      <p class="faq-a">A sine tone only exercises one frequency at a time. Pink noise has equal energy per octave, so it simultaneously drives your tweeter, midrange, and woofer. This makes it ideal for comparing left/right tonal balance in a single listen - a muffled or darker side points to a degraded driver.</p>
+      <p class="faq-q">How do I know if my speakers are balanced?</p>
+      <p class="faq-a">Play pink noise on both speakers and close your eyes. A balanced system creates a centred image — the sound appears to come from a point equidistant between both speakers. If it pulls left or right, adjust the OS balance slider.</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q">Does this test work with a soundbar?</p>
-      <p class="faq-a">Yes - the test verifies the stereo signal your computer sends. If the soundbar internally virtualises or upmixes stereo, both physical drivers may respond even during a "Left only" test. That's soundbar processing, not a wiring fault.</p>
+      <p class="faq-q">What is a stereo speaker test?</p>
+      <p class="faq-a">A stereo speaker test plays audio through your left and right channels independently to confirm both channels are active, correctly routed, and equally loud. This tool does all three in under two minutes.</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q">My speakers distort during the sine tone test. Is that a problem?</p>
-      <p class="faq-a">Distortion at high volumes is usually amplifier clipping - the amp is being pushed beyond its rated wattage. Lower the test volume. Distortion at low volumes means the speaker cone or voice coil is physically damaged.</p>
+      <p class="faq-q">Why are my audio channels reversed?</p>
+      <p class="faq-a">For passive speakers, the cables are physically swapped at the amplifier — switch them. For USB or HDMI audio, check your OS audio settings or manufacturer software for a channel swap option. For Bluetooth, disconnect and re-pair.</p>
     </div>
+    <div class="faq-item">
+      <p class="faq-q">Can I test headphones with this tool?</p>
+      <p class="faq-a">Yes. The test works identically for headphones, earbuds, and AirPods. Click "Left only" and confirm sound in your left ear only, then repeat for the right.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What is pink noise and why use it for speaker testing?</p>
+      <p class="faq-a">Pink noise contains equal energy across every frequency octave, so it drives your tweeter, midrange, and woofer simultaneously. This lets you compare left and right tonal character in a single listen. A sine tone only tests one frequency at a time.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What does the 100 Hz test check?</p>
+      <p class="faq-a">100 Hz exercises your bass drivers. In a 2.1 system the signal routes to the subwoofer. In bookshelf speakers, both woofer cones should produce equal bass output. Rattling or buzzing at this frequency usually means a damaged cone.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What does 440 Hz test?</p>
+      <p class="faq-a">440 Hz tests the midrange driver — the frequency range most important for voice clarity and instruments. Any difference in volume or tone between left and right at this frequency points to a midrange driver or crossover problem.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Does Bluetooth affect the speaker test?</p>
+      <p class="faq-a">Bluetooth introduces latency but does not affect channel accuracy. If your Bluetooth speaker plays mono, it connected in HFP voice mode rather than A2DP stereo mode. Reconnect in stereo mode.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">My speaker crackles during the test. Is it damaged?</p>
+      <p class="faq-a">Crackling at high volume = amplifier clipping. Lower the volume slider. Crackling at low volume = damaged voice coil or loose cone. Low-volume distortion requires driver replacement.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do I fix audio balance in Windows?</p>
+      <p class="faq-a">Settings → System → Sound → click your output device → Properties → Balance slider → centre at 50/50.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do I fix audio balance on Mac?</p>
+      <p class="faq-a">System Settings → Sound → Output tab → select your device → drag Balance slider to centre.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why does my soundbar play both sides during the Left only test?</p>
+      <p class="faq-a">Soundbars apply internal DSP and stereo widening across all physical drivers. The signal your computer sent was correct (left only). The soundbar's processing caused both drivers to respond. This is expected — not a defect.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Does this test work on mobile?</p>
+      <p class="faq-a">Yes. On a phone with stereo speakers the channels route to each side of the grille. With headphones plugged in, each earbud receives its designated channel. The test behaves identically to desktop.</p>
+    </div>
+
+    <p class="conclusion-text">Run this left right speaker test any time you set up new speakers, switch audio devices, or notice a change in how your system sounds. The test takes under two minutes and runs entirely in your browser. For headphone frequency and driver quality testing, visit the <a href="/headphone-test/">Headphone Test</a>.</p>
   </div>
 
 </Layout>
@@ -457,6 +717,136 @@ const schema = {
     background: var(--canvas-soft);
     color: var(--mute);
     border: 1px solid var(--hairline);
+  }
+
+  /* ── Content section additions ── */
+
+  .how-section p {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.7;
+    margin-bottom: var(--s-md);
+  }
+  .how-section p:last-child { margin-bottom: 0; }
+
+  .how-section h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: var(--s-xs);
+  }
+
+  .how-section ul,
+  .how-section ol {
+    padding-left: var(--s-lg);
+    margin-bottom: var(--s-md);
+  }
+  .how-section li {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.7;
+    margin-bottom: 4px;
+  }
+  .how-section ul { list-style: disc; }
+  .how-section ol { list-style: decimal; }
+  .how-section li strong { color: var(--ink); font-weight: 500; }
+
+  .how-section a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+  .how-section strong { color: var(--ink); font-weight: 500; }
+
+  /* Content images */
+  .content-img {
+    margin: var(--s-xl) auto;
+    max-width: 100%;
+  }
+  .content-img img {
+    width: 100%;
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-3);
+    display: block;
+  }
+  .content-img figcaption {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--mute);
+    text-align: center;
+    margin-top: var(--s-xs);
+    line-height: 1.5;
+  }
+
+  /* Signal grid */
+  .signal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-md);
+    margin-top: var(--s-lg);
+  }
+  .signal-card {
+    background: var(--canvas);
+    border-radius: var(--r-md);
+    padding: var(--s-md);
+    box-shadow: var(--shadow-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+  }
+  .signal-name {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .signal-freq {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--mute);
+  }
+  .signal-desc {
+    font-size: 13px;
+    color: var(--body-text);
+    line-height: 1.55;
+    flex: 1;
+  }
+  .signal-result {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: var(--r-full);
+    display: inline-block;
+    width: fit-content;
+    line-height: 1.4;
+  }
+  .signal-result.pass {
+    background: var(--success-bg);
+    color: var(--success-fg);
+    border: 1px solid var(--success-border);
+  }
+  .signal-result.fail {
+    background: var(--grade-poor-bg);
+    color: var(--grade-poor-fg);
+  }
+
+  /* Problem blocks */
+  .problem-block {
+    border-top: 1px solid var(--hairline);
+    padding-top: var(--s-lg);
+    margin-top: var(--s-lg);
+  }
+
+  /* Conclusion paragraph inside FAQ section */
+  .conclusion-text {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.7;
+    margin-top: var(--s-xl);
+    padding-top: var(--s-lg);
+    border-top: 1px solid var(--hairline);
+  }
+  .conclusion-text a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+
+  @media (max-width: 560px) {
+    .signal-grid { grid-template-columns: 1fr; }
+    .content-img { max-width: 100%; }
   }
 
   @media (max-width: 480px) {
