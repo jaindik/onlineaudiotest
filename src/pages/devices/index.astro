@@ -1,0 +1,345 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { DEVICES } from '../../data/devices';
+import { CODECS } from '../../data/codecs';
+import { categoryLabel, latencyRating } from '../../lib/related';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: 'Bluetooth Headphone & Earbuds Latency Guide — Device Database',
+      url: 'https://onlineaudiotest.com/devices/',
+      description: 'Bluetooth latency, codec support, and audio delay data for AirPods, Sony, Bose, Samsung, and Google headphones and earbuds.',
+      provider: {
+        '@type': 'Organization',
+        name: 'OnlineAudioTest.com',
+        url: 'https://onlineaudiotest.com/',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://onlineaudiotest.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Bluetooth Device Guides', item: 'https://onlineaudiotest.com/devices/' },
+      ],
+    },
+    {
+      '@type': 'ItemList',
+      name: 'Bluetooth Audio Devices',
+      itemListElement: DEVICES.map((d, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: d.name,
+        url: `https://onlineaudiotest.com/devices/${d.slug}/`,
+      })),
+    },
+  ],
+};
+
+// Group by manufacturer for display
+const byManufacturer: Record<string, typeof DEVICES> = {};
+for (const device of DEVICES) {
+  if (!byManufacturer[device.manufacturer]) byManufacturer[device.manufacturer] = [];
+  byManufacturer[device.manufacturer].push(device);
+}
+---
+
+<Layout
+  title="Bluetooth Headphone Latency Guide — AirPods, Sony, Bose, Samsung & More"
+  description="Bluetooth audio latency data for the most popular headphones and earbuds. Compare AirPods, Sony WH/WF-1000XM5, Bose QC Ultra, Galaxy Buds, and Pixel Buds by codec and latency in ms."
+  keywords="bluetooth headphone latency, airpods latency ms, sony wh-1000xm5 latency, bose quietcomfort latency, galaxy buds latency, pixel buds latency, bluetooth earbuds delay comparison"
+  canonical="https://onlineaudiotest.com/devices/"
+  schema={schema}
+>
+
+  <section class="tool-hero container">
+    <p class="eyebrow" style="margin-bottom:var(--s-sm)">Bluetooth Audio Devices</p>
+    <h1>Headphone & Earbuds Latency Guide</h1>
+    <p>Real Bluetooth latency data — by codec, by device — for the most popular headphones and earbuds. Find your device and learn which settings minimize audio delay.</p>
+  </section>
+
+  <div class="devices-wrap container">
+
+    <!-- Quick compare table -->
+    <section class="devices-section">
+      <h2>Latency Comparison at a Glance</h2>
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Device</th>
+              <th>Category</th>
+              <th>Best Latency</th>
+              <th>Best Codec</th>
+              <th>ANC</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {DEVICES.map((d) => {
+              const codec = CODECS[d.bestLatencyCodec];
+              const rating = latencyRating(d.typicalLatencyMs[0]);
+              return (
+                <tr>
+                  <td>
+                    <a href={`/devices/${d.slug}/`} class="device-table-link">
+                      <span class="device-mfr">{d.manufacturer}</span>
+                      <strong class="device-name-cell">{d.name}</strong>
+                    </a>
+                  </td>
+                  <td class="category-cell">{categoryLabel(d.category)}</td>
+                  <td>
+                    <span class={`latency-chip grade-${rating.grade}`}>{d.typicalLatencyMs[0]}–{d.typicalLatencyMs[1]} ms</span>
+                  </td>
+                  <td class="codec-cell">{codec?.name ?? d.bestLatencyCodec.toUpperCase()}</td>
+                  <td class="anc-cell">{d.anc ? '✓' : '—'}</td>
+                  <td><a href={`/devices/${d.slug}/`} class="table-guide-link">Guide →</a></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Device cards by manufacturer -->
+    {Object.entries(byManufacturer).map(([mfr, devices]) => (
+      <section class="devices-section">
+        <h2>{mfr} Devices</h2>
+        <div class="device-cards">
+          {devices.map((d) => {
+            const codec = CODECS[d.bestLatencyCodec];
+            const rating = latencyRating(d.typicalLatencyMs[0]);
+            return (
+              <a href={`/devices/${d.slug}/`} class="device-card">
+                <div class="device-card-top">
+                  <div>
+                    <span class="device-card-mfr">{d.manufacturer} · {d.releaseYear}</span>
+                    <strong class="device-card-name">{d.name}</strong>
+                  </div>
+                  <span class={`latency-chip grade-${rating.grade}`}>{d.typicalLatencyMs[0]}–{d.typicalLatencyMs[1]} ms</span>
+                </div>
+                <p class="device-card-desc">{d.intro.split('.')[0]}.</p>
+                <div class="device-card-meta">
+                  <span>{categoryLabel(d.category)}</span>
+                  <span>Best codec: {codec?.name ?? d.bestLatencyCodec.toUpperCase()}</span>
+                  {d.anc && <span>ANC</span>}
+                  {d.gamingViable && <span class="gaming-badge">Gaming</span>}
+                </div>
+                <span class="device-card-cta">View latency guide →</span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    ))}
+
+    <!-- Bottom resource links -->
+    <section class="devices-section">
+      <h2>Test Your Device Now</h2>
+      <div class="resource-row">
+        <a href="/latency-test/" class="resource-pill">
+          <strong>Audio Latency Test</strong>
+          <span>Measure your exact Bluetooth delay in ms</span>
+        </a>
+        <a href="/bluetooth-latency-test/" class="resource-pill">
+          <strong>Bluetooth Latency Test</strong>
+          <span>Codec-by-codec latency guide</span>
+        </a>
+        <a href="/bluetooth-codec-guide/" class="resource-pill">
+          <strong>Codec Guide</strong>
+          <span>SBC vs AAC vs aptX vs LDAC explained</span>
+        </a>
+        <a href="/airpods-latency-test/" class="resource-pill">
+          <strong>AirPods Latency Test</strong>
+          <span>Apple-specific latency measurement</span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+</Layout>
+
+<style>
+  .devices-wrap {
+    padding-bottom: var(--s-5xl);
+  }
+  .devices-section {
+    margin-bottom: var(--s-3xl);
+  }
+  .devices-section h2 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.7px;
+    color: var(--ink);
+    margin-bottom: var(--s-lg);
+  }
+
+  /* Compare table */
+  .compare-table-wrap {
+    overflow-x: auto;
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-2);
+  }
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--canvas);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .compare-table th {
+    text-align: left;
+    padding: var(--s-sm) var(--s-md);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--mute);
+    background: var(--canvas-soft-2);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .compare-table td {
+    padding: var(--s-sm) var(--s-md);
+    border-bottom: 1px solid var(--hairline);
+    color: var(--body-text);
+    vertical-align: middle;
+  }
+  .compare-table tbody tr:last-child td { border-bottom: none; }
+  .compare-table tbody tr:hover { background: var(--canvas-soft); }
+  .device-table-link {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .device-mfr {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .device-name-cell {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .category-cell { font-size: 13px; color: var(--mute); }
+  .codec-cell { font-family: var(--font-mono); font-size: 12px; }
+  .anc-cell { text-align: center; color: var(--mute); }
+  .table-guide-link { font-size: 13px; color: var(--link); text-decoration: none; }
+  .table-guide-link:hover { text-decoration: underline; }
+
+  /* Latency chips */
+  .latency-chip {
+    display: inline-flex;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: var(--r-full);
+    padding: 2px 8px;
+  }
+  .grade-excellent { background: var(--grade-excellent-bg); color: var(--grade-excellent-fg); }
+  .grade-good      { background: var(--grade-good-bg);      color: var(--grade-good-fg); }
+  .grade-fair      { background: var(--grade-fair-bg);      color: var(--grade-fair-fg); }
+  .grade-poor      { background: var(--grade-poor-bg);      color: var(--grade-poor-fg); }
+
+  /* Device cards */
+  .device-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--s-md);
+  }
+  .device-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+    background: var(--canvas);
+    border-radius: var(--r-lg);
+    padding: var(--s-lg);
+    box-shadow: var(--shadow-2);
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow .15s, transform .1s;
+  }
+  .device-card:hover { box-shadow: var(--shadow-4); transform: translateY(-2px); }
+  .device-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--s-sm);
+  }
+  .device-card-mfr {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+  .device-card-name {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .device-card-desc {
+    font-size: 13px;
+    color: var(--body-text);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .device-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-xs);
+  }
+  .device-card-meta span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--mute);
+    background: var(--canvas-soft-2);
+    border-radius: var(--r-full);
+    padding: 2px 8px;
+  }
+  .gaming-badge {
+    background: var(--grade-good-bg) !important;
+    color: var(--grade-good-fg) !important;
+  }
+  .device-card-cta {
+    font-size: 13px;
+    color: var(--link);
+    margin-top: auto;
+  }
+
+  /* Resource row */
+  .resource-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--s-md);
+  }
+  .resource-pill {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xxs);
+    background: var(--canvas);
+    border-radius: var(--r-md);
+    padding: var(--s-md);
+    box-shadow: var(--shadow-2);
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow .15s;
+  }
+  .resource-pill:hover { box-shadow: var(--shadow-3); }
+  .resource-pill strong { font-size: 14px; color: var(--link); }
+  .resource-pill span { font-size: 13px; color: var(--body-text); }
+
+  @media (max-width: 640px) {
+    .category-cell, .codec-cell, .anc-cell { display: none; }
+  }
+</style>

@@ -1,8 +1,7 @@
 User-agent: *
 Allow: /
 
-# Redirect stubs — no crawl value
-Disallow: /audio-test
-Disallow: /headphone-test
+# Redirect stub only — no indexable content
+Disallow: /audio-test/
 
 Sitemap: https://onlineaudiotest.com/sitemap-index.xml

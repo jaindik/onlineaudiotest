@@ -38,6 +38,12 @@ export default defineConfig({
         } else if (/\/(about|contact|privacy|terms)\/?$/.test(u)) {
           item.priority = 0.5;
           item.changefreq = 'monthly';
+        } else if (u === 'https://onlineaudiotest.com/devices/') {
+          item.priority = 0.9;
+          item.changefreq = 'weekly';
+        } else if (u.includes('/devices/')) {
+          item.priority = 0.8;
+          item.changefreq = 'monthly';
         } else {
           item.priority = 0.6;
           item.changefreq = 'monthly';

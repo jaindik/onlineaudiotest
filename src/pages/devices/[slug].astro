@@ -1,0 +1,717 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { DEVICES, getDeviceBySlug, getAllSlugs } from '../../data/devices';
+import { CODECS } from '../../data/codecs';
+import { buildDevicePageSchema, generateDeviceKeywords } from '../../lib/seo';
+import { getRelatedDevices, getSameManufacturerDevices, getRelatedResources, latencyRating, categoryLabel } from '../../lib/related';
+
+export function getStaticPaths() {
+  return getAllSlugs().map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const device = getDeviceBySlug(slug!);
+if (!device) return Astro.redirect('/404/');
+
+const schema = buildDevicePageSchema(device);
+const keywords = generateDeviceKeywords(device);
+const relatedDevices = getRelatedDevices(device.slug);
+const sameManufacturer = getSameManufacturerDevices(device.slug);
+const relatedResources = getRelatedResources(device);
+
+const canonicalURL = `https://onlineaudiotest.com/devices/${device.slug}/`;
+const bestCodec = CODECS[device.bestLatencyCodec];
+const typicalMin = device.typicalLatencyMs[0];
+const typicalMax = device.typicalLatencyMs[1];
+const minRating = latencyRating(typicalMin);
+const catLabel = categoryLabel(device.category);
+
+const videoSyncLabel: Record<typeof device.videoSync, string> = {
+  excellent: 'Excellent — no perceptible drift',
+  good: 'Good — minimal drift in most apps',
+  acceptable: 'Acceptable — some apps may show drift',
+  poor: 'Poor — noticeable lip-sync offset',
+};
+---
+
+<Layout
+  title={device.metaTitle}
+  description={device.metaDescription}
+  keywords={keywords}
+  canonical={canonicalURL}
+  schema={schema}
+  sidebar={true}
+>
+
+  <!-- ── HERO ── -->
+  <section class="tool-hero container">
+    <p class="eyebrow" style="margin-bottom:var(--s-sm)">{device.manufacturer} · {catLabel} · {device.releaseYear}</p>
+    <h1>{device.name} — Bluetooth Latency Guide</h1>
+    <p>{device.intro.split('.')[0]}.</p>
+  </section>
+
+  <!-- ── QUICK STATS STRIP ── -->
+  <div class="device-stats-wrap container">
+    <div class="device-stats">
+      <div class="stat-cell">
+        <span class="stat-label">Typical Latency</span>
+        <span class="stat-value">{typicalMin}–{typicalMax} ms</span>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat-cell">
+        <span class="stat-label">Best Codec</span>
+        <span class="stat-value">{bestCodec?.name ?? device.bestLatencyCodec.toUpperCase()}</span>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat-cell">
+        <span class="stat-label">Bluetooth</span>
+        <span class="stat-value">{device.bluetoothVersion}</span>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat-cell">
+        <span class="stat-label">ANC</span>
+        <span class="stat-value">{device.anc ? 'Yes' : 'No'}</span>
+      </div>
+      <div class="stat-divider" aria-hidden="true"></div>
+      <div class="stat-cell">
+        <span class="stat-label">Gaming</span>
+        <span class={`stat-value ${device.gamingViable ? 'grade-good' : 'grade-fair'}`}>
+          {device.gamingViable ? 'Viable' : 'Not recommended'}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TEST CTA ── -->
+  <div class="device-cta-wrap container">
+    <div class="device-cta-card">
+      <div class="device-cta-text">
+        <strong>Measure your {device.name} latency right now</strong>
+        <p>Connect your {device.name} via Bluetooth, then run the live latency test. Results appear in milliseconds instantly — no download required.</p>
+      </div>
+      <a href="/latency-test/" class="btn btn-primary btn-lg device-cta-btn">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M10 6v4.5l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Run Latency Test
+      </a>
+    </div>
+  </div>
+
+  <!-- ── CODEC LATENCY TABLE ── -->
+  <section class="device-section container">
+    <h2>Bluetooth Latency by Codec</h2>
+    <p class="section-intro">{device.latencyProfile}</p>
+
+    <div class="codec-table-wrap">
+      <table class="codec-table">
+        <thead>
+          <tr>
+            <th>Codec</th>
+            <th>Latency Range</th>
+            <th>Audio Quality</th>
+            <th>Platform</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          {device.codecLatency.map((cl) => {
+            const codec = CODECS[cl.codecId];
+            if (!codec) return null;
+            const rating = latencyRating(cl.latencyRange[0]);
+            const qualityMap = { standard: 'Standard', good: 'Good', high: 'High', 'very-high': 'Very High' };
+            const platformLabel = codec.iOSSupport && codec.androidNative
+              ? 'iOS & Android'
+              : codec.iOSSupport
+              ? 'iOS / Apple'
+              : codec.androidNative
+              ? 'Android'
+              : 'Select Android';
+            const bestForMap = {
+              sbc: 'Fallback only',
+              aac: 'Apple devices, streaming',
+              aptx: 'Gaming, video (Android)',
+              aptx_hd: 'Hi-res music listening',
+              aptx_adaptive: 'Gaming, music, video',
+              ldac: 'Critical listening only',
+              samsung_scalable: 'Galaxy devices, gaming',
+            };
+            return (
+              <tr class={cl.recommended ? 'row-recommended' : ''}>
+                <td>
+                  <span class="codec-name">{codec.name}</span>
+                  {cl.recommended && <span class="recommended-badge">Recommended</span>}
+                </td>
+                <td>
+                  <span class={`latency-chip grade-${rating.grade}`}>{cl.latencyRange[0]}–{cl.latencyRange[1]} ms</span>
+                </td>
+                <td>{qualityMap[codec.audioQuality]}</td>
+                <td class="platform-col">{platformLabel}</td>
+                <td class="note-col">{bestForMap[cl.codecId] ?? '—'}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+
+    {device.codecLatency.some((cl) => cl.note) && (
+      <div class="codec-notes">
+        {device.codecLatency.filter((cl) => cl.note).map((cl) => {
+          const codec = CODECS[cl.codecId];
+          return (
+            <p class="codec-note"><strong>{codec?.name ?? cl.codecId}:</strong> {cl.note}</p>
+          );
+        })}
+      </div>
+    )}
+  </section>
+
+  <!-- ── USE CASE SECTIONS ── -->
+  <section class="device-section container">
+    <div class="use-case-grid">
+
+      <!-- Gaming -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="2" y="6" width="16" height="10" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 11h4M8 9v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="13" cy="10" r="1" fill="currentColor"/>
+            <circle cx="15" cy="12" r="1" fill="currentColor"/>
+          </svg>
+          <h3>Gaming Performance</h3>
+          <span class={`use-case-badge ${device.gamingViable ? 'badge-pass' : 'badge-fail'}`}>
+            {device.gamingViable ? 'Viable' : 'Not Recommended'}
+          </span>
+        </div>
+        <p>{device.gamingVerdict}</p>
+        {device.gamingLatencyMs && (
+          <p class="gaming-mode-note">
+            <strong>Gaming mode latency:</strong> {device.gamingLatencyMs[0]}–{device.gamingLatencyMs[1]} ms
+          </p>
+        )}
+        {!device.gamingViable && (
+          <a href="/latency-test/" class="use-case-link">Test your actual gaming latency →</a>
+        )}
+      </div>
+
+      <!-- Video -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="1" y="4" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M15 8l4-2v8l-4-2V8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+          <h3>Video & Streaming</h3>
+          <span class={`use-case-badge badge-${device.videoSync === 'excellent' || device.videoSync === 'good' ? 'pass' : 'warn'}`}>
+            {videoSyncLabel[device.videoSync].split('—')[0].trim()}
+          </span>
+        </div>
+        <p>{device.videoVerdict}</p>
+        <p class="use-case-meta">{videoSyncLabel[device.videoSync]}</p>
+      </div>
+
+      <!-- Calls -->
+      <div class="use-case-card">
+        <div class="use-case-header">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M4 4a2 2 0 012-2h1.5l1 3-1.5 1.5a11 11 0 005.5 5.5L14 10.5l3 1V13a2 2 0 01-2 2C7 15 4 8 4 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+          <h3>Call Quality</h3>
+        </div>
+        <p>{device.callQualityNote}</p>
+        {device.micSupport && (
+          <a href="/mic-test/" class="use-case-link">Test your microphone →</a>
+        )}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── TROUBLESHOOTING ── -->
+  <section class="device-section container">
+    <h2>Common {device.name} Issues</h2>
+    <div class="troubleshoot-list">
+      {device.troubleshooting.map((item, i) => (
+        <div class="troubleshoot-item">
+          <div class="troubleshoot-issue">
+            <span class="troubleshoot-num">{String(i + 1).padStart(2, '0')}</span>
+            <strong>{item.issue}</strong>
+          </div>
+          <p class="troubleshoot-fix">{item.fix}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── RELATED DEVICES ── -->
+  {relatedDevices.length > 0 && (
+    <section class="device-section container">
+      <h2>Compare Similar Devices</h2>
+      <div class="related-devices-grid">
+        {relatedDevices.map((rel) => {
+          const relBest = CODECS[rel.bestLatencyCodec];
+          const relRating = latencyRating(rel.typicalLatencyMs[0]);
+          return (
+            <a href={`/devices/${rel.slug}/`} class="related-device-card">
+              <div class="related-device-header">
+                <span class="related-manufacturer">{rel.manufacturer}</span>
+                <span class={`latency-chip grade-${relRating.grade}`}>{rel.typicalLatencyMs[0]}–{rel.typicalLatencyMs[1]} ms</span>
+              </div>
+              <strong class="related-device-name">{rel.name}</strong>
+              <p class="related-device-meta">{categoryLabel(rel.category)} · {relBest?.name ?? rel.bestLatencyCodec.toUpperCase()}</p>
+              <span class="related-cta">View latency guide →</span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <!-- ── SAME MANUFACTURER ── -->
+  {sameManufacturer.length > 0 && (
+    <section class="device-section container">
+      <h2>Other {device.manufacturer} Devices</h2>
+      <div class="same-mfr-list">
+        {sameManufacturer.map((rel) => (
+          <a href={`/devices/${rel.slug}/`} class="same-mfr-item">
+            <span>{rel.name}</span>
+            <span class="same-mfr-meta">{rel.typicalLatencyMs[0]}–{rel.typicalLatencyMs[1]} ms · {categoryLabel(rel.category)}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ── RELATED RESOURCES ── -->
+  <section class="device-section container">
+    <h2>Related Tools & Guides</h2>
+    <div class="resources-grid">
+      {relatedResources.map((res) => (
+        <a href={res.href} class="resource-card">
+          <strong>{res.title}</strong>
+          <p>{res.desc}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    {device.faqs.map((faq) => (
+      <div class="faq-item">
+        <p class="faq-q">{faq.q}</p>
+        <p class="faq-a">{faq.a}</p>
+      </div>
+    ))}
+  </section>
+
+</Layout>
+
+<style>
+  /* ── Stats strip ── */
+  .device-stats-wrap {
+    margin-bottom: var(--s-xl);
+  }
+  .device-stats {
+    display: flex;
+    align-items: stretch;
+    background: var(--canvas);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-3);
+    overflow: hidden;
+    flex-wrap: wrap;
+  }
+  .stat-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--s-md) var(--s-lg);
+    flex: 1;
+    min-width: 120px;
+  }
+  .stat-divider {
+    width: 1px;
+    background: var(--hairline);
+    flex-shrink: 0;
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .stat-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .grade-good { color: var(--grade-good-fg); }
+  .grade-fair { color: var(--grade-fair-fg); }
+  .grade-excellent { color: var(--grade-excellent-fg); }
+  .grade-poor { color: var(--grade-poor-fg); }
+
+  /* ── CTA card ── */
+  .device-cta-wrap {
+    margin-bottom: var(--s-3xl);
+  }
+  .device-cta-card {
+    background: var(--canvas);
+    border-radius: var(--r-lg);
+    padding: var(--s-xl);
+    box-shadow: var(--shadow-3);
+    display: flex;
+    align-items: center;
+    gap: var(--s-xl);
+    flex-wrap: wrap;
+  }
+  .device-cta-text {
+    flex: 1;
+    min-width: 200px;
+  }
+  .device-cta-text strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: var(--s-xs);
+  }
+  .device-cta-text p {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.6;
+  }
+  .device-cta-btn {
+    flex-shrink: 0;
+  }
+
+  /* ── Section commons ── */
+  .device-section {
+    margin-bottom: var(--s-3xl);
+  }
+  .device-section h2 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.7px;
+    color: var(--ink);
+    margin-bottom: var(--s-md);
+  }
+  .section-intro {
+    font-size: 15px;
+    color: var(--body-text);
+    line-height: 1.7;
+    margin-bottom: var(--s-lg);
+    max-width: 680px;
+  }
+
+  /* ── Codec table ── */
+  .codec-table-wrap {
+    overflow-x: auto;
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-2);
+    margin-bottom: var(--s-md);
+  }
+  .codec-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--canvas);
+    font-size: 14px;
+  }
+  .codec-table thead {
+    background: var(--canvas-soft-2);
+  }
+  .codec-table th {
+    text-align: left;
+    padding: var(--s-sm) var(--s-md);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--mute);
+    border-bottom: 1px solid var(--hairline);
+    white-space: nowrap;
+  }
+  .codec-table td {
+    padding: var(--s-sm) var(--s-md);
+    border-bottom: 1px solid var(--hairline);
+    color: var(--body-text);
+    vertical-align: middle;
+  }
+  .codec-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .codec-table .row-recommended {
+    background: var(--success-bg);
+  }
+  .codec-name {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .recommended-badge {
+    display: inline-block;
+    margin-left: var(--s-xs);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--success-fg);
+    background: var(--success-bg);
+    border: 1px solid var(--success-border);
+    border-radius: var(--r-full);
+    padding: 1px 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .latency-chip {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: var(--r-full);
+    padding: 2px 8px;
+  }
+  .latency-chip.grade-excellent { background: var(--grade-excellent-bg); color: var(--grade-excellent-fg); }
+  .latency-chip.grade-good      { background: var(--grade-good-bg);      color: var(--grade-good-fg); }
+  .latency-chip.grade-fair      { background: var(--grade-fair-bg);      color: var(--grade-fair-fg); }
+  .latency-chip.grade-poor      { background: var(--grade-poor-bg);      color: var(--grade-poor-fg); }
+  .note-col { font-size: 13px; max-width: 200px; }
+  .platform-col { font-size: 13px; white-space: nowrap; }
+
+  .codec-notes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+  }
+  .codec-note {
+    font-size: 13px;
+    color: var(--body-text);
+    line-height: 1.6;
+    padding-left: var(--s-sm);
+    border-left: 2px solid var(--hairline);
+  }
+  .codec-note strong { color: var(--ink); }
+
+  /* ── Use case grid ── */
+  .use-case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--s-md);
+  }
+  .use-case-card {
+    background: var(--canvas);
+    border-radius: var(--r-lg);
+    padding: var(--s-lg);
+    box-shadow: var(--shadow-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-sm);
+  }
+  .use-case-header {
+    display: flex;
+    align-items: center;
+    gap: var(--s-sm);
+    flex-wrap: wrap;
+  }
+  .use-case-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+  }
+  .use-case-header svg { color: var(--mute); flex-shrink: 0; }
+  .use-case-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: var(--r-full);
+    padding: 2px 8px;
+  }
+  .badge-pass { background: var(--grade-good-bg); color: var(--grade-good-fg); }
+  .badge-fail { background: var(--grade-fair-bg); color: var(--grade-fair-fg); }
+  .badge-warn { background: var(--grade-fair-bg); color: var(--grade-fair-fg); }
+  .use-case-card p {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.65;
+  }
+  .use-case-link {
+    font-size: 13px;
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    margin-top: auto;
+  }
+  .use-case-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+  }
+  .gaming-mode-note {
+    font-size: 13px;
+    color: var(--body-text);
+    background: var(--grade-good-bg);
+    color: var(--grade-good-fg);
+    border-radius: var(--r-sm);
+    padding: var(--s-xs) var(--s-sm);
+  }
+
+  /* ── Troubleshooting ── */
+  .troubleshoot-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .troubleshoot-item {
+    padding: var(--s-lg) 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .troubleshoot-item:last-child { border-bottom: 1px solid var(--hairline); }
+  .troubleshoot-issue {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-sm);
+    margin-bottom: var(--s-sm);
+  }
+  .troubleshoot-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--mute);
+    flex-shrink: 0;
+  }
+  .troubleshoot-issue strong {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .troubleshoot-fix {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.65;
+    padding-left: calc(var(--s-sm) + 24px);
+  }
+
+  /* ── Related devices ── */
+  .related-devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--s-md);
+  }
+  .related-device-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+    background: var(--canvas);
+    border-radius: var(--r-lg);
+    padding: var(--s-lg);
+    box-shadow: var(--shadow-2);
+    text-decoration: none;
+    transition: box-shadow .15s, transform .1s;
+    color: inherit;
+  }
+  .related-device-card:hover {
+    box-shadow: var(--shadow-4);
+    transform: translateY(-1px);
+  }
+  .related-device-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-xs);
+  }
+  .related-manufacturer {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .related-device-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .related-device-meta {
+    font-size: 13px;
+    color: var(--mute);
+  }
+  .related-cta {
+    font-size: 13px;
+    color: var(--link);
+    margin-top: auto;
+  }
+
+  /* ── Same manufacturer ── */
+  .same-mfr-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .same-mfr-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-md);
+    padding: var(--s-md) 0;
+    border-top: 1px solid var(--hairline);
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 500;
+    transition: color .15s;
+  }
+  .same-mfr-item:last-child { border-bottom: 1px solid var(--hairline); }
+  .same-mfr-item:hover { color: var(--link); }
+  .same-mfr-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  /* ── Resources ── */
+  .resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--s-md);
+  }
+  .resource-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-xs);
+    background: var(--canvas-soft);
+    border-radius: var(--r-md);
+    padding: var(--s-md);
+    box-shadow: var(--shadow-1);
+    text-decoration: none;
+    color: inherit;
+    transition: background .15s;
+  }
+  .resource-card:hover { background: var(--canvas-soft-2); }
+  .resource-card strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--link);
+  }
+  .resource-card p {
+    font-size: 13px;
+    color: var(--body-text);
+    line-height: 1.55;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .device-stats { flex-direction: column; }
+    .stat-divider { width: 100%; height: 1px; }
+    .device-cta-card { flex-direction: column; }
+    .codec-table th, .codec-table td { padding: var(--s-xs) var(--s-sm); }
+    .note-col { display: none; }
+    .troubleshoot-fix { padding-left: 0; }
+  }
+</style>
