@@ -99,9 +99,33 @@ export const CODECS: Record<string, CodecInfo> = {
     compression: 'lossy',
     summary: 'Samsung\'s proprietary adaptive codec, exclusive to Galaxy devices and Galaxy Buds. Adjusts bitrate based on Bluetooth signal stability. Solid latency and quality on the Galaxy ecosystem.',
   },
+  aptx_ll: {
+    id: 'aptx_ll',
+    name: 'aptX Low Latency',
+    developer: 'Qualcomm',
+    maxBitrateKbps: 352,
+    latencyRange: [32, 40],
+    audioQuality: 'good',
+    androidNative: true,
+    iOSSupport: false,
+    compression: 'lossy',
+    summary: 'Qualcomm states approximately 40 ms end to end latency for aptX Low Latency, with some implementations measured closer to 32 ms. Built specifically to keep audio and video in sync for gaming and lip sync, at the cost of the higher bitrate ceiling that aptX HD or aptX Adaptive offer. Source: Qualcomm aptX Low Latency product page.',
+  },
+  lc3: {
+    id: 'lc3',
+    name: 'LC3',
+    developer: 'Bluetooth SIG',
+    maxBitrateKbps: 345,
+    latencyRange: [20, 30],
+    audioQuality: 'high',
+    androidNative: true,
+    iOSSupport: false,
+    compression: 'lossy',
+    summary: 'The mandatory codec for Bluetooth LE Audio, built on 7.5 ms or 10 ms frames, which typically works out to roughly 20 to 30 ms of algorithmic latency in real implementations. Requires Bluetooth 5.2 or later hardware on both the source and the headphones, plus OS-level LE Audio support. Source: Bluetooth SIG LC3 technical characterization white paper.',
+  },
 };
 
-export const CODEC_QUALITY_ORDER: string[] = ['sbc', 'aac', 'aptx', 'aptx_hd', 'samsung_scalable', 'aptx_adaptive', 'ldac'];
+export const CODEC_QUALITY_ORDER: string[] = ['sbc', 'aptx_ll', 'lc3', 'aac', 'aptx', 'aptx_hd', 'samsung_scalable', 'aptx_adaptive', 'ldac'];
 
 export function getCodecInfo(id: string): CodecInfo | undefined {
   return CODECS[id];
@@ -110,7 +134,7 @@ export function getCodecInfo(id: string): CodecInfo | undefined {
 export function getBestCodec(codecIds: string[]): CodecInfo | undefined {
   let best: CodecInfo | undefined;
   let bestScore = -1;
-  const scoreMap: Record<string, number> = { sbc: 0, aac: 1, aptx: 2, aptx_hd: 3, samsung_scalable: 4, aptx_adaptive: 5, ldac: 6 };
+  const scoreMap: Record<string, number> = { sbc: 0, aptx_ll: 1, lc3: 2, aac: 3, aptx: 4, aptx_hd: 5, samsung_scalable: 6, aptx_adaptive: 7, ldac: 8 };
   for (const id of codecIds) {
     const score = scoreMap[id] ?? -1;
     if (score > bestScore && CODECS[id]) {

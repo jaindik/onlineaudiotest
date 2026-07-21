@@ -95,15 +95,15 @@ const schema = {
   <!-- CODEC TABLE -->
   <div class="how-section">
     <h2>Bluetooth codec comparison</h2>
-    <p class="section-intro">Quick reference for every major Bluetooth audio codec. Both your source device and headphones must support the same codec for it to activate — a mismatch always falls back to SBC.</p>
+    <p class="section-intro">Quick reference for every major Bluetooth audio codec, including the typical latency range in milliseconds. Both your source device and headphones must support the same codec for it to activate, a mismatch always falls back to SBC.</p>
     <div class="level-table-wrap">
       <table class="level-table">
         <thead>
           <tr>
             <th>Codec</th>
             <th>Developer</th>
+            <th>Latency (ms)</th>
             <th>Audio quality</th>
-            <th>Relative latency</th>
             <th>Where it works</th>
           </tr>
         </thead>
@@ -111,62 +111,63 @@ const schema = {
           <tr>
             <td>SBC</td>
             <td>Bluetooth SIG</td>
+            <td>~150&ndash;270 ms</td>
             <td>Adequate</td>
-            <td>Higher</td>
             <td>All Bluetooth devices (universal)</td>
           </tr>
           <tr>
             <td>AAC</td>
             <td>MPEG / Apple</td>
+            <td>~70&ndash;200 ms</td>
             <td>Good</td>
-            <td>Moderate</td>
             <td>iPhone, iPad, Mac, many Android phones</td>
           </tr>
           <tr>
             <td>aptX</td>
             <td>Qualcomm</td>
+            <td>~60&ndash;120 ms</td>
             <td>Good</td>
-            <td>Moderate</td>
             <td>Android (Qualcomm chipsets), select headphones</td>
           </tr>
           <tr>
             <td>aptX HD</td>
             <td>Qualcomm</td>
+            <td>~100&ndash;200 ms</td>
             <td>Very good</td>
-            <td>Moderate</td>
             <td>Android (Qualcomm), aptX HD headphones</td>
           </tr>
           <tr>
             <td>aptX Low Latency</td>
             <td>Qualcomm</td>
+            <td>~32&ndash;40 ms</td>
             <td>Good</td>
-            <td>Lower</td>
             <td>Select gaming headsets and Android devices</td>
           </tr>
           <tr>
             <td>aptX Adaptive</td>
             <td>Qualcomm</td>
+            <td>~50&ndash;90 ms</td>
             <td>Excellent</td>
-            <td>Variable (low in gaming mode)</td>
             <td>Newer Qualcomm devices and headphones</td>
           </tr>
           <tr>
             <td>LDAC</td>
             <td>Sony</td>
+            <td>~170&ndash;350 ms</td>
             <td>Excellent</td>
-            <td>Quality-focused</td>
             <td>Android 8+, Sony headphones</td>
           </tr>
           <tr>
             <td>LC3 / LE Audio</td>
             <td>Bluetooth SIG</td>
+            <td>~20&ndash;30 ms</td>
             <td>Excellent</td>
-            <td>Lower</td>
             <td>Android 13+, Bluetooth 5.2+ devices</td>
           </tr>
         </tbody>
       </table>
     </div>
+    <p class="section-intro">Ranges above reflect typical real-world round trip latency reported by Qualcomm's own aptX documentation and the Bluetooth SIG's LC3 technical characterization white paper, plus independently measured figures for SBC, AAC, aptX, aptX HD and LDAC. Your actual number depends on the specific chipset, firmware, and connection quality on both ends, so treat these as ranges, not guarantees.</p>
   </div>
 
   <!-- CODEC DETAILS -->
