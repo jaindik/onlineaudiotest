@@ -30,47 +30,47 @@ const schema = {
         {
           "@type": "Question",
           "name": "Why isn't my microphone being detected?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Check that your microphone is connected and set as the default input device in your OS sound settings. On Windows: Settings → Sound → Input. On Mac: System Preferences → Sound → Input. Also ensure no other app has exclusive access to the mic — close any running video call or recording apps and try again." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Check this site's browser microphone permission, reconnect the microphone, and select it in your operating system's audio input settings. Menu names differ by device and OS. If permission is allowed but no level appears, reload the page or try another supported browser." }
         },
         {
           "@type": "Question",
           "name": "Is my voice recorded or stored anywhere?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. All audio processing happens entirely in your browser using the Web Audio API and MediaRecorder API. No audio data is transmitted to any server. Your voice never leaves your device." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The microphone test processes its short recording in the browser and does not upload it. The site separately loads analytics for page usage; see the Privacy Policy for details." }
         },
         {
           "@type": "Question",
           "name": "The microphone level meter isn't moving — what should I do?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Make sure you clicked Allow when the browser asked for microphone permission. Check your system volume mixer isn't muting the microphone input. On Windows, right-click the speaker icon → Open Sound settings → Input → check the device is selected. Try a different browser (Chrome or Edge recommended) if the issue persists." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Confirm microphone permission is allowed for this site, choose the intended input device in system settings, and check that input is not muted. Reload the page after changing a permission or input setting. If the meter still does not respond, try another supported browser." }
         },
         {
           "@type": "Question",
           "name": "Why does my microphone recording sound echo-y or distorted?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Echo usually means your speakers are feeding back into your open microphone — use headphones while recording to break this loop. Distortion typically indicates your input gain is too high. Lower the microphone sensitivity in OS settings (Windows: Recording Devices → Properties → Levels; Mac: System Settings → Sound → Input volume)." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Speaker sound reaching an open microphone can create feedback; try headphones and repeat the short playback check. Distortion can have several causes, including input level or app processing, so this test cannot identify a specific fault." }
         },
         {
           "@type": "Question",
           "name": "How do I test my headset microphone online?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Connect your headset, then open the Mic Test page and click 'Test My Microphone.' Allow browser microphone access when prompted. Select your headset's microphone from the browser permission dropdown if multiple input devices are detected. Speak into the headset mic — the waveform and level meter should respond in real time, confirming the headset mic is working." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Connect the headset before starting the test, allow microphone access, and choose the headset microphone in the browser or system input settings if needed. Speak and check whether the meter responds, then play back a short recording. This confirms browser input and playback for that setup, not how a calling app will process the mic." }
         },
         {
           "@type": "Question",
           "name": "Why does my microphone sound quiet?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The most common cause is low input gain. On Windows: right-click the volume icon → Open Sound settings → Input → select your device → Device Properties → raise Input Volume. On Mac: System Settings → Sound → Input → drag Input Volume up. Also speak close to the microphone and ensure nothing is obstructing it." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Playback level can depend on microphone distance, input level, automatic gain control, browser or operating system processing, and playback volume. Check the selected input and its level in system settings, then record again at a comfortable speaking distance." }
         },
         {
           "@type": "Question",
           "name": "My microphone works in this test but not in Discord or Zoom. Why?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Those apps maintain their own microphone selection separate from your OS default. In Discord: User Settings → Voice & Video → Input Device — select the mic that works in this test. In Zoom: Settings → Audio → Microphone. If the device is already correct, review the app's microphone processing and noise suppression settings, which occasionally prevent audio from being detected correctly." }
+          "acceptedAnswer": { "@type": "Answer", "text": "A browser test and a meeting app can use different input selections and audio processing. Select the intended microphone in the app's audio settings and use its test or preview. Menu names vary by app version; this page cannot verify the app's configuration." }
         },
         {
           "@type": "Question",
           "name": "How do I test my AirPods microphone?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Connect your AirPods via Bluetooth first, then open this test and click 'Test My Microphone.' When the browser asks for permission, select 'AirPods' or 'AirPods Microphone' as the input device. Speak into the AirPods and watch the waveform. Note: when AirPods are used as a microphone, your device switches to a lower-quality Bluetooth codec (SCO), which is why audio quality drops during calls compared to music playback." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Connect the AirPods, allow microphone access, and select the AirPods microphone as the input if your browser or system lists it. Speak and check the level, then play back a short recording. Call audio can sound different from music playback because the operating system and app may use a different audio path." }
         },
         {
           "@type": "Question",
           "name": "How do I test my microphone before a Zoom or Teams meeting?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Click 'Test My Microphone,' speak for a few seconds, then click 'Stop & Play Back' to hear exactly how you sound. If playback is clear with strong signal and no clipping, you are ready. No download or account needed — works directly in Chrome, Firefox, Edge, and Safari." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Allow browser microphone access, speak for a few seconds, stop the test, and listen to the playback. Then select the same intended microphone in Zoom or Teams and use that app's own test or preview. A browser check does not confirm meeting-app settings or call quality." }
         }
       ]
     }
@@ -80,7 +80,7 @@ const schema = {
 
 <Layout
   title="Microphone Test Online — Free Mic Check & Headset Tester"
-  description="Free microphone test online. Check input levels, record audio, and verify your mic works correctly. No download required."
+  description="Check whether your microphone sends input to the browser. View the level, record a short clip, and play it back; app settings need a separate check."
   keywords="microphone test online, mic test online, online mic test, mic check online, test my microphone, headset mic test, check microphone online, earphone mic test, online microphone check, mic check"
   schema={schema}
   alternates={buildToolAlternates('/mic-test/', '/pt-br/teste-de-microfone/')}
@@ -90,7 +90,7 @@ const schema = {
   <!-- HERO -->
   <section class="tool-hero container">
     <h1>Microphone Test Online</h1>
-    <p>Run a quick online mic check for a built-in microphone, headset, or earphone mic. Watch the input level, record a short clip, and play it back in your browser. For a deeper noise and clipping analysis, use the <a href="/mic-quality-test/">microphone quality test</a>.</p>
+    <p>Run a quick online mic check for a built-in microphone, headset, or earphone mic. Watch the input level, record a short clip, and play it back in your browser. For session-based input-level and near-full-scale indicators, use the <a href="/mic-quality-test/">microphone quality test</a>.</p>
   </section>
 
   <!-- TOOL -->
@@ -116,7 +116,7 @@ const schema = {
             <line x1="11" y1="29" x2="21" y2="29" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </div>
-        <p class="perm-text">Click <strong>Start Mic Test</strong>, then allow microphone access when your browser asks. Your audio is never sent anywhere - it stays in your browser.</p>
+        <p class="perm-text">Click <strong>Start Mic Test</strong>, then allow microphone access when your browser asks. The test does not upload microphone audio. The site separately uses analytics for page usage; see the <a href="/privacy/">privacy policy</a>.</p>
       </div>
 
       <!-- Level meter (hidden until mic active) -->
@@ -125,7 +125,7 @@ const schema = {
         <div class="meter-wrap">
           <div class="meter-label">
             <span class="eyebrow">Input level</span>
-            <span class="caption-mono" id="db-label">- dB</span>
+            <span class="caption-mono" id="db-label">- dBFS</span>
           </div>
           <div class="meter-track">
             <div class="meter-fill" id="meter-fill"></div>
@@ -173,49 +173,64 @@ const schema = {
       </div>
       <div class="step">
         <span class="step-num">3</span>
-        <p class="step-body"><strong>Recording starts automatically.</strong> Speak into your mic, then click <strong>"Stop &amp; Play Back"</strong> to hear how you sound. No audio is sent to any server.</p>
+        <p class="step-body"><strong>Speak into your microphone.</strong> The browser records a short clip locally while the test is running.</p>
       </div>
       <div class="step">
         <span class="step-num">4</span>
-        <p class="step-body"><strong>Click "Stop &amp; Play Back"</strong> when you're done. Your recording plays back instantly and the microphone is released.</p>
+        <p class="step-body"><strong>Stop and listen back.</strong> Review the clip in this browser. This checks the selected browser input and playback path; it does not test a meeting app's microphone settings.</p>
       </div>
     </div>
   </div>
+
+  <section class="how-section">
+    <h2>Check your microphone before a video call</h2>
+    <p>This browser test checks whether the selected microphone sends input to this page and lets you listen to a short local playback. The call app has its own input selection and processing, so make its test call the final check.</p>
+    <div class="steps">
+      <div class="step"><span class="step-num">1</span><p class="step-body"><strong>Connect and select your microphone.</strong> If the browser or operating system asks for permission, allow microphone access for this site. Check the system input selection if you have more than one microphone.</p></div>
+      <div class="step"><span class="step-num">2</span><p class="step-body"><strong>Speak and listen back.</strong> Start the test, confirm the input meter responds, stop the test, and play the short recording. Keep the playback volume comfortable.</p></div>
+      <div class="step"><span class="step-num">3</span><p class="step-body"><strong>Check the call app separately.</strong> Select the intended input in Zoom, Teams, or another app and use its audio preview or test call. The browser result cannot confirm the app's microphone selection or call processing.</p></div>
+    </div>
+    <p>If the browser cannot list or inspect audio devices, try the <a href="/audio-device-check/">audio device check</a> for browser-reported inputs and permissions.</p>
+  </section>
 
   <!-- FAQ -->
   <div class="faq-section">
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <p class="faq-q">Why isn't my microphone being detected?</p>
-      <p class="faq-a">Check that your microphone is connected and set as the default input device in your OS sound settings. On Windows: Settings → Sound → Input. On Mac: System Preferences → Sound → Input. Also ensure no other app has exclusive access to the mic.</p>
+      <p class="faq-a">Check this site's browser microphone permission, reconnect the microphone, and select it in your operating system's audio input settings. Menu names differ by device and OS. If permission is allowed but no level appears, reload the page or try another supported browser.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Is my voice recorded and stored anywhere?</p>
-      <p class="faq-a">No. All audio processing happens entirely in your browser using the Web Audio API and MediaRecorder API. No audio data is transmitted to any server.</p>
+      <p class="faq-a">The microphone stream and short playback recording are processed in this browser page; this tool does not upload the audio. The site uses analytics scripts for page usage, described in the <a href="/privacy/">privacy notice</a>.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">The level meter isn't moving. What should I do?</p>
-      <p class="faq-a">Make sure you clicked "Allow" when the browser asked for mic permission. Check your system volume mixer isn't muting the microphone. Try a different browser if the issue persists.</p>
+      <p class="faq-a">Confirm microphone permission is allowed for this site, choose the intended input device in system settings, and check that input is not muted. Reload the page after changing a permission or input setting.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Why does my recording sound echo-y or distorted?</p>
-      <p class="faq-a">Echo usually means your speakers are feeding back into your microphone. Use headphones while recording to eliminate this. Distortion typically indicates your input gain is too high - lower the mic sensitivity in your OS settings.</p>
+      <p class="faq-a">Speaker sound reaching an open microphone can create feedback; try headphones and repeat the short playback check. Distortion can have several causes, including input level or app processing, so this test cannot identify a specific fault.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Why does my microphone sound quiet?</p>
-      <p class="faq-a">The most common cause is low input gain. On Windows: right-click the volume icon → Open Sound settings → Input → select your device → Device Properties → raise Input Volume. On Mac: System Settings → Sound → Input → drag Input Volume up. Also speak close to the microphone and ensure nothing is obstructing it.</p>
+      <p class="faq-a">Playback level can depend on microphone distance, input level, automatic gain control, browser or operating system processing, and playback volume. Check the selected input and its level in system settings, then record again at a comfortable speaking distance.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">My microphone works here but not in Discord or Zoom. Why?</p>
-      <p class="faq-a">Those apps maintain their own microphone selection separate from your OS default. In Discord: User Settings → Voice & Video → Input Device — select the mic that works in this test. In Zoom: Settings → Audio → Microphone. If the device is already correct, review the app's microphone processing and noise suppression settings, which occasionally prevent audio from being detected correctly.</p>
+      <p class="faq-a">Those apps have their own microphone selection and audio preview. Select the intended input in the app and use its test or preview. If the device is already selected, check the app's input processing settings. A browser test cannot confirm how another app receives or processes audio.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do I test my headset microphone online?</p>
+      <p class="faq-a">Connect the headset before starting the test, allow microphone access, and choose the headset microphone in the browser or system input settings if needed. Speak and check whether the meter responds, then play back a short recording. This confirms browser input and playback for that setup, not how a calling app will process the mic.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">How do I test my AirPods microphone?</p>
-      <p class="faq-a">Connect your AirPods via Bluetooth first, then open this test and click "Test My Microphone." When the browser asks for permission, select "AirPods" or "AirPods Microphone" as the input device. Speak into the AirPods and watch the waveform. Note: when AirPods are used as a microphone, your device switches to a lower-quality Bluetooth codec (SCO), which is why audio quality drops during calls compared to music playback.</p>
+      <p class="faq-a">Connect the AirPods, allow microphone access, and select the AirPods microphone as the input if your browser or system lists it. Speak and check the level, then play back a short recording. Call audio can sound different from music playback because the operating system and app may use a different audio path.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">How do I test my mic before a Zoom or Teams meeting?</p>
-      <p class="faq-a">Click "Test My Microphone," speak for a few seconds, then click "Stop &amp; Play Back" to hear exactly how you sound. If playback is clear with strong signal and no clipping, you're ready. No download or account needed — works in Chrome, Firefox, Edge, and Safari.</p>
+      <p class="faq-a">Allow browser microphone access, speak for a few seconds, stop the test, and listen to the playback. Then select the same intended microphone in Zoom or Teams and use that app's own test or preview. A browser check does not confirm meeting-app settings or call quality.</p>
     </div>
   </div>
 
@@ -225,11 +240,11 @@ const schema = {
     <div class="steps">
       <div class="step">
         <span class="step-num">1</span>
-        <p class="step-body"><strong>Browser permission request</strong> — When you click "Test My Microphone," your browser asks for microphone access using the standard <code>getUserMedia</code> API. You can revoke this permission at any time from the browser's address bar.</p>
+        <p class="step-body"><strong>Browser permission request</strong> — When you click "Test My Microphone," your browser asks for microphone access using the standard <code>getUserMedia</code> API. Permission can be changed in the browser's site or privacy settings; the exact controls vary by browser.</p>
       </div>
       <div class="step">
         <span class="step-num">2</span>
-        <p class="step-body"><strong>Audio stays on your device</strong> — All processing happens inside your browser tab using the Web Audio API. No audio data is transmitted to any server. Your voice never leaves your device.</p>
+        <p class="step-body"><strong>Audio stays on your device</strong> — This page processes the microphone stream and recording locally using browser audio APIs; the audio is not uploaded by this tool. The site separately uses analytics scripts for page usage; see the <a href="/privacy/">privacy notice</a>.</p>
       </div>
       <div class="step">
         <span class="step-num">3</span>
@@ -242,129 +257,23 @@ const schema = {
     </div>
   </div>
 
-  <!-- READING LEVELS -->
-  <div class="how-section">
-    <h2>Reading your microphone levels</h2>
-    <p class="section-intro">The level meter shows your microphone's signal strength. Aim for a strong, steady signal that avoids hitting the maximum — that's the sweet spot for calls and recordings.</p>
-    <div class="level-table-wrap">
-      <table class="level-table">
-        <thead>
-          <tr>
-            <th>Signal</th>
-            <th>Meter appearance</th>
-            <th>What it means</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Too quiet</td>
-            <td>Barely moves when you speak</td>
-            <td>Gain too low, mic too far away, or connection issue</td>
-          </tr>
-          <tr>
-            <td>Good</td>
-            <td>Steady peaks with headroom above</td>
-            <td>Clean signal — ideal for calls and recordings</td>
-          </tr>
-          <tr>
-            <td>Hot</td>
-            <td>Peaks reaching the top</td>
-            <td>Close to clipping — lower your input gain slightly</td>
-          </tr>
-          <tr>
-            <td>Clipping</td>
-            <td>Hits maximum, meter turns red</td>
-            <td>Distortion will occur — reduce mic gain immediately</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <section class="how-section">
+    <h2>Understanding the microphone level</h2>
+    <p class="section-intro">The meter maps the selected browser input's relative RMS level to a dBFS display. It is not a calibrated microphone specification. Automatic gain control, noise reduction, hardware, and browser processing can change the reading.</p>
+    <p class="section-intro">A level near the top means the digital input is approaching full scale; it does not prove that clipping occurred. Listen to the playback and, if it sounds distorted, reduce the input level slightly and repeat the same check. There is no universal target reading for every microphone or app.</p>
+  </section>
 
-  <!-- COMMON ISSUES -->
-  <div class="how-section">
-    <h2>Common microphone problems and fixes</h2>
+  <section class="how-section">
+    <h2>Microphone troubleshooting</h2>
     <div class="steps">
-      <div class="step">
-        <span class="step-num">!</span>
-        <p class="step-body"><strong>Mic not detected</strong> — If the browser didn't ask for permission, you may have previously clicked "Block." Reset the microphone permission in your browser's site settings, then refresh the page. Also close any app that may have exclusive mic access (Teams, Discord, Zoom).</p>
-      </div>
-      <div class="step">
-        <span class="step-num">!</span>
-        <p class="step-body"><strong>Level meter not moving</strong> — The mic is connected but silent. On Windows: right-click the volume icon → Open Sound settings → Input — check the device is selected and input volume isn't zero. On Mac: System Settings → Sound → Input. Speak close to the microphone and ensure nothing is obstructing it.</p>
-      </div>
-      <div class="step">
-        <span class="step-num">!</span>
-        <p class="step-body"><strong>Echo in playback</strong> — Your speakers are feeding back into the microphone. Put on headphones before recording. If you're using AirPods as both input and output, move to a quieter space or use push-to-talk in your apps.</p>
-      </div>
-      <div class="step">
-        <span class="step-num">!</span>
-        <p class="step-body"><strong>Distorted or clipping audio</strong> — Input gain is too high. On Windows: Recording Devices → Properties → Levels → lower to 70–80%. On Mac: System Settings → Sound → Input → drag Input Volume left. USB mics with a physical gain dial — turn it down.</p>
-      </div>
-      <div class="step">
-        <span class="step-num">!</span>
-        <p class="step-body"><strong>Works here but not in Discord or Zoom</strong> — Those apps maintain their own microphone selection. In Discord: User Settings → Voice &amp; Video → Input Device. In Zoom: Settings → Audio → Microphone. Set the same device that works in this test.</p>
-      </div>
+      <div class="step"><span class="step-num">1</span><p class="step-body"><strong>No microphone or permission prompt:</strong> Check this site's microphone permission in the browser, then select an input in your operating system's audio settings. Reconnect a USB device and reload the page after changing permissions.</p></div>
+      <div class="step"><span class="step-num">2</span><p class="step-body"><strong>Meter does not respond:</strong> Confirm the intended input is selected and not muted, then speak close enough for the mic to pick up your voice. Try another browser if access is allowed but the level remains still.</p></div>
+      <div class="step"><span class="step-num">3</span><p class="step-body"><strong>Playback has echo:</strong> Speaker sound can feed into an open microphone. Try headphones and repeat the short recording. This browser test cannot identify the exact cause of echo in a meeting app.</p></div>
+      <div class="step"><span class="step-num">4</span><p class="step-body"><strong>Playback is quiet or distorted:</strong> Check microphone distance and input level, then record again at a comfortable speaking level. Do not use a fixed gain percentage as a universal target; settings and devices differ.</p></div>
+      <div class="step"><span class="step-num">5</span><p class="step-body"><strong>Works here but not in a call:</strong> Select the microphone in the call app and use its test or preview. A connected Bluetooth headset may use a different audio mode when its microphone is active, so judge it in the app and setup you plan to use.</p></div>
     </div>
-  </div>
-
-  <!-- HOW TO USE -->
-  <div class="how-section">
-    <h2>How to Use This Microphone Test</h2>
-    <ol class="numbered-steps">
-      <li>Click Start Test.</li>
-      <li>Allow microphone access when prompted.</li>
-      <li>Speak normally into your microphone.</li>
-      <li>Watch the level meter react to your voice.</li>
-      <li>Record a short sample.</li>
-      <li>Play it back to confirm your microphone works correctly.</li>
-    </ol>
-  </div>
-
-  <!-- WHY NOT WORKING -->
-  <div class="how-section">
-    <h2>Why Is My Microphone Not Working?</h2>
-    <p class="section-intro">If the test cannot detect your microphone:</p>
-    <ul class="bullet-list">
-      <li>Check browser permissions.</li>
-      <li>Verify the correct microphone is selected.</li>
-      <li>Disconnect and reconnect USB devices.</li>
-      <li>Close apps that may be using the microphone.</li>
-      <li>Restart your browser.</li>
-    </ul>
-  </div>
-
-  <!-- TROUBLESHOOTING BY DEVICE -->
-  <div class="how-section">
-    <h2>Microphone Troubleshooting by Device</h2>
-    <div class="device-blocks">
-      <div class="device-block">
-        <p class="device-name">USB Microphones</p>
-        <p class="device-desc">USB microphones should appear automatically after connection.</p>
-      </div>
-      <div class="device-block">
-        <p class="device-name">Bluetooth Headsets</p>
-        <p class="device-desc">Bluetooth headsets often switch to a lower-quality profile when using the microphone.</p>
-      </div>
-      <div class="device-block">
-        <p class="device-name">Built-in Laptop Microphones</p>
-        <p class="device-desc">Check system privacy settings if the microphone isn't detected.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- GOOD SIGNAL -->
-  <div class="how-section">
-    <h2>What Does a Good Microphone Signal Look Like?</h2>
-    <p class="section-intro">A healthy microphone should:</p>
-    <ul class="bullet-list">
-      <li>Respond instantly to speech.</li>
-      <li>Avoid clipping or distortion.</li>
-      <li>Maintain a consistent volume level.</li>
-      <li>Have minimal background noise.</li>
-    </ul>
-    <p class="section-intro" style="margin-top:var(--s-md)">If the waveform remains flat while speaking, the microphone is likely muted or disconnected.</p>
-  </div>
+    <p class="section-intro">For browser-reported device labels and input details, see the <a href="/audio-device-check/">audio device check</a>. For short-session noise and near-full-scale indicators, see the <a href="/mic-quality-test/">microphone quality test</a>.</p>
+  </section>
 
   <!-- RELATED TESTS -->
   <div class="how-section">
@@ -475,8 +384,8 @@ const schema = {
       const pct = Math.min(100, Math.max(0, (db + 60) / 60 * 100));
 
       meterFill.style.width = `${pct}%`;
-      meterFill.className = 'meter-fill' + (pct > 85 ? ' clip' : pct > 65 ? ' high' : '');
-      dbLabel.textContent = db > -60 ? `${db.toFixed(1)} dB` : '- dB';
+      meterFill.className = 'meter-fill' + (pct > 65 ? ' high' : '');
+      dbLabel.textContent = db > -60 ? `${db.toFixed(1)} dBFS` : '- dBFS';
 
       // Waveform line
       canvasCtx.beginPath();
@@ -562,7 +471,7 @@ const schema = {
         setStatus('idle', 'Test complete');
         timerLabel.textContent = '-';
         meterFill.style.width = '0%';
-        dbLabel.textContent = '- dB';
+        dbLabel.textContent = '- dBFS';
         actionRow.innerHTML = `<button class="btn btn-primary btn-lg" id="btn-start" style="min-width:160px"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><rect x="5.5" y="1" width="4" height="8" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 7.5a5 5 0 0010 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="7.5" y1="12.5" x2="7.5" y2="14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="5" y1="14" x2="10" y2="14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Test My Microphone</button>`;
         document.getElementById('btn-start')?.addEventListener('click', startMic);
         resultNote.textContent = 'Recording saved - press play above, or start a new test.';
