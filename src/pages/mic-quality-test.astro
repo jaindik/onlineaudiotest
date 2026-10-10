@@ -17,13 +17,13 @@ const schema = {
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "featureList": [
         "Heuristic 0–100 session indicator",
-        "Noise floor measurement in dBFS",
-        "Signal-to-noise ratio analysis",
+        "Quiet-frame level estimate in dBFS",
+        "Speech-to-baseline difference estimate",
         "Clipping detection and count",
-        "Dynamic range measurement",
+        "Relative signal variation estimate",
         "Signal strength assessment",
         "Background noise pattern detection",
-        "Personalized improvement recommendations",
+        "Session-based troubleshooting suggestions",
         "Live waveform and level meter",
         "Dark mode support"
       ],
@@ -42,27 +42,27 @@ const schema = {
         {
           "@type": "Question",
           "name": "How do I know if my microphone is good quality?",
-          "acceptedAnswer": { "@type": "Answer", "text": "This page summarizes one recording session using relative input levels, clipping events, and variation between quiet and active frames. Results depend on the selected microphone, gain, room, and browser or operating-system processing; the score is a heuristic indicator, not an objective model-quality grade." }
+          "acceptedAnswer": { "@type": "Answer", "text": "This report is a session heuristic, not a validated microphone-quality benchmark. It cannot predict how you will sound in a specific app; make a short recording there and listen back." }
         },
         {
           "@type": "Question",
           "name": "What is a good noise floor for a microphone?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Excellent: below -65 dBFS. Good: -55 to -65 dBFS. Fair: -45 to -55 dBFS. Poor: above -45 dBFS. Lower (more negative) is better." }
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no universal threshold for this browser check. It estimates a baseline from the quietest 15% of frames, and the result depends on gain, room sound, speech, and browser or OS processing. Compare repeated runs on the same setup only." }
         },
         {
           "@type": "Question",
           "name": "What causes microphone clipping?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Clipping occurs when the input signal exceeds the maximum level the microphone or audio interface can handle. The waveform is literally clipped at the top and bottom, causing harsh distortion. Reduce the microphone gain or move further from the mic to fix it." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Clipping can occur when the digital input reaches its maximum. This page flags samples near that level, but it cannot identify whether the cause is microphone gain, interface settings, or another part of the audio path. Lower input level and listen to a new sample." }
         },
         {
           "@type": "Question",
           "name": "Why is my microphone so quiet?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Low signal strength is usually caused by low microphone gain in system settings, a damaged cable or connector, or a condenser mic not receiving phantom power. Increase input volume in your OS sound settings first." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Check that the intended microphone is selected and that browser permission is allowed. Then inspect the input level in the browser or operating system and make a short recording in the app you use." }
         },
         {
           "@type": "Question",
           "name": "Why do I hear hiss in my recordings?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Microphone hiss is broadband noise, usually from the microphone's own electronics (self-noise) or electrical interference. A high-quality microphone has lower self-noise. Reducing microphone gain and using a preamp can also help." }
+          "acceptedAnswer": { "@type": "Answer", "text": "A hiss-like sound can come from the room, microphone, connection, or audio processing. This browser session cannot identify the source. Listen to a sample in your target app and change one setup factor at a time." }
         },
         {
           "@type": "Question",
@@ -72,12 +72,12 @@ const schema = {
         {
           "@type": "Question",
           "name": "Does this work on mobile?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes, on Safari (iOS) and Chrome (Android). Mobile microphones tend to score lower due to small capsule size and proximity to fans and components." }
+          "acceptedAnswer": { "@type": "Answer", "text": "It requires browser support for microphone capture and Web Audio. The selected input and available controls vary by device and browser. Compare results only on the same setup; this page does not rank built-in and external microphones." }
         },
         {
           "@type": "Question",
           "name": "Is my audio uploaded anywhere?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. All analysis is done locally using the Web Audio API. No audio data is transmitted, recorded, or stored anywhere." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The analysis code uses microphone input in the browser and does not upload audio or test results. The website separately loads analytics for page usage; see the privacy policy." }
         }
       ]
     }
@@ -98,7 +98,7 @@ const schema = {
   <!-- HERO -->
   <section class="tool-hero container">
     <h1>Microphone Quality Test</h1>
-    <p>Speak for 10 seconds to analyze noise floor, signal-to-noise ratio, clipping, and dynamic range. This is a quality analysis, not a simple permission check. If you only need to confirm that a mic works, start with the <a href="/mic-test/">online microphone test</a>.</p>
+    <p>Speak for 10 seconds to review relative input level, quiet-frame estimates, and clipping indicators from this session. This is a browser heuristic, not a standardized microphone measurement or quality grade. If you only need to confirm that a mic works, start with the <a href="/mic-test/">online microphone test</a>.</p>
   </section>
 
   <!-- TOOL -->
@@ -133,7 +133,7 @@ const schema = {
             <line x1="11" y1="30" x2="21" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </div>
-        <p class="perm-text">Click <strong>Start Test</strong>, allow microphone access, then <strong>speak normally for 10 seconds</strong>. The tool will analyze your microphone and generate a full quality report.</p>
+        <p class="perm-text">Click <strong>Start Test</strong>, allow microphone access, then <strong>speak normally for 10 seconds</strong>. The report summarizes relative readings from this session; it is not an objective microphone-quality rating.</p>
       </div>
 
       <!-- Analysis panel (shown during test) -->
@@ -197,7 +197,7 @@ const schema = {
               <span class="grade-score" id="grade-score">--</span>
               <span class="grade-score-max">/100</span>
             </div>
-            <span class="grade-label">Microphone Grade</span>
+            <span class="grade-label">Session Indicator (heuristic)</span>
             <span class="grade-sub" id="grade-sub"></span>
           </div>
         </div>
@@ -257,7 +257,7 @@ const schema = {
       </div>
       <div class="step">
         <span class="step-num">4</span>
-        <p class="step-body"><strong>Review your recommendations.</strong> The tool explains any issues found and suggests specific steps to improve recording quality.</p>
+        <p class="step-body"><strong>Review the session clues.</strong> The tool can flag observed clipping or input patterns. Check your sound in the app where you plan to use the microphone.</p>
       </div>
     </div>
   </div>
@@ -266,21 +266,18 @@ const schema = {
   <div class="mq-seo-section">
     <div class="mq-seo-inner">
 
-      <h2>What is a microphone quality test?</h2>
-      <p>A microphone quality test measures the technical performance of your microphone using audio analysis. Rather than simply checking if a microphone works, it quantifies how well it works — measuring the noise it adds to your signal, how cleanly it captures loud sounds, and how consistently it reproduces your voice. This matters for video calls, streaming, podcasting, and remote work where poor microphone quality affects how you're perceived.</p>
+      <h2>What this microphone session checks</h2>
+      <p>This 10-second browser session summarizes relative input levels, clipping events, and variation between quiet and active frames. It does not isolate microphone self-noise, measure frequency response, or compare microphone models. Browser and operating-system processing, automatic gain, room sound, and speaking distance all affect the result. If you only need to check that a mic signal reaches the browser, use the <a href="/mic-test/">basic microphone test</a>.</p>
 
-      <h2>How microphone quality is measured</h2>
+      <h2>How to interpret the indicators</h2>
       <div class="mq-metrics-table-wrap">
         <table class="mq-metrics-table">
-          <thead>
-            <tr><th>Metric</th><th>What it measures</th><th>Excellent</th><th>Poor</th></tr>
-          </thead>
+          <thead><tr><th>Indicator</th><th>What this session estimates</th><th>How to interpret</th></tr></thead>
           <tbody>
-            <tr><td>Noise Floor</td><td>Ambient noise when silent</td><td>Below −65 dB</td><td>Above −45 dB</td></tr>
-            <tr><td>Signal-to-Noise Ratio</td><td>Voice level vs. noise level</td><td>45+ dB</td><td>Below 20 dB</td></tr>
-            <tr><td>Clipping</td><td>Distortion from overload</td><td>None detected</td><td>10+ events</td></tr>
-            <tr><td>Input Level</td><td>Average speaking volume</td><td>−18 to −6 dB</td><td>Below −50 dB</td></tr>
-            <tr><td>Dynamic Range</td><td>Range from quiet to loud</td><td>25+ dB</td><td>Below 10 dB</td></tr>
+            <tr><td>Quiet-frame level</td><td>Average of the quietest 15% of frames; includes room sound, speech, and system processing</td><td>Compare repeated runs on the same setup only</td></tr>
+            <tr><td>Speech-to-baseline difference</td><td>Difference between active and quiet frames in this recording</td><td>Not a standardized microphone SNR measurement</td></tr>
+            <tr><td>Clipping events</td><td>Input samples near the digital maximum</td><td>Check the input level and listen to the recording if events appear</td></tr>
+            <tr><td>Input level and variation</td><td>Relative values calculated from the selected input</td><td>No universal target is provided</td></tr>
           </tbody>
         </table>
       </div>
@@ -288,14 +285,13 @@ const schema = {
       <h2>Understanding noise floor</h2>
       <p>This tool estimates a quiet baseline from the quietest 15% of short input frames during the 10-second test. That is not a dedicated measurement of microphone self-noise: room noise, your speech, automatic gain control, noise suppression, and the selected input all affect it. Treat the displayed dBFS values as relative readings from this session, not as standardized microphone specifications.</p>
 
-      <h2>Common microphone problems and causes</h2>
-      <ul class="mq-seo-list">
-        <li><strong>High noise floor:</strong> Electrical interference, low-quality microphone capsule, proximity to fans or hard drives, long USB cable without shielding.</li>
-        <li><strong>Clipping/distortion:</strong> Microphone gain set too high, speaking too close to the mic, loud environment causing the input to saturate.</li>
-        <li><strong>Too quiet:</strong> Gain set too low in OS settings, condenser mic missing phantom power, damaged cable.</li>
-        <li><strong>Room echo:</strong> Hard surfaces reflecting sound — bare walls, floors, and ceilings. Carpets, curtains, and acoustic foam help.</li>
-        <li><strong>Hiss:</strong> Microphone self-noise or ground loop interference. Try a different USB port or a USB isolator.</li>
-      </ul>
+      <h2>What to try if the recording sounds wrong</h2>
+      <ol class="mq-seo-list">
+        <li>Confirm the intended microphone is selected in the browser and operating system.</li>
+        <li>Check site permission and input level, then repeat the test under similar room conditions.</li>
+        <li>Listen to a sample in the call or recording app you use. This page cannot reproduce audio processing in the app you use.</li>
+        <li>For a basic permission and playback check, use the <a href="/mic-test/">online microphone test</a>; for speaker pickup, use the <a href="/echo-test/">echo test</a>.</li>
+      </ol>
 
     </div>
   </div>
@@ -305,35 +301,35 @@ const schema = {
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <p class="faq-q">How do I know if my microphone is good quality?</p>
-      <p class="faq-a">Run this test and check your score. A score above 75 means your microphone is suitable for most uses. Below 50 suggests significant issues — usually high background noise, too-low gain, or clipping.</p>
+      <p class="faq-a">This report is a session heuristic, not a validated microphone-quality benchmark. It cannot predict how you will sound in a specific app; make a short recording there and listen back.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">What is a good noise floor for a microphone?</p>
-      <p class="faq-a">There is no universal threshold for this browser check. It estimates a baseline from the quietest 15% of frames in the test, and the result depends on microphone gain, room noise, and browser/OS processing. Compare repeated tests on the same setup and conditions only.</p>
+      <p class="faq-a">There is no universal threshold for this browser check. It estimates a baseline from the quietest 15% of frames, and the result depends on gain, room sound, speech, and browser or OS processing. Compare repeated runs on the same setup only.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">What causes microphone clipping?</p>
-      <p class="faq-a">Clipping happens when input signal exceeds the maximum the interface can handle — the waveform peaks get flattened, creating harsh distortion. Fix it by reducing gain in system settings or moving further from the microphone.</p>
+      <p class="faq-a">Clipping can occur when the digital input reaches its maximum. This page flags samples near that level, but it cannot identify whether the cause is microphone gain, interface settings, or another part of the audio path. Lower input level and listen to a new sample.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Why is my microphone so quiet?</p>
-      <p class="faq-a">Check your microphone input volume in System Preferences (macOS) or Sound Settings (Windows). Also verify you've selected the correct microphone. Condenser microphones require phantom power — ensure your interface or adapter provides it.</p>
+      <p class="faq-a">Check that the intended microphone is selected and that browser permission is allowed. Then inspect the input level in the browser or operating system and make a short recording in the app you use.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Why do I hear hiss in my recordings?</p>
-      <p class="faq-a">Hiss is broadband noise — usually the microphone's own electronic self-noise. Better microphones have lower self-noise. Also check for ground loop interference from USB power by trying a different USB port or hub.</p>
+      <p class="faq-a">A hiss-like sound can come from the room, microphone, connection, or audio processing. This browser session cannot identify the source. Listen to a sample in your target app and change one setup factor at a time.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Can I test my headset microphone?</p>
-      <p class="faq-a">Yes. If your headset appears as a separate audio input, it will show in the device selector. Select it and run the test normally.</p>
+      <p class="faq-a">If your headset microphone is available to the browser as an audio input, select it from the device menu and run the test. Availability depends on the browser, operating system, and connection mode.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Does this work on mobile?</p>
-      <p class="faq-a">Yes, on Safari (iOS) and Chrome (Android). Note that mobile microphones are small and often surrounded by fan and component noise, so scores tend to be lower than dedicated USB microphones.</p>
+      <p class="faq-a">It requires browser support for microphone capture and Web Audio. The selected input and available controls vary by device and browser. Compare results only on the same setup; this page does not rank built-in and external microphones.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Is my audio uploaded anywhere?</p>
-      <p class="faq-a">No. All analysis runs locally in your browser using the Web Audio API. No audio is transmitted, recorded, or stored on any server.</p>
+      <p class="faq-a">The analysis code uses microphone input in the browser and does not upload audio or test results. The website separately loads analytics for page usage; see the privacy policy.</p>
     </div>
   </div>
 
@@ -578,12 +574,12 @@ const schema = {
       const recs: string[] = [];
       if (r.clips > 5) recs.push('Reduce microphone gain — clipping is causing distortion. Lower input volume in System Settings.');
       else if (r.avgDb < -50) recs.push('Signal is too quiet. Increase microphone input volume in System Settings or move closer to the mic.');
-      if (r.noiseFloor > -50) recs.push('High background noise detected. Try a quieter room, close windows, or turn off fans.');
-      if (r.snr < 25) recs.push('Low signal-to-noise ratio. A directional (cardioid) microphone or moving closer will help significantly.');
-      if (r.noisePatterns.includes('Electrical hum (50/60 Hz)')) recs.push('Electrical hum detected. Try a different USB port or a USB hub with power filtering.');
+      if (r.noiseFloor > -50) recs.push('Higher quiet-frame level in this session. Repeat in a quieter room to compare.');
+      if (r.snr < 25) recs.push('Small speech-to-baseline difference in this session. Check input selection and speaking distance, then compare another run.');
+      if (r.noisePatterns.includes('Electrical hum (50/60 Hz)')) recs.push('A 50/60 Hz component was present in this session; this pattern does not identify its source.');
       if (r.speechPct < 0.3) recs.push('Very little speech was detected. Speak louder or move closer to the microphone.');
-      if (score >= 85 && !recs.length) recs.push('Excellent recording conditions. Your microphone is suitable for streaming, podcasting, and professional calls.');
-      else if (score >= 70 && !recs.length) recs.push('Good microphone quality. Suitable for video calls, online meetings, and casual recordings.');
+      if (score >= 85 && !recs.length) recs.push('No threshold flags were triggered in this session. Listen to the recording in your target app.');
+      else if (score >= 70 && !recs.length) recs.push('No major threshold flags were triggered in this session. This is not a quality or suitability rating.');
       if (!recs.length) recs.push('Review the metrics above to identify the weakest areas for improvement.');
       return recs;
     }
@@ -624,17 +620,17 @@ const schema = {
       gradeSub.textContent = gradeDesc[gc] ?? '';
 
       // Metric grades
-      const nfG  = r.noiseFloor < -65 ? 'excellent' : r.noiseFloor < -55 ? 'good' : r.noiseFloor < -45 ? 'fair' : 'poor';
-      const snrG = r.snr > 45 ? 'excellent' : r.snr > 35 ? 'good' : r.snr > 25 ? 'fair' : 'poor';
-      const clipG = r.clips === 0 ? 'excellent' : r.clips < 5 ? 'fair' : 'poor';
-      const lvlLabel = r.avgDb > -6 ? 'Too loud' : r.avgDb < -50 ? 'Too quiet' : r.avgDb < -30 ? 'Moderate' : 'Strong';
+      const nfG  = r.noiseFloor < -60 ? 'good' : r.noiseFloor < -45 ? 'fair' : 'poor';
+      const snrG = r.snr > 35 ? 'good' : r.snr > 15 ? 'fair' : 'poor';
+      const clipG = r.clips === 0 ? 'good' : r.clips < 5 ? 'fair' : 'poor';
+      const lvlLabel = r.avgDb > -6 ? 'Higher level' : r.avgDb < -50 ? 'Lower level' : r.avgDb < -30 ? 'Mid-range' : 'Higher level';
       const lvlG = r.avgDb > -6 ? 'poor' : r.avgDb < -50 ? 'fair' : 'good';
 
       mqMetrics.innerHTML = `
         <div class="mq-metric-grid">
           <div class="mq-metric ${nfG}">
             <div class="mq-metric-head">
-              <span class="mq-metric-name">Noise Floor</span>
+              <span class="mq-metric-name">Quiet-frame level</span>
               <span class="mq-metric-badge ${nfG}">${cap(nfG)}</span>
             </div>
             <span class="mq-metric-val">${r.noiseFloor.toFixed(1)} dBFS</span>
@@ -642,7 +638,7 @@ const schema = {
           </div>
           <div class="mq-metric ${snrG}">
             <div class="mq-metric-head">
-              <span class="mq-metric-name">Signal-to-Noise</span>
+              <span class="mq-metric-name">Speech-to-baseline difference</span>
               <span class="mq-metric-badge ${snrG}">${cap(snrG)}</span>
             </div>
             <span class="mq-metric-val">${r.snr.toFixed(1)} dB (session estimate)</span>
@@ -651,10 +647,10 @@ const schema = {
           <div class="mq-metric ${clipG}">
             <div class="mq-metric-head">
               <span class="mq-metric-name">Clipping</span>
-              <span class="mq-metric-badge ${clipG}">${r.clips === 0 ? 'None' : `${r.clips} events`}</span>
+              <span class="mq-metric-badge ${clipG}">${r.clips === 0 ? 'No events' : `${r.clips} events`}</span>
             </div>
-            <span class="mq-metric-val">${r.clips === 0 ? 'Clean' : `${r.clips} clips`}</span>
-            <span class="mq-metric-bench">${r.clips === 0 ? 'No distortion detected' : 'Reduce microphone gain'}</span>
+            <span class="mq-metric-val">${r.clips === 0 ? 'None observed' : `${r.clips} events`}</span>
+            <span class="mq-metric-bench">${r.clips === 0 ? 'No clipping events observed' : 'Check input level and playback'}</span>
           </div>
           <div class="mq-metric ${lvlG}">
             <div class="mq-metric-head">
@@ -662,7 +658,7 @@ const schema = {
               <span class="mq-metric-badge ${lvlG}">${lvlLabel}</span>
             </div>
             <span class="mq-metric-val">${r.avgDb.toFixed(1)} dB</span>
-            <span class="mq-metric-bench">Ideal range: −18 to −6 dB</span>
+            <span class="mq-metric-bench">Relative level for this session</span>
           </div>
           <div class="mq-metric">
             <div class="mq-metric-head"><span class="mq-metric-name">Dynamic Range</span></div>
@@ -677,23 +673,7 @@ const schema = {
         </div>
         <p class="fg-disclaimer">These relative readings cannot compare microphone models or certify recording suitability. Run the same test again with the same setup to compare changes.</p>`;
 
-      // Use-case compatibility
-      const uses = [
-        { label: 'Zoom / Google Meet',    ok: r.snr > 20 && r.clips < 5 && r.avgDb > -55 },
-        { label: 'Discord / Gaming',      ok: r.snr > 15 && r.clips < 10 },
-        { label: 'Podcast Recording',     ok: score >= 70 && r.clips === 0 },
-        { label: 'Streaming / YouTube',   ok: score >= 75 && r.noiseFloor < -55 },
-        { label: 'Professional Voiceover', ok: score >= 88 && r.noiseFloor < -65 && r.clips === 0 },
-      ];
-      useCasesEl.innerHTML = `
-        <span class="eyebrow use-cases-title">Heuristic checks (not a suitability guarantee):</span>
-        <div class="use-case-list">
-          ${uses.map(u => `
-            <div class="use-case-item ${u.ok ? 'ok' : 'no'}">
-              <span class="use-case-icon">${u.ok ? '✓' : '✗'}</span>
-              <span>${u.label}</span>
-            </div>`).join('')}
-        </div>`;
+      useCasesEl.innerHTML = '<p class="fg-disclaimer">This session cannot predict call, podcast, streaming, or voiceover suitability. Make a short test recording in the app you plan to use and listen back.</p>\n';
 
       // Noise patterns
       if (r.noisePatterns.length > 0) {

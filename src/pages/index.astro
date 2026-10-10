@@ -42,7 +42,7 @@ const tools = [
     href: '/mic-test/',
     eyebrow: 'Mic Check Online',
     title: 'Mic Test',
-    desc: 'Mic check online in seconds. Detect your microphone, monitor real-time input levels, run an earphone mic test, and play back your recording instantly.',
+    desc: 'Check whether your browser receives microphone input, then record and play back a short sample.',
     gradClass: 'develop',
     cta: 'Test my microphone →',
   },
@@ -66,13 +66,13 @@ const tools = [
     href: '/latency-test/',
     eyebrow: 'Bluetooth & System Delay',
     title: 'Latency Test',
-    desc: 'Audio latency test in milliseconds. Measure Bluetooth audio delay, AirPods lag, Zoom sync issues, and gaming latency — instantly in your browser.',
+    desc: 'View browser-reported output timing or estimate playback-to-microphone round-trip delay. Neither isolates Bluetooth codec latency.',
     gradClass: 'ship',
     cta: 'Measure latency →',
   },
   {
     href: '/hearing-test/',
-    eyebrow: 'Hearing Range & Age Test',
+    eyebrow: 'Frequency Listening Check',
     title: 'Hearing Test',
     desc: 'A browser tone sweep that reports the highest frequency heard in this session. Results are affected by playback equipment and are not a clinical hearing assessment.',
     gradClass: 'develop',
@@ -82,7 +82,7 @@ const tools = [
     href: '/audio-spectrum-analyzer/',
     eyebrow: 'Real-Time FFT Visualizer',
     title: 'Spectrum Analyzer',
-    desc: 'See every frequency your microphone picks up in real time. FFT spectrum visualization with peak hold, dominant frequency display, and musical note detection.',
+    desc: 'View a live spectrum of the selected microphone input, with peak hold, dominant-frequency estimate, and note labels. Values depend on input and browser processing.',
     gradClass: 'preview',
     cta: 'Open spectrum analyzer →',
   },
@@ -90,7 +90,7 @@ const tools = [
     href: '/voice-recorder/',
     eyebrow: 'Browser Audio Recorder',
     title: 'Voice Recorder',
-    desc: 'Record, pause, trim, normalize, and download audio in your browser. Live waveform, level meter, quality analytics, and WAV download — no uploads, no account.',
+    desc: 'Record, pause, trim, normalize, and export audio in this browser. The recording tool does not upload audio; the site separately loads page-usage analytics.',
     gradClass: 'ship',
     cta: 'Start recording →',
   },
@@ -98,7 +98,7 @@ const tools = [
     href: '/mic-quality-test/',
     eyebrow: 'Mic Diagnostic Report',
     title: 'Microphone Quality Test',
-    desc: 'Speak for 10 seconds and get a full diagnostic: noise floor, signal-to-noise ratio, clipping count, dynamic range, and a quality score from 0–100 with personalized recommendations.',
+    desc: 'Review relative input-level, clipping, and quiet-frame indicators from a short recording. The score and suggestions are session heuristics, not a microphone grade.',
     gradClass: 'develop',
     cta: 'Test mic quality →',
   },
@@ -106,7 +106,7 @@ const tools = [
     href: '/bpm-detector/',
     eyebrow: 'Tempo Finder',
     title: 'BPM Detector',
-    desc: 'Upload any MP3 or WAV and instantly detect the BPM of any song. Find the beats per minute for DJ mixing, music production, or workout playlists — no download required.',
+    desc: 'Upload an audio file your browser can decode to estimate tempo. Short, noisy, or rhythmically ambiguous clips can produce uncertain or half/double-time results.',
     gradClass: 'preview',
     cta: 'Detect BPM →',
   },
@@ -114,7 +114,7 @@ const tools = [
     href: '/key-detector/',
     eyebrow: 'Musical Key Finder',
     title: 'Song Key Detector',
-    desc: 'Upload any audio file and find its musical key and scale. Get the Camelot code for harmonic DJ mixing. Supports MP3, WAV, OGG, and FLAC — fully browser-based.',
+    desc: 'Upload a browser-decodable audio file for a musical-key estimate and Camelot reference. Results can be uncertain for short, noisy, or weakly tonal tracks.',
     gradClass: 'ship',
     cta: 'Find the key →',
   },
@@ -122,7 +122,7 @@ const tools = [
     href: '/key-and-bpm-detector/',
     eyebrow: 'DJ Analysis Tool',
     title: 'Key + BPM Detector',
-    desc: 'Get the musical key, Camelot code, and BPM of any song in one analysis. The fastest way to prepare tracks for harmonic mixing, sample matching, and DJ sets.',
+    desc: 'Estimate key and tempo from one uploaded clip, with a Camelot reference. Check uncertain results and preview transitions by ear.',
     gradClass: 'develop',
     cta: 'Analyze track →',
   },
@@ -130,7 +130,7 @@ const tools = [
     href: '/decibel-meter/',
     eyebrow: 'Live Sound Level',
     title: 'Decibel Meter',
-    desc: 'Measure relative sound level from your microphone in real time. Live dB reading, peak, average, and min — free, in your browser.',
+    desc: 'View a relative microphone input level in dBFS with peak, average, and minimum. It is not a calibrated sound-pressure meter.',
     gradClass: 'ship',
     cta: 'Measure sound level →',
   },
@@ -146,7 +146,7 @@ const tools = [
     href: '/echo-test/',
     eyebrow: 'Call Diagnostic',
     title: 'Echo Test',
-    desc: 'Check whether your microphone picks up your speaker audio before you join a call. Record and play back to catch echo before it happens live.',
+    desc: 'Play and record a short local check to hear whether your mic picks up speaker sound in this setup. It cannot certify echo cancellation in a meeting app.',
     gradClass: 'develop',
     cta: 'Test for echo →',
   },
@@ -154,7 +154,7 @@ const tools = [
     href: '/audio-reaction-test/',
     eyebrow: 'Reflex Test',
     title: 'Audio Reaction Test',
-    desc: 'How fast do you react to sound? 5 rounds, no warning. Compare your reflexes to the average human auditory reaction time.',
+    desc: 'Try a five-round browser reaction exercise. Results include audio, display, input, browser, and device timing; they are not a universal benchmark.',
     gradClass: 'ship',
     cta: 'Test my reflexes →',
   },
@@ -164,8 +164,8 @@ const tools = [
 <Layout
   alternates={buildHomeAlternates()}
   title="Online Audio Test - Free Mic, Speaker, Headphone & Latency"
-  description="Free tools to test your mic, speakers, headphones, and Bluetooth latency - runs in your browser. No download, no account. Instant results."
-  keywords="audio test, left right audio test, stereo audio test, mic check, mic check online, headphone test, left right headphone test, headphone check, earphone mic test, earphone test left right, audio latency test, bluetooth audio test, airpods test, playback audio test, lossless audio test"
+  description="Free browser tools to check microphone input, speaker and headphone channels, audio timing, and more. No download or account required."
+  keywords="online audio test, microphone test online, speaker test, left right audio test, headphone sound test, audio latency test"
   schema={schema}
 >
 
@@ -180,10 +180,10 @@ const tools = [
         </span>
       </div>
       <h1 class="hero-title">
-        Free online audio test.<br />Instant results.
+        Free online audio tests.<br />Check your setup.
       </h1>
       <p class="hero-desc">
-        Mic check, left right audio test, headphone test, stereo audio test, and Bluetooth latency - all free, all in your browser, zero friction.
+        Choose a browser test for your microphone, speakers, headphones, or audio timing. Results describe what this browser and selected setup can report.
       </p>
       <div class="hero-actions">
         <a href="/mic-test/" class="btn btn-primary btn-lg">
@@ -244,149 +244,50 @@ const tools = [
       <div class="why-grid">
         <div class="why-card card-soft">
           <span class="why-icon">⚡</span>
-          <h3 class="why-card-title">Instant, no friction</h3>
-          <p class="why-card-desc">No account. No download. No app store. One click and your test is running.</p>
+          <h3 class="why-card-title">No install or account</h3>
+          <p class="why-card-desc">Open a tool in your browser. Tests that need a microphone ask for permission before accessing it.</p>
         </div>
         <div class="why-card card-soft">
           <span class="why-icon">🎯</span>
-          <h3 class="why-card-title">Focused tools only</h3>
-          <p class="why-card-desc">No bloat. Every page does exactly one thing - with clear, honest feedback.</p>
+          <h3 class="why-card-title">Purpose-built checks</h3>
+          <p class="why-card-desc">Choose a tool for a particular audio task and see what its result can and cannot tell you.</p>
         </div>
         <div class="why-card card-soft">
           <span class="why-icon">🔒</span>
-          <h3 class="why-card-title">Private by default</h3>
-          <p class="why-card-desc">Mic audio is processed entirely in your browser. Nothing is sent to any server.</p>
+          <h3 class="why-card-title">Audio processed in your browser</h3>
+          <p class="why-card-desc">The audio tools do not upload microphone audio or test result values. The site separately loads analytics for page usage; see the <a href="/privacy/">privacy policy</a>.</p>
         </div>
         <div class="why-card card-soft">
           <span class="why-icon">📱</span>
-          <h3 class="why-card-title">Works everywhere</h3>
-          <p class="why-card-desc">Mobile, tablet, desktop - every test is touch-friendly and fully responsive.</p>
+          <h3 class="why-card-title">Use in a modern browser</h3>
+          <p class="why-card-desc">Tools that use a microphone or Web Audio need browser support and permission. File decoding and recording formats vary by browser.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FAQ JSON-LD (separate block so Google can isolate the FAQPage type) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Why does my headphone audio keep cutting out?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Intermittent headphone audio is usually caused by a loose or damaged cable near the 3.5mm jack, a low Bluetooth battery forcing a codec downgrade, or wireless interference. Plug your headphones into a different device to isolate whether the fault is in the headphones or the source. For Bluetooth, move closer to your device, disconnect competing Bluetooth connections, and check that your battery is above 20%."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why is audio only playing in one headphone?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Single-ear audio usually means a broken wire inside the cable (most commonly near the plug or ear cup), a damaged driver on one side, or an OS audio balance setting shifted fully to one channel. First check System Settings → Sound → Balance and confirm it is centered. Then run a left right audio test on OnlineAudioTest.com to confirm which channel is silent, and test the headphones on a second device to rule out a software issue."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why does my headphone audio sound muffled?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Muffled headphone audio typically means the high-frequency drivers are degraded, a foam ear pad is blocking the driver, or an equalizer preset is cutting the treble. Check your device EQ settings first. If no EQ is applied, run a headphone test with pink noise — if one ear sounds noticeably darker than the other, that driver is damaged. Dirty or clogged earphone mesh grilles are another common cause on in-ear models."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I test audio latency?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Open the Audio Latency Test to view browser-reported output timing or run a playback-to-microphone round-trip estimate. The browser-reported value does not isolate Bluetooth or measure sound at your ear."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is latency in audio?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Audio latency is the delay between when a sound is generated by software or hardware and when you actually hear it through speakers or headphones. It is measured in milliseconds (ms). Low latency matters most in gaming, music production, and video calls, where even a 100 ms delay can cause noticeable lip-sync issues or make real-time monitoring unusable."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is low latency audio?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Low-latency audio means reducing delay through the complete playback path. Results depend on the source, app, operating system, connection, audio buffers, and output hardware. Our browser tool reports browser timing and can estimate playback-to-microphone round-trip delay; it cannot isolate codec latency or certify the full path to your ear."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I check if my mic is working?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Open the Mic Test page on OnlineAudioTest.com and click 'Test My Microphone.' Allow browser microphone access when prompted. If the waveform and level meter respond to your voice, your mic is detected and working. If nothing moves, check that the correct input device is selected in your OS sound settings (Windows: Settings → Sound → Input; Mac: System Settings → Sound → Input) and that no other app has exclusive mic access."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I do a left right audio test?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Open the Speaker Test on OnlineAudioTest.com and click 'Left only' — you should hear sound only from your left speaker or left ear. Then click 'Right only.' If audio plays from the wrong side, your stereo channels are swapped. If one side is completely silent, that channel or driver is faulty. The test works for headphones, earphones, AirPods, and desktop speakers."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is a stereo audio test?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A stereo audio test verifies that your audio output's left and right channels are working independently and at equal volume. It plays audio through each channel in isolation so you can confirm correct stereo imaging, detect dead channels, and identify reversed wiring. OnlineAudioTest.com includes a stereo audio test with sine tones and pink noise for both speakers and headphones."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why does my microphone have echo or sound distorted?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Echo usually means your speakers are feeding back into your open microphone. Wear headphones while recording to break this feedback loop. Distortion typically indicates your input gain is set too high — lower the microphone sensitivity in your OS sound settings (Windows: Recording Devices → Properties → Levels; Mac: System Settings → Sound → Input volume). You can monitor your live mic signal using the Mic Test on OnlineAudioTest.com."
-        }
-      }
-    ]
-  }
-  </script>
-
   <!-- SEO CONTENT -->
   <section class="seo-section">
     <div class="container seo-inner">
+      <h2>Choose an online audio test for your setup</h2>
+      <p>Start with the problem you notice. These browser checks help you inspect a signal or compare settings; they cannot identify every hardware fault or replace calibrated measurement equipment.</p>
 
-      <h2>Free Online Audio Test — Everything You Need, Right in Your Browser</h2>
-      <p>Whether you just plugged in a new pair of headphones, updated your audio drivers, or you're troubleshooting a video call where no one can hear you — a quick audio test is the fastest way to find out exactly what's working and what's not. OnlineAudioTest.com is a free, browser-based suite of audio diagnostic tools that gives you real answers in seconds. No download, no install, no account required.</p>
+      <h3>Check whether a microphone is working</h3>
+      <p>Open the <a href="/mic-test/">online microphone test</a>, choose the input if prompted, allow browser access, and speak. A moving level display means the browser is receiving input. Record and play back a short sample to check how it sounds. If the browser receives nothing, confirm the selected input and site permission in your browser and operating system. This is a basic signal check, not a complete microphone-quality rating.</p>
+      <p>For a longer session, the <a href="/mic-quality-test/">microphone quality test</a> reports relative level, clipping, and a quiet-frame estimate. Its score and suggestions are heuristics affected by room sound, gain, and browser processing.</p>
 
-      <h3>Mic Check Online — Is Your Microphone Working?</h3>
-      <p>The mic check is the most commonly needed audio test, and our mic check online tool handles every scenario. Whether you're using a built-in laptop microphone, a USB desk mic, a Bluetooth headset, or an earphone mic — simply click "Test My Microphone" and grant browser access. You'll immediately see a live waveform and input level meter respond to your voice, confirming the mic is being detected and the signal is strong enough for a call or recording session.</p>
-      <p>The earphone mic test works for any in-line mic — Apple EarPods, Android earphones, gaming headsets, and podcast microphones are all supported. A built-in playback feature records a short clip and lets you hear exactly how your voice sounds to others. This is the fastest way to catch echo, background noise, low gain, or distortion before your next Zoom call or recording session.</p>
+      <h3>Test speaker or headphone channels</h3>
+      <p>Use the <a href="/speaker-test/">speaker sound test</a> or <a href="/headphone-test/">headphone test</a> to play left and right channels separately. Listen for which channel you hear and whether the routing matches the control. Mono settings, spatial audio, Bluetooth processing, and room acoustics can change what you hear; a listening test does not measure a driver or prove that hardware is damaged.</p>
 
-      <h3>Left Right Audio Test — Stereo Channel Verification</h3>
-      <p>A stereo audio test is essential whenever you set up new audio hardware or suspect a channel imbalance. Our left right audio test plays audio through each channel independently — left first, then right — so you instantly confirm whether both sides of your headphones, earphones, or speakers are producing sound at equal volume. If the left channel test plays audio from the right side, your stereo channels are swapped — a common issue after a driver reset or hardware reconnect that's easy to fix once identified.</p>
-      <p>The left and right audio test also works as a headphone check and earphone test left right. If one ear is completely silent, you've found a hardware fault in the driver or cable. Works equally well as a left right headphone test for over-ear cans, in-ear monitors, AirPods, and everyday earbuds.</p>
+      <h3>Understand browser audio timing</h3>
+      <p>The <a href="/latency-test/">audio latency test</a> shows timing reported by the browser or an approximate playback-to-microphone round trip. The round-trip result also includes the speaker, room, mic placement, and processing; neither result isolates a Bluetooth codec or measures sound at your ear. For wireless setup context, see the <a href="/bluetooth-latency-test/">Bluetooth latency guide</a> and <a href="/bluetooth-codec-guide/">codec guide</a>.</p>
 
-      <h3>Headphone Test — Music, Frequency, and Balance</h3>
-      <p>Our speaker test doubles as a full headphone test with pink noise and sine tones sweeping bass, midrange, and high-frequency ranges. This headphone test music mode lets you hear real tonal differences between each driver — a darker or quieter ear reveals a degraded driver or a channel imbalance in your amplifier chain. The headphone check runs at any volume you set, making it suitable for quiet desk testing or normal listening-level evaluation.</p>
-      <p>The lossless audio test mode uses pink noise — a full-spectrum signal with equal energy per octave — to drive your headphone drivers across their entire rated frequency range simultaneously. This is faster and more revealing than a single-tone sine wave for spotting frequency holes, driver damage, or tonal imbalance between the left and right earpieces.</p>
-
-      <h3>Audio Latency Test — Measure Bluetooth Delay</h3>
-      <p>Audio latency is the delay between scheduling a sound and hearing it through the full playback path. Bluetooth delay varies by source device, headphones, operating system, app, buffering, and connection. Codec support matters, but a codec label alone does not tell you the end-to-end delay.</p>
-      <p>Our audio latency test shows values reported by the browser and offers a playback-to-microphone round-trip estimate. The first value may omit parts of the output path; the second is affected by speakers, room acoustics, microphone placement, and processing. Neither isolates a Bluetooth codec or measures sound at your ear. Use the same setup to compare a change, and check sync in the app where you notice a problem.</p>
-      <p>See the <a href="/airpods-latency-test/">AirPods latency guide</a> for setup notes, the <a href="/bluetooth-latency-test/">Bluetooth latency guide</a> for wireless troubleshooting, and the <a href="/bluetooth-codec-guide/">codec guide</a> for compatibility. Our <a href="/devices/">device guides</a> summarize codec support without presenting unsupported model-specific latency measurements.</p>
-
-      <h3>Audio stays in your browser</h3>
-      <p>The audio tools process microphone input and generated sounds in the browser; the tool code does not upload the audio or test result values. The site does load third-party analytics for page usage, as described in our <a href="/privacy/">privacy policy</a>. Microphone permission is requested only by tools that need it, and can be revoked in your browser settings.</p>
-
+      <h3>Know what a microphone level reading means</h3>
+      <p>The <a href="/decibel-meter/">online decibel meter</a> displays relative microphone input in dBFS. It is not calibrated to sound pressure (dB SPL or dBA) and should not be used to assess noise exposure. Use the <a href="/privacy/">privacy policy</a> to see how browser audio handling differs from site analytics.</p>
     </div>
   </section>
 
-  <!-- FAQ SECTION -->
+    <!-- FAQ SECTION -->
   <section class="faq-home-section">
     <div class="container faq-home-inner">
       <div class="faq-home-header">
@@ -398,17 +299,17 @@ const tools = [
 
         <details class="faq-home-item">
           <summary class="faq-home-q">Why does my headphone audio keep cutting out?</summary>
-          <p class="faq-home-a">Intermittent audio is usually a loose or damaged cable near the 3.5mm jack, low Bluetooth battery forcing a codec downgrade, or wireless interference. Plug your headphones into a different device first. For Bluetooth, move closer to the source, disconnect competing connections, and keep battery above 20%.</p>
+          <p class="faq-home-a">Audio dropouts can come from the source, connection, app, or headphones. Try the same headphones with another source, move closer if using Bluetooth, and check the app and device connection settings. A browser listening check cannot identify the faulty component.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">Why is audio only playing in one headphone?</summary>
-          <p class="faq-home-a">Single-ear audio usually means a broken wire near the plug, a damaged driver on one side, or a balance setting shifted fully to one channel. Check System Settings → Sound → Balance first. Then run the <a href="/speaker-test/">left right audio test</a> to confirm which channel is silent, and test on a second device to rule out software.</p>
+          <p class="faq-home-a">First check that the operating system balance is centered and test another app or source. Then use the <a href="/speaker-test/">left/right speaker test</a> to hear how each channel is routed. A silent side can have several causes; this listening check cannot diagnose a cable or driver.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">Why does my headphone audio sound muffled?</summary>
-          <p class="faq-home-a">Muffled audio usually means a degraded tweeter/driver, a blocked ear pad, or an EQ preset cutting treble. Check your device EQ first. If no EQ is applied, run a <a href="/speaker-test/">headphone test with pink noise</a> — if one ear sounds darker than the other, that driver is damaged. Dirty grilles on in-ear models are another common cause.</p>
+          <p class="faq-home-a">Check volume, equalizer, fit, and device audio effects first. Compare both sides with the <a href="/headphone-test/">headphone sound test</a>, then try another source. A listening comparison cannot confirm driver damage or measure frequency response.</p>
         </details>
 
         <details class="faq-home-item">
@@ -418,7 +319,7 @@ const tools = [
 
         <details class="faq-home-item">
           <summary class="faq-home-q">What is latency in audio?</summary>
-          <p class="faq-home-a">Audio latency is the delay between when a sound is generated and when you actually hear it, measured in milliseconds (ms). It matters most in gaming, music production, and video calls — even a 100 ms delay causes noticeable lip-sync issues or makes real-time monitoring unusable.</p>
+          <p class="faq-home-a">Audio latency is the time taken by an audio path, usually described in milliseconds. Whether delay is noticeable or disruptive depends on the task, app synchronization, and the full playback path; one fixed threshold does not apply to every use.</p>
         </details>
 
         <details class="faq-home-item">
@@ -428,22 +329,22 @@ const tools = [
 
         <details class="faq-home-item">
           <summary class="faq-home-q">How do I check if my mic is working?</summary>
-          <p class="faq-home-a">Open the <a href="/mic-test/">Mic Check</a> and click "Test My Microphone." Allow browser access. If the waveform and level meter respond to your voice, your mic is working. If nothing moves, verify the correct input device is selected in OS settings (Windows: Settings → Sound → Input; Mac: System Settings → Sound → Input) and no other app has exclusive mic access.</p>
+          <p class="faq-home-a">If the level display responds, the browser is receiving input from the selected microphone. If it does not, check site permission and input selection in the browser and operating system, then try another browser or app.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">How do I do a left right audio test?</summary>
-          <p class="faq-home-a">Open the <a href="/speaker-test/">Speaker Test</a> and click "Left only" — you should hear sound only from your left speaker or left ear. Then "Right only." If audio plays from the wrong side, your channels are swapped. If one side is silent, that channel or driver is faulty. Works for headphones, earphones, AirPods, and desktop speakers.</p>
+          <p class="faq-home-a">Open the <a href="/speaker-test/">Speaker Test</a>, play the left and right signals separately, and listen for which side produces each sound. If routing seems unexpected, check mono, balance, spatial-audio, and output-device settings. The result does not identify a faulty driver.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">What is a stereo audio test?</summary>
-          <p class="faq-home-a">A stereo audio test verifies that the left and right channels of your audio output work independently and at equal volume. It plays audio through each channel in isolation to confirm correct stereo imaging, detect dead channels, and identify reversed wiring. Our <a href="/speaker-test/">stereo test</a> includes sine tones and full-spectrum pink noise.</p>
+          <p class="faq-home-a">A stereo test plays left and right signals separately so you can listen for channel routing. It cannot measure equal acoustic volume or diagnose wiring. Try the <a href="/speaker-test/">speaker test</a> with the output device you want to check.</p>
         </details>
 
         <details class="faq-home-item">
           <summary class="faq-home-q">Why does my microphone have echo or sound distorted?</summary>
-          <p class="faq-home-a">Echo means your speakers are feeding back into your open mic — wear headphones while recording to break that loop. Distortion means input gain is too high — lower the microphone sensitivity in OS settings (Windows: Recording Devices → Properties → Levels; Mac: System Settings → Sound → Input volume). Monitor your live signal with the <a href="/mic-test/">Mic Test</a>.</p>
+          <p class="faq-home-a">Echo can occur when speaker audio is picked up by a microphone, but meeting apps and rooms can also affect it. Try headphones and check the call app?s input/output selection. Use the <a href="/echo-test/">echo test</a> to listen to a local playback-and-recording check; it cannot certify the app?s echo cancellation. For distortion, lower input gain and retry the <a href="/mic-test/">microphone test</a>.</p>
         </details>
 
       </div>

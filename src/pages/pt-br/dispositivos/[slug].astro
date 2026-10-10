@@ -1,7 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { DEVICES, getDeviceBySlug, getAllSlugs } from '../../../data/devices';
-import { CODECS } from '../../../data/codecs';
 import { buildDeviceAlternates } from '../../../lib/i18n';
 
 export function getStaticPaths() { return getAllSlugs().map((slug) => ({ params: { slug } })); }
@@ -9,14 +8,41 @@ const { slug } = Astro.params;
 const device = getDeviceBySlug(slug!);
 if (!device) return Astro.redirect('/404/');
 const canonical = `https://onlineaudiotest.com/pt-br/dispositivos/${device.slug}/`;
-const schema = { '@context': 'https://schema.org', '@type': 'TechArticle', headline: `${device.name} — Latência Bluetooth`, description: `Latência, codecs e desempenho do ${device.name} em português.`, url: canonical, about: { '@type': 'Product', name: device.name, brand: { '@type': 'Brand', name: device.manufacturer } }, author: { '@type': 'Organization', name: 'OnlineAudioTest.com' } };
-const codecRows = device.codecLatency.map((item) => { const codec = CODECS[item.codecId]; return codec ? { name: codec.name, min: item.latencyRange[0], max: item.latencyRange[1], note: item.note } : null; }).filter(Boolean);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: `${device.name} — Compatibilidade de codecs`,
+  description: `Referência de codecs para ${device.name}. Confirme as especificações atuais do fabricante e do dispositivo de origem.`,
+  url: canonical,
+  about: { '@type': 'Thing', name: device.name },
+  author: { '@type': 'Organization', name: 'OnlineAudioTest.com' },
+};
 ---
-<Layout title={`${device.name} — Latência Bluetooth e Codec`} description={`Veja a latência Bluetooth, codecs compatíveis e desempenho em jogos do ${device.name}. Guia em português com referências em milissegundos.`} keywords={`${device.name} latência, ${device.name} atraso Bluetooth, ${device.name} codec, ${device.name} jogos`} canonical={canonical} locale="pt-BR" alternates={buildDeviceAlternates(device.slug)} schema={schema}>
-  <section class="tool-hero container"><p class="eyebrow">{device.manufacturer} · {device.bluetoothVersion} · {device.releaseYear}</p><h1>{device.name} — Latência Bluetooth</h1><p>{device.intro}</p></section>
-  <section class="stats container"><div><small>Latência típica</small><strong>{device.typicalLatencyMs[0]}–{device.typicalLatencyMs[1]} ms</strong></div><div><small>Melhor codec</small><strong>{CODECS[device.bestLatencyCodec]?.name ?? device.bestLatencyCodec.toUpperCase()}</strong></div><div><small>Jogos</small><strong>{device.gamingViable ? 'Viável' : 'Não recomendado'}</strong></div></section>
-  <section class="article container"><a class="btn btn-primary" href="/pt-br/teste-de-latencia-bluetooth/">Medir este dispositivo agora</a><h2>Latência por codec</h2><p>{device.latencyProfile}</p><div class="table-wrap"><table><thead><tr><th>Codec</th><th>Faixa</th><th>Observação</th></tr></thead><tbody>{codecRows.map((row) => <tr><td>{row.name}</td><td>{row.min}–{row.max} ms</td><td>{row.note ?? 'Varia conforme o dispositivo e o sistema.'}</td></tr>)}</tbody></table></div><h2>Jogos, vídeos e chamadas</h2><p><strong>Jogos:</strong> {device.gamingVerdict}</p><p><strong>Vídeos:</strong> {device.videoVerdict}</p><p><strong>Chamadas:</strong> {device.callQualityNote}</p><h2>Como reduzir o atraso</h2>{device.troubleshooting.slice(0, 4).map((item) => <p><strong>{item.issue}:</strong> {item.fix}</p>)}</section>
+<Layout title={`${device.name} — Compatibilidade de codecs Bluetooth`} description={`Veja os codecs associados a ${device.name} e entenda por que a compatibilidade também depende do aparelho de origem e do sistema.`} keywords={`${device.name} codecs, ${device.name} compatibilidade Bluetooth, codecs de fones Bluetooth`} canonical={canonical} locale="pt-BR" alternates={buildDeviceAlternates(device.slug)} schema={schema}>
+  <section class="tool-hero container">
+    <p class="eyebrow">{device.manufacturer} · Guia de codecs</p>
+    <h1>{device.name}: compatibilidade de codecs</h1>
+    <p>Esta referência não verifica de forma independente as especificações atuais de codecs deste modelo. Consulte a documentação do fabricante para o modelo e a região exatos. A disponibilidade também depende do aparelho de origem e do sistema.</p>
+  </section>
+  <section class="article container">
+    <h2>Referência de compatibilidade</h2>
+    <p>Não publicamos uma lista de codecs sem confirmar as especificações atuais do fabricante para este modelo. Consulte também a documentação do aparelho de origem. O codec precisa ser compatível nas duas pontas; sistema, configurações, aplicativo e região podem influenciar o modo ativo.</p>
+    <h2>Como verificar o atraso no seu conjunto</h2>
+    <p>O atraso de áudio depende do aparelho de origem, sistema, aplicativo, conexão e caminho de reprodução. O <a href="/pt-br/teste-de-latencia/">teste de latência de áudio</a> mostra valores informados pelo navegador ou estima o percurso entre reprodução e microfone. Ele não mede a latência Bluetooth deste modelo.</p>
+    <p>Consulte também o <a href="/pt-br/guia-de-codecs-bluetooth/">guia de codecs Bluetooth</a> e o <a href="/pt-br/teste-de-latencia-bluetooth/">guia de latência Bluetooth</a>.</p>
+    <h2>Etapas gerais de solução de problemas</h2>
+    <ol>
+      <li>Confirme se os fones estão conectados ao aparelho correto e selecionados como saída de áudio.</li>
+      <li>Verifique a bateria, a distância e a estabilidade da conexão; depois reconecte e teste novamente.</li>
+      <li>Confira nas configurações Bluetooth do aparelho qual codec ou modo de baixa latência está ativo, se essa opção existir.</li>
+      <li>Para sincronização em um aplicativo específico, consulte os controles de atraso de áudio desse aplicativo.</li>
+    </ol>
+    <p>Os nomes dos controles variam por fabricante, sistema e modelo. Use o manual atualizado do produto para instruções específicas.</p>
+  </section>
 </Layout>
 <style>
-  .stats { max-width: 760px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); margin-bottom: var(--s-3xl); } .stats div { display: flex; flex-direction: column; gap: 6px; padding: var(--s-lg); background: var(--canvas); } .stats small { color: var(--mute); } .stats strong { color: var(--ink); } .article { max-width: 760px; padding-bottom: var(--s-5xl); } .article h2 { margin: var(--s-3xl) 0 var(--s-md); } .article p { color: var(--body-text); line-height: 1.8; } .table-wrap { overflow-x: auto; } table { width: 100%; border-collapse: collapse; margin-top: var(--s-lg); } th, td { text-align: left; border-bottom: 1px solid var(--hairline); padding: 12px 10px; color: var(--body-text); vertical-align: top; } th { color: var(--ink); } @media (max-width: 600px) { .stats { grid-template-columns: 1fr; } }
+  .article { max-width: 760px; padding-bottom: var(--s-5xl); }
+  .article h2 { margin: var(--s-3xl) 0 var(--s-md); }
+  .article p, .article li { color: var(--body-text); line-height: 1.8; }
+  .article a { color: var(--link); }
 </style>

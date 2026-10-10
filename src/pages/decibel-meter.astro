@@ -9,7 +9,7 @@ const schema = {
       "@type": "SoftwareApplication",
       "name": "Decibel Meter Online",
       "url": "https://onlineaudiotest.com/decibel-meter/",
-      "description": "Free online decibel meter. Measure relative sound level from your microphone in real time, right in your browser. No download, no app.",
+      "description": "Browser microphone level display for relative input comparisons. The dBFS reading is not a calibrated sound pressure level (dB SPL) measurement.",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires getUserMedia API support",
@@ -23,27 +23,14 @@ const schema = {
         { "@type": "ListItem", "position": 2, "name": "Decibel Meter", "item": "https://onlineaudiotest.com/decibel-meter/" }
       ]
     },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        { "@type": "Question", "name": "Is this a real, calibrated decibel (dB SPL) meter?", "acceptedAnswer": { "@type": "Answer", "text": "No. This tool measures relative loudness (dBFS) from your microphone's raw input signal, not absolute sound pressure level (dB SPL) in a physical room. Every microphone has different sensitivity and gain, so the same real-world sound will read differently on different devices. Use it to compare loudness over time or check for consistency, not as a substitute for a calibrated SPL meter." } },
-        { "@type": "Question", "name": "How does an online decibel meter work?", "acceptedAnswer": { "@type": "Answer", "text": "It uses the Web Audio API's AnalyserNode to read your microphone's live input signal, calculates the RMS (root mean square) amplitude of that signal, and converts it to a decibel scale using 20 * log10(RMS). This runs entirely in your browser - no audio is uploaded or stored." }
-        },
-        { "@type": "Question", "name": "Why does the same sound show a different reading on my phone vs laptop?", "acceptedAnswer": { "@type": "Answer", "text": "Different microphones have different sensitivity, automatic gain control (AGC), and noise suppression settings. Phones often apply aggressive AGC that compresses loud and quiet sounds toward a similar level, while laptop mics vary widely in raw gain. This is expected and is exactly why this tool reports relative level, not calibrated SPL." }
-        },
-        { "@type": "Question", "name": "What decibel level is considered loud or dangerous?", "acceptedAnswer": { "@type": "Answer", "text": "On a calibrated SPL scale: 60 dB is normal conversation, 85 dB is where hearing damage risk begins with prolonged exposure, 100 dB is a loud concert, and 120+ dB is the threshold of pain. This tool cannot give you a true SPL reading, but a free dedicated phone app using a calibrated SPL algorithm is a better choice if you need to check real-world noise exposure." }
-        },
-        { "@type": "Question", "name": "Why is the meter not moving or stuck at silence?", "acceptedAnswer": { "@type": "Answer", "text": "Check that you granted microphone permission when prompted, and that the correct input device is selected in your OS sound settings. If you're on a laptop, make sure no other app (like a video call) is currently using the microphone exclusively." }
-        }
-      ]
-    }
+
   ]
 };
 ---
 
 <Layout
-  title="Decibel Meter Online — Free Live Sound Level Test"
-  description="Free online decibel meter. Measure relative sound level from your microphone in real time - no download, no app. See live dB level, peak, and average."
+  title="Online Decibel Meter — Relative Mic Level"
+  description="View a live microphone level in your browser. This dBFS reading is relative to the input signal and is not a calibrated dB SPL measurement."
   keywords="decibel meter online, dB meter online, sound level meter online, free decibel meter, online sound meter, dbfs meter, mic level meter, sound level test"
   canonical="https://onlineaudiotest.com/decibel-meter/"
   alternates={buildToolAlternates('/decibel-meter/', '/pt-br/medidor-de-decibeis/')}
@@ -52,7 +39,7 @@ const schema = {
 >
   <section class="tool-hero container">
     <h1>Decibel Meter</h1>
-    <p>Measure relative sound level from your microphone in real time, right in your browser.</p>
+    <p>View the live level of your microphone input. Readings are relative digital levels, not sound pressure measurements.</p>
   </section>
 
   <div class="tool-card-wrap">
@@ -66,7 +53,7 @@ const schema = {
 
       <div class="dm-display" id="dm-display">
         <span class="dm-num" id="dm-num">—</span>
-        <span class="dm-unit">dB (relative)</span>
+        <span class="dm-unit">dBFS (relative)</span>
       </div>
 
       <div class="dm-bar-track" role="progressbar" aria-label="Sound level meter">
@@ -86,7 +73,7 @@ const schema = {
 
       <p class="fg-disclaimer">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><line x1="8" y1="5" x2="8" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.75" fill="currentColor"/></svg>
-        Measures relative loudness (dBFS) from your mic, not calibrated SPL. Readings vary by device — see FAQ.
+        This is a relative dBFS input reading, not calibrated dB SPL. Do not use it to assess noise exposure.
       </p>
     </div>
   </div>
@@ -94,20 +81,9 @@ const schema = {
   <div class="edu-section">
     <h2>What This Decibel Meter Measures</h2>
     <p>This tool reads your microphone's live input using the Web Audio API, calculates the RMS (root mean square) amplitude of the signal, and converts it to decibels relative to full scale (dBFS). It is useful for comparing loudness over time, checking mic sensitivity, or spotting sudden level changes — but it is <strong>not a calibrated sound pressure level (SPL) meter</strong>. Every microphone has different gain and sensitivity, so the same physical sound will read differently across devices.</p>
-    <h2>Typical Real-World Sound Levels (for reference)</h2>
-    <table class="freq-table">
-      <thead><tr><th>Source</th><th>Approx. SPL</th></tr></thead>
-      <tbody>
-        <tr><td>Whisper</td><td>~30 dB</td></tr>
-        <tr><td>Quiet room</td><td>~40 dB</td></tr>
-        <tr><td>Normal conversation</td><td>~60 dB</td></tr>
-        <tr><td>Busy traffic</td><td>~80 dB</td></tr>
-        <tr><td>Hearing damage risk (prolonged)</td><td>~85 dB+</td></tr>
-        <tr><td>Loud concert</td><td>~100–110 dB</td></tr>
-        <tr><td>Threshold of pain</td><td>~120–130 dB</td></tr>
-      </tbody>
-    </table>
-    <p>For checking your <a href="/mic-quality-test/">microphone's noise floor and clipping</a>, see the mic quality test. To check your own hearing range, try the <a href="/hearing-test/">hearing test</a>.</p>
+    <h2>Why this is not a sound exposure meter</h2>
+    <p>This page reports the microphone's digital input level in dBFS. It does not apply sound-pressure calibration, A-weighting, or exposure-over-time calculations, so it cannot tell you whether a room or workplace is within a noise limit. For example, NIOSH describes its occupational recommended limit as 85 dBA averaged over an eight-hour workday; this browser reading is not comparable to that value. See the <a href="https://www.cdc.gov/niosh/noise/about/noise.html" rel="noopener noreferrer">NIOSH explanation of noise exposure</a> for the scope of that guidance.</p>
+    <p>Use this display to compare input levels on the same microphone and setup. For a short microphone signal check, open the <a href="/mic-test/">online microphone test</a>; for repeated-session noise and clipping indicators, use the <a href="/mic-quality-test/">microphone quality test</a>.</p>
   </div>
 
   <div class="faq-section">
@@ -125,8 +101,8 @@ const schema = {
       <p class="faq-a">Different mics have different sensitivity and automatic gain control (AGC). Phones often compress loud and quiet sounds toward similar levels; laptop mics vary widely in raw gain. This is expected.</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q">What decibel level is considered loud or dangerous?</p>
-      <p class="faq-a">On a calibrated scale: 60 dB is conversation, 85 dB+ is hearing-damage risk with prolonged exposure, 100 dB is a loud concert, 120+ dB is the pain threshold. For real exposure checks, use a dedicated calibrated SPL app.</p>
+      <p class="faq-q">Can this meter tell me whether a sound is dangerous?</p>
+      <p class="faq-a">No. This page reports relative microphone input in dBFS, not calibrated dB SPL or dBA, and does not calculate exposure over time. It cannot assess hearing risk. See <a href="https://www.cdc.gov/niosh/noise/about/noise.html" rel="noopener noreferrer">NIOSH noise guidance</a> for occupational exposure information.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Why is the meter not moving?</p>
@@ -186,7 +162,7 @@ const schema = {
       peakEl.textContent = '—'; avgEl.textContent = '—'; minEl.textContent = '—';
     }
 
-    function fmt(db: number) { return db > -70 ? db.toFixed(1) + ' dB' : '−∞ dB'; }
+    function fmt(db: number) { return db > -70 ? db.toFixed(1) + ' dBFS' : '−∞ dBFS'; }
 
     function tick() {
       if (!analyser || !running) return;

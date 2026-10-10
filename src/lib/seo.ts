@@ -1,5 +1,4 @@
 import type { Device } from '../data/devices';
-import { CODECS } from '../data/codecs';
 
 const SITE = 'https://onlineaudiotest.com';
 
@@ -66,7 +65,7 @@ export function buildDevicePageSchema(device: Device): object {
     '@graph': [
       {
         '@type': 'TechArticle',
-        headline: `${device.name} Bluetooth & Codec Guide`,
+        headline: `${device.name} Codec Support & Compatibility Guide`,
         description: `Codec support and platform compatibility notes for ${device.name}. Actual audio delay varies by device, software, and test method.`,
         url,
         author: {
@@ -80,17 +79,10 @@ export function buildDevicePageSchema(device: Device): object {
           url: `${SITE}/`,
         },
         about: {
-          '@type': 'Product',
+          '@type': 'Thing',
           name: device.name,
           brand: { '@type': 'Brand', name: device.manufacturer },
-          description: `Bluetooth codec support reference for ${device.name}. Device-specific end-to-end latency has not been measured consistently here.`,
-          additionalProperty: [
-            { '@type': 'PropertyValue', name: 'Bluetooth Version', value: device.bluetoothVersion },
-            { '@type': 'PropertyValue', name: 'Codec Support', value: device.codecSupport.join(', ').toUpperCase() },
-            { '@type': 'PropertyValue', name: 'Latency', value: 'Varies by connected device, codec, software, and test method; no model-specific measurement published here' },
-            { '@type': 'PropertyValue', name: 'ANC', value: device.anc ? 'Yes' : 'No' },
-            ...(device.chipset ? [{ '@type': 'PropertyValue', name: 'Chipset', value: device.chipset }] : []),
-          ],
+          description: `Codec compatibility reference for ${device.name}. Check the current manufacturer specification and the connected source device before relying on codec availability.`,
         },
       },
       buildBreadcrumbSchema([
@@ -103,17 +95,9 @@ export function buildDevicePageSchema(device: Device): object {
 }
 
 export function generateDeviceKeywords(device: Device): string {
-  const codecNames = device.codecSupport
-    .map((id) => CODECS[id]?.name ?? id.toUpperCase())
-    .join(', ');
-
   const base = [
-    `${device.name} latency`,
-    `${device.name} bluetooth delay`,
-    `${device.name} audio latency ms`,
-    `${device.name} ${codecNames.split(', ')[0]} latency`,
-    `${device.manufacturer} ${device.category} bluetooth latency`,
-    ...device.keywords,
+    `${device.name} Bluetooth reference`,
+    `${device.manufacturer} ${device.category} audio setup`,
   ];
 
   return [...new Set(base)].join(', ');

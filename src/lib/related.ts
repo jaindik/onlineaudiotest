@@ -65,17 +65,17 @@ export function getRelatedResources(device: Device): RelatedResource[] {
     {
       title: 'Live Audio Latency Test',
       href: '/latency-test/',
-      desc: 'Measure your exact Bluetooth delay in milliseconds, in your browser.',
+      desc: 'View browser-reported output timing or estimate a playback-to-microphone round trip.',
     },
     {
       title: 'Bluetooth Codec Guide',
       href: '/bluetooth-codec-guide/',
-      desc: 'Understand SBC, AAC, aptX, LDAC, and aptX Adaptive in depth.',
+      desc: 'Understand codec compatibility, Classic Bluetooth and LE Audio, and what the codec label can tell you.',
     },
     {
       title: 'Bluetooth Latency Test',
       href: '/bluetooth-latency-test/',
-      desc: 'General Bluetooth latency reference and comparison by codec.',
+      desc: 'General Bluetooth latency guidance with browser measurement limits.',
     },
   ];
 
@@ -91,7 +91,7 @@ export function getRelatedResources(device: Device): RelatedResource[] {
     resources.push({
       title: 'Microphone Test',
       href: '/mic-test/',
-      desc: 'Test your headset\'s microphone quality in your browser.',
+      desc: 'Check headset microphone input and listen to a short recording in your browser.',
     });
   }
 
@@ -99,7 +99,7 @@ export function getRelatedResources(device: Device): RelatedResource[] {
     resources.push({
       title: 'Headphone Test',
       href: '/headphone-test/',
-      desc: 'Test driver balance and frequency response on your headphones.',
+      desc: 'Listen to separate channel and tone checks; this is not a calibrated frequency-response measurement.',
     });
   } else {
     resources.push({
