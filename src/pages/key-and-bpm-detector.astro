@@ -9,7 +9,7 @@ const schema = {
       "@type": "WebApplication",
       "name": "Key and BPM Detector Online",
       "url": "https://onlineaudiotest.com/key-and-bpm-detector/",
-      "description": "Free online key and BPM detector. Upload an MP3 or WAV to instantly find the musical key, scale, and tempo of any song. Perfect for DJs and producers.",
+      "description": "Free browser-based tool that estimates the key, scale, and tempo of an uploaded audio clip. Results are heuristic and depend on the recording and browser decoding.",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires Web Audio API support",
@@ -30,7 +30,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "Why detect both key and BPM together?",
-          "acceptedAnswer": { "@type": "Answer", "text": "DJs use both pieces of information simultaneously when mixing. BPM determines whether two tracks can be beatmatched — they need similar tempos or a 2:1 ratio. Key determines whether the tracks will sound harmonically compatible when played together. Uploading one file and getting both results in a single analysis saves time and ensures the BPM and key were analyzed from the same audio." }
+          "acceptedAnswer": { "@type": "Answer", "text": "This tool estimates both values from the same uploaded clip, which can be convenient when preparing a track. Tempo and key can help with mix planning, but neither estimate is guaranteed; listen to the track and verify results before relying on them." }
         },
         {
           "@type": "Question",
@@ -40,7 +40,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "How do I use the Camelot code for mixing?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The Camelot code is a number from 1–12 plus a letter (A for minor, B for major). To mix harmonically: same code = perfect match (e.g., 8B into 8B); adjacent number, same letter = a fifth apart, blends smoothly (8B into 9B); same number, different letter = relative key, also works well (8B into 8A). Moving more than 2 steps risks tonal clash." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The Camelot code uses a number from 1 to 12 and a letter for major or minor. DJs often use the wheel as a guide to choose candidate transitions, but key compatibility depends on the music and arrangement. Preview transitions by ear rather than treating a code match as a guarantee." }
         },
         {
           "@type": "Question",
@@ -50,7 +50,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "Does this tool work with live DJ sets or just single tracks?",
-          "acceptedAnswer": { "@type": "Answer", "text": "This tool analyzes single audio files only. For live DJ sets or long mixes, the key and BPM will reflect the dominant content of the full file, not individual tracks within it. For best results, analyze individual tracks before your set rather than analyzing the recorded mix after." }
+          "acceptedAnswer": { "@type": "Answer", "text": "This tool analyzes an uploaded audio file; it does not analyze a live input or separate tracks within a long mix. Results for a long or changing recording may be ambiguous. Analyze individual tracks when you need a track-specific estimate." }
         }
       ]
     }
@@ -59,7 +59,7 @@ const schema = {
 ---
 
 <Layout
-  title="Key and BPM Detector - Find Key and Tempo of Any Song"
+  title="Key and BPM Detector - Estimate a Track's Key and Tempo"
   description="Upload audio for browser-based key and tempo estimates in one step. Results vary with the clip and browser decoding support."
   keywords="key and bpm detector, song key bpm finder, bpm key detector, harmonic mixing tool, camelot wheel finder, dj key bpm, tempo key detector"
   canonical="https://onlineaudiotest.com/key-and-bpm-detector/"
@@ -232,15 +232,15 @@ const schema = {
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <p class="faq-q">Why detect both key and BPM together?</p>
-      <p class="faq-a">DJs need both to mix tracks. BPM determines whether two tracks can be beatmatched. Key determines whether they will sound harmonic when played together. Getting both from the same analysis in one click is faster than running two separate tools, and ensures both values came from the same audio.</p>
+      <p class="faq-a">This tool estimates both values from the same uploaded clip, which can be convenient when preparing a track. Tempo and key can help with mix planning, but neither estimate is guaranteed; listen to the track and verify results before relying on them.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">What is harmonic mixing?</p>
-      <p class="faq-a">Harmonic mixing is the technique of choosing tracks that are in compatible musical keys so that transitions sound smooth and musical rather than clashing. The Camelot Wheel system makes it easy: mix tracks with the same Camelot number (same key), adjacent numbers (a fifth apart), or switch between A and B at the same number (relative major/minor). The difference between harmonic and non-harmonic mixing is immediately audible even to non-musicians.</p>
+      <p class="faq-a">Harmonic mixing uses estimated musical keys to help choose tracks to preview together. The Camelot Wheel offers one way to organize candidate transitions, but a matching or neighboring code does not guarantee compatibility. Listen to the tracks in context.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">My BPM shows 64 but the track clearly sounds faster. What happened?</p>
-      <p class="faq-a">This is a half-time artifact where the algorithm found beats at twice the expected interval. If the result seems too slow, double it. If it seems too fast, halve it. This is especially common in tracks with sparse kick drum patterns or heavy syncopation. The true musical tempo is usually the value that places the song in a familiar genre BPM range.</p>
+      <p class="faq-a">Tempo algorithms can return half-time or double-time interpretations, especially when the beat pattern is ambiguous. Compare the estimate with the pulse you hear and verify it with another method if timing matters.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">The key confidence is low. Should I trust the result?</p>
