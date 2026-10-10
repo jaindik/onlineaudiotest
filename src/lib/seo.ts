@@ -61,22 +61,13 @@ export function buildWebApplicationSchema(opts: {
 export function buildDevicePageSchema(device: Device): object {
   const url = `${SITE}/devices/${device.slug}/`;
 
-  const codecRows = device.codecLatency
-    .map((cl) => {
-      const codec = CODECS[cl.codecId];
-      if (!codec) return null;
-      return `${codec.name}: ${cl.latencyRange[0]}–${cl.latencyRange[1]} ms`;
-    })
-    .filter(Boolean)
-    .join('; ');
-
   return {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'TechArticle',
-        headline: device.metaTitle,
-        description: device.metaDescription,
+        headline: `${device.name} Bluetooth & Codec Guide`,
+        description: `Codec support and platform compatibility notes for ${device.name}. Actual audio delay varies by device, software, and test method.`,
         url,
         author: {
           '@type': 'Organization',
@@ -92,14 +83,13 @@ export function buildDevicePageSchema(device: Device): object {
           '@type': 'Product',
           name: device.name,
           brand: { '@type': 'Brand', name: device.manufacturer },
-          description: device.intro,
+          description: `Bluetooth codec support reference for ${device.name}. Device-specific end-to-end latency has not been measured consistently here.`,
           additionalProperty: [
             { '@type': 'PropertyValue', name: 'Bluetooth Version', value: device.bluetoothVersion },
             { '@type': 'PropertyValue', name: 'Codec Support', value: device.codecSupport.join(', ').toUpperCase() },
-            { '@type': 'PropertyValue', name: 'Typical Latency', value: `${device.typicalLatencyMs[0]}–${device.typicalLatencyMs[1]} ms` },
+            { '@type': 'PropertyValue', name: 'Latency', value: 'Varies by connected device, codec, software, and test method; no model-specific measurement published here' },
             { '@type': 'PropertyValue', name: 'ANC', value: device.anc ? 'Yes' : 'No' },
             ...(device.chipset ? [{ '@type': 'PropertyValue', name: 'Chipset', value: device.chipset }] : []),
-            ...(codecRows ? [{ '@type': 'PropertyValue', name: 'Per-Codec Latency', value: codecRows }] : []),
           ],
         },
       },
@@ -108,7 +98,6 @@ export function buildDevicePageSchema(device: Device): object {
         { name: 'Devices', url: `${SITE}/devices/` },
         { name: device.name, url },
       ]),
-      buildFAQSchema(device.faqs),
     ],
   };
 }

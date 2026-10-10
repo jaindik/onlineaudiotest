@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import { DEVICES, getDeviceBySlug, getAllSlugs } from '../../data/devices';
 import { CODECS } from '../../data/codecs';
 import { buildDevicePageSchema, generateDeviceKeywords } from '../../lib/seo';
-import { getRelatedDevices, getSameManufacturerDevices, getRelatedResources, latencyRating, categoryLabel } from '../../lib/related';
+import { getRelatedDevices, getSameManufacturerDevices, getRelatedResources, categoryLabel } from '../../lib/related';
 import { buildDeviceAlternates } from '../../lib/i18n';
 
 export function getStaticPaths() {
@@ -22,9 +22,6 @@ const relatedResources = getRelatedResources(device);
 
 const canonicalURL = `https://onlineaudiotest.com/devices/${device.slug}/`;
 const bestCodec = CODECS[device.bestLatencyCodec];
-const typicalMin = device.typicalLatencyMs[0];
-const typicalMax = device.typicalLatencyMs[1];
-const minRating = latencyRating(typicalMin);
 const catLabel = categoryLabel(device.category);
 
 const videoSyncLabel: Record<typeof device.videoSync, string> = {
@@ -36,8 +33,8 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
 ---
 
 <Layout
-  title={device.metaTitle}
-  description={device.metaDescription}
+  title={`${device.name} Bluetooth & Codec Guide`}
+  description={`Codec support and platform compatibility notes for ${device.name}. Actual audio delay varies by device, software, and test method.`}
   keywords={keywords}
   canonical={canonicalURL}
   alternates={buildDeviceAlternates(device.slug)}
@@ -48,16 +45,16 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
   <!-- ── HERO ── -->
   <section class="tool-hero container">
     <p class="eyebrow" style="margin-bottom:var(--s-sm)">{device.manufacturer} · {catLabel} · {device.releaseYear}</p>
-    <h1>{device.name} — Bluetooth Latency Guide</h1>
-    <p>{device.intro.split('.')[0]}.</p>
+    <h1>{device.name} — Bluetooth & Codec Guide</h1>
+    <p>{device.name} supports {device.codecSupport.map((id) => CODECS[id]?.name ?? id.toUpperCase()).join(', ')}. Actual audio delay depends on the headphones and connected device, software, codec, and playback path.</p>
   </section>
 
   <!-- ── QUICK STATS STRIP ── -->
   <div class="device-stats-wrap container">
     <div class="device-stats">
       <div class="stat-cell">
-        <span class="stat-label">Typical Latency</span>
-        <span class="stat-value">{typicalMin}–{typicalMax} ms</span>
+        <span class="stat-label">Codec Support</span>
+        <span class="stat-value">{device.codecSupport.map((id) => CODECS[id]?.name ?? id.toUpperCase()).join(', ')}</span>
       </div>
       <div class="stat-divider" aria-hidden="true"></div>
       <div class="stat-cell">
@@ -88,8 +85,8 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
   <div class="device-cta-wrap container">
     <div class="device-cta-card">
       <div class="device-cta-text">
-        <strong>Measure your {device.name} latency right now</strong>
-        <p>Connect your {device.name} via Bluetooth, then run the live latency test. Results appear in milliseconds instantly — no download required.</p>
+        <strong>Check audio output timing on your setup</strong>
+        <p>Connect your {device.name} and run the browser test. It reports browser-provided timing where available; it cannot isolate or certify this headphone model's end-to-end Bluetooth delay.</p>
       </div>
       <a href="/latency-test/" class="btn btn-primary btn-lg device-cta-btn">
         <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -103,15 +100,15 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
 
   <!-- ── CODEC LATENCY TABLE ── -->
   <section class="device-section container">
-    <h2>Bluetooth Latency by Codec</h2>
-    <p class="section-intro">{device.latencyProfile}</p>
+    <h2>Bluetooth Codec Support</h2>
+    <p class="section-intro">The entries below describe codec support and general tradeoffs, not lab measurements of this exact headphone and phone combination. We do not have a reproducible, published measurement set for model-by-model latency figures, so generic codec ranges should not be treated as device specifications. For comparisons, keep the phone, app, content, and measurement method the same.</p>
 
     <div class="codec-table-wrap">
       <table class="codec-table">
         <thead>
           <tr>
             <th>Codec</th>
-            <th>Latency Range</th>
+            <th>Latency characteristics</th>
             <th>Audio Quality</th>
             <th>Platform</th>
             <th>Best For</th>
@@ -121,7 +118,6 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
           {device.codecLatency.map((cl) => {
             const codec = CODECS[cl.codecId];
             if (!codec) return null;
-            const rating = latencyRating(cl.latencyRange[0]);
             const qualityMap = { standard: 'Standard', good: 'Good', high: 'High', 'very-high': 'Very High' };
             const platformLabel = codec.iOSSupport && codec.androidNative
               ? 'iOS & Android'
@@ -145,9 +141,7 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
                   <span class="codec-name">{codec.name}</span>
                   {cl.recommended && <span class="recommended-badge">Recommended</span>}
                 </td>
-                <td>
-                  <span class={`latency-chip grade-${rating.grade}`}>{cl.latencyRange[0]}–{cl.latencyRange[1]} ms</span>
-                </td>
+                <td>{cl.codecId === 'ldac' || cl.codecId === 'aptx_hd' ? 'Prioritizes audio quality; delay varies by implementation' : 'Delay varies by device and implementation'}</td>
                 <td>{qualityMap[codec.audioQuality]}</td>
                 <td class="platform-col">{platformLabel}</td>
                 <td class="note-col">{bestForMap[cl.codecId] ?? '—'}</td>
@@ -188,14 +182,9 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
             {device.gamingViable ? 'Viable' : 'Not Recommended'}
           </span>
         </div>
-        <p>{device.gamingVerdict}</p>
-        {device.gamingLatencyMs && (
-          <p class="gaming-mode-note">
-            <strong>Gaming mode latency:</strong> {device.gamingLatencyMs[0]}–{device.gamingLatencyMs[1]} ms
-          </p>
-        )}
+        <p>Bluetooth audio delay can affect how closely game sound matches on-screen action. This guide does not have a controlled measurement for this exact headset and gaming setup. For timing-sensitive play, compare wired audio or a dedicated low-latency wireless mode on your own device.</p>
         {!device.gamingViable && (
-          <a href="/latency-test/" class="use-case-link">Test your actual gaming latency →</a>
+          <a href="/latency-test/" class="use-case-link">Check browser-reported output timing →</a>
         )}
       </div>
 
@@ -211,8 +200,8 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
             {videoSyncLabel[device.videoSync].split('—')[0].trim()}
           </span>
         </div>
-        <p>{device.videoVerdict}</p>
-        <p class="use-case-meta">{videoSyncLabel[device.videoSync]}</p>
+        <p>Video apps may compensate for audio delay, and behavior differs by app and device. Check lip sync with the app and source you normally use; this guide does not rate a specific pairing from controlled tests.</p>
+        <p class="use-case-meta">Compatibility depends on the playback app and connected device.</p>
       </div>
 
       <!-- Calls -->
@@ -223,7 +212,7 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
           </svg>
           <h3>Call Quality</h3>
         </div>
-        <p>{device.callQualityNote}</p>
+        <p>Call audio behavior depends on the headset, operating system, and meeting app. Test the microphone and playback in the call app you use, since the browser cannot reproduce every call mode.</p>
         {device.micSupport && (
           <a href="/mic-test/" class="use-case-link">Test your microphone →</a>
         )}
@@ -255,12 +244,11 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
       <div class="related-devices-grid">
         {relatedDevices.map((rel) => {
           const relBest = CODECS[rel.bestLatencyCodec];
-          const relRating = latencyRating(rel.typicalLatencyMs[0]);
           return (
             <a href={`/devices/${rel.slug}/`} class="related-device-card">
               <div class="related-device-header">
                 <span class="related-manufacturer">{rel.manufacturer}</span>
-                <span class={`latency-chip grade-${relRating.grade}`}>{rel.typicalLatencyMs[0]}–{rel.typicalLatencyMs[1]} ms</span>
+                <span class="latency-chip">{rel.codecSupport.map((id) => CODECS[id]?.name ?? id.toUpperCase()).join(', ')}</span>
               </div>
               <strong class="related-device-name">{rel.name}</strong>
               <p class="related-device-meta">{categoryLabel(rel.category)} · {relBest?.name ?? rel.bestLatencyCodec.toUpperCase()}</p>
@@ -280,7 +268,7 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
         {sameManufacturer.map((rel) => (
           <a href={`/devices/${rel.slug}/`} class="same-mfr-item">
             <span>{rel.name}</span>
-            <span class="same-mfr-meta">{rel.typicalLatencyMs[0]}–{rel.typicalLatencyMs[1]} ms · {categoryLabel(rel.category)}</span>
+            <span class="same-mfr-meta">{categoryLabel(rel.category)} · {rel.codecSupport.map((id) => CODECS[id]?.name ?? id.toUpperCase()).join(', ')}</span>
           </a>
         ))}
       </div>
@@ -298,17 +286,6 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
         </a>
       ))}
     </div>
-  </section>
-
-  <!-- ── FAQ ── -->
-  <section class="faq-section">
-    <h2>Frequently Asked Questions</h2>
-    {device.faqs.map((faq) => (
-      <div class="faq-item">
-        <p class="faq-q">{faq.q}</p>
-        <p class="faq-a">{faq.a}</p>
-      </div>
-    ))}
   </section>
 
 </Layout>

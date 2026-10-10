@@ -29,7 +29,7 @@ const schema = {
         { "@type": "Question", "name": "How do I test for echo on a call before joining a meeting?", "acceptedAnswer": { "@type": "Answer", "text": "Click Start Echo Test - it plays a short test phrase through your speakers while your microphone records at the same time, with echo cancellation temporarily disabled. Then it plays back what your mic captured. If you hear the test phrase repeated faintly in the playback, your microphone is picking up your speaker output, which is exactly what causes echo on live calls." } },
         { "@type": "Question", "name": "What causes echo on video calls?", "acceptedAnswer": { "@type": "Answer", "text": "Echo happens when your microphone picks up audio coming from your own speakers and sends it back into the call, so the other person hears their own voice repeated back to them with a delay. It's most common with laptop built-in mic + speakers, speakerphone mode, or open-back headphones sitting near a mic." } },
         { "@type": "Question", "name": "How do I fix echo on a call?", "acceptedAnswer": { "@type": "Answer", "text": "Use headphones instead of speakers - this is the single most reliable fix, since your mic can no longer pick up the call audio. If headphones aren't an option, lower your speaker volume, move the microphone further from the speakers, or enable your call software's built-in echo cancellation (usually on by default, but can fail with certain USB audio devices)." } },
-        { "@type": "Question", "name": "Why does this test disable echo cancellation?", "acceptedAnswer": { "@type": "Answer", "text": "Your browser and OS normally apply automatic echo cancellation (AEC) to hide this exact problem. This test temporarily requests the microphone without AEC so you can hear your raw setup's actual echo behavior - the same way a call would sound if AEC failed or wasn't supported by your call software." } }
+        { "@type": "Question", "name": "Does this test check echo cancellation in my meeting app?", "acceptedAnswer": { "@type": "Answer", "text": "No. The test requests raw microphone input where the browser allows it and plays back a local recording. Browser and operating-system processing may still apply. Test inside your meeting app to check that app's echo cancellation." } }
       ]
     }
   ]
@@ -76,16 +76,16 @@ const schema = {
 
       <p class="fg-disclaimer">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><line x1="8" y1="5" x2="8" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.75" fill="currentColor"/></svg>
-        Echo cancellation is temporarily disabled during this test so you can hear your setup's real echo behavior.
+        The test requests that browser echo cancellation, noise suppression, and automatic gain control be disabled. Browser or operating-system processing may still affect the recording.
       </p>
     </div>
   </div>
 
   <div class="edu-section">
     <h2>What Causes Echo on Calls?</h2>
-    <p>Echo happens when your microphone picks up sound coming out of your own speakers and sends it back into the call. The other person hears their own voice repeated back to them, delayed by however long it takes for sound to travel from your speaker to your mic and back through the call. It's most common with laptop built-in mic + speaker combos, speakerphone mode, or any open-back headset positioned near a live mic.</p>
+    <p>Echo can happen when a microphone picks up sound from nearby speakers and that sound is sent back into a call. This local playback check can help you hear whether your test tone is captured by your microphone. It does not test a meeting app's echo cancellation, network audio, or the other participant's experience.</p>
     <h2>How to Fix It</h2>
-    <p><strong>Use headphones.</strong> This is the single most reliable fix — with headphones, your microphone physically cannot pick up the call audio, so there's nothing to echo. If headphones aren't an option: lower your speaker volume, move the mic further away, mute when not speaking, or check that your call software's echo cancellation (AEC) is enabled — it usually is by default, but can silently fail with some USB audio interfaces and virtual audio devices.</p>
+    <p><strong>Try headphones first.</strong> They often reduce how much speaker audio reaches the microphone. If headphones aren't an option, lower speaker volume, move the microphone away from the speakers, or check the echo-cancellation settings in your meeting app. Then test inside that app, because this browser check cannot confirm its call processing.</p>
     <p>For a full mic diagnostic beyond echo, see the <a href="/mic-test/">mic test</a> and <a href="/mic-quality-test/">mic quality test</a>.</p>
   </div>
 
@@ -94,7 +94,7 @@ const schema = {
     <div class="faq-item"><p class="faq-q">How do I test for echo before joining a meeting?</p><p class="faq-a">Click Start — it plays a test phrase through your speakers while recording your mic simultaneously, with echo cancellation disabled. Play back the result; if you hear the phrase repeated faintly, your mic is picking up your speaker output.</p></div>
     <div class="faq-item"><p class="faq-q">What causes echo on video calls?</p><p class="faq-a">Your microphone picks up audio from your own speakers and sends it back into the call, so others hear their voice repeated with a delay. Most common with laptop mic+speaker combos or speakerphone mode.</p></div>
     <div class="faq-item"><p class="faq-q">How do I fix echo on a call?</p><p class="faq-a">Use headphones — the most reliable fix. Otherwise lower speaker volume, move the mic away from speakers, or verify your call software's built-in echo cancellation is active.</p></div>
-    <div class="faq-item"><p class="faq-q">Why does this test disable echo cancellation?</p><p class="faq-a">Your OS/browser normally hides this problem with automatic echo cancellation (AEC). This test disables it temporarily so you hear your setup's real, unmasked echo behavior.</p></div>
+    <div class="faq-item"><p class="faq-q">Does this test check echo cancellation in my meeting app?</p><p class="faq-a">No. It checks whether your microphone captures speaker audio in this browser test. Browser or operating-system processing can still affect the result. Test inside your meeting app to check its echo cancellation.</p></div>
   </div>
 </Layout>
 

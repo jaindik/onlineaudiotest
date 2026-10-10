@@ -7,9 +7,9 @@ const schema = {
   "@graph": [
     {
       "@type": "SoftwareApplication",
-      "name": "Loudness Meter Online (LUFS Estimate)",
+      "name": "Microphone Level Meter Online",
       "url": "https://onlineaudiotest.com/loudness-meter/",
-      "description": "Free online loudness meter. Get a live LUFS-style loudness estimate from your microphone or system audio, directly in your browser.",
+      "description": "Free browser microphone meter showing a rough signal-level estimate. It is not an ITU-R BS.1770 LUFS measurement.",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires getUserMedia API support",
@@ -37,8 +37,8 @@ const schema = {
 ---
 
 <Layout
-  title="Loudness Meter Online — Free LUFS Estimate"
-  description="Free online loudness meter with a live LUFS-style estimate from your microphone. Check integrated loudness against Spotify, YouTube, and podcast targets."
+  title="Online Loudness Meter — Microphone Level Estimate"
+  description="View a rough microphone level estimate in your browser. This simplified tool is not a standards-compliant LUFS meter for music or broadcast delivery."
   keywords="loudness meter online, lufs meter online, free lufs meter, online loudness meter, integrated loudness test, podcast loudness meter, lufs test online"
   canonical="https://onlineaudiotest.com/loudness-meter/"
   alternates={buildToolAlternates('/loudness-meter/', '/pt-br/medidor-de-volume/')}
@@ -46,8 +46,8 @@ const schema = {
   sidebar={true}
 >
   <section class="tool-hero container">
-    <h1>Loudness Meter</h1>
-    <p>A live LUFS-style loudness estimate from your microphone, right in your browser.</p>
+    <h1>Microphone Loudness Estimate</h1>
+    <p>View a rough, live level estimate from your microphone. The calculation is simplified and is not a standards-compliant LUFS measurement.</p>
   </section>
 
   <div class="tool-card-wrap">
@@ -58,7 +58,7 @@ const schema = {
 
       <div class="dm-display">
         <span class="dm-num" id="lm-num">—</span>
-        <span class="dm-unit">LUFS (estimate, integrated)</span>
+        <span class="dm-unit">Relative estimate (not LUFS)</span>
       </div>
 
       <div class="dm-bar-track" role="progressbar" aria-label="Loudness meter">
@@ -66,8 +66,8 @@ const schema = {
       </div>
 
       <div class="dm-stats">
-        <div class="dm-stat"><span class="dm-stat-label">Momentary</span><span class="dm-stat-val" id="lm-momentary">—</span></div>
-        <div class="dm-stat"><span class="dm-stat-label">Integrated</span><span class="dm-stat-val" id="lm-integrated">—</span></div>
+        <div class="dm-stat"><span class="dm-stat-label">Current estimate</span><span class="dm-stat-val" id="lm-momentary">—</span></div>
+        <div class="dm-stat"><span class="dm-stat-label">Session average</span><span class="dm-stat-val" id="lm-integrated">—</span></div>
         <div class="dm-stat"><span class="dm-stat-label">Peak</span><span class="dm-stat-val" id="lm-peak">—</span></div>
       </div>
 
@@ -78,14 +78,14 @@ const schema = {
 
       <p class="fg-disclaimer">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><line x1="8" y1="5" x2="8" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.75" fill="currentColor"/></svg>
-        Approximate K-weighted estimate, not a certified broadcast LUFS meter. See FAQ.
+        Simplified microphone signal estimate. Do not use for mastering, broadcast, or platform compliance.
       </p>
     </div>
   </div>
 
   <div class="edu-section">
-    <h2>What Is LUFS?</h2>
-    <p>LUFS (Loudness Units relative to Full Scale) is a standardized loudness measurement (ITU-R BS.1770) that applies K-weighting - a frequency curve that approximates how the human ear perceives loudness - before measuring signal power. Unlike a raw dB/RMS meter, LUFS gives a much closer estimate of how loud something will actually sound to a listener, which is why every major streaming platform uses it for loudness normalization.</p>
+    <h2>What This Meter Measures</h2>
+    <p>This page reads microphone samples and applies a simplified filter and averaging calculation. The browser's microphone gain control, noise suppression, room, and microphone all affect the result. It does not implement the complete ITU-R BS.1770 measurement, including the required filtering and gating, and its values should not be labeled or used as LUFS for delivery decisions.</p>
     <h2>Streaming Platform Loudness Targets</h2>
     <table class="freq-table">
       <thead><tr><th>Platform</th><th>Target (Integrated LUFS)</th></tr></thead>
@@ -162,7 +162,7 @@ const schema = {
     const GATE_LUFS = -70;
     const K_OFFSET = -0.691; // ITU-R BS.1770 constant
 
-    function fmt(v: number) { return v > -69 ? v.toFixed(1) + ' LUFS' : '−∞ LUFS'; }
+    function fmt(v: number) { return v > -69 ? v.toFixed(1) + ' est.' : '—'; }
 
     function resetStats() {
       integratedSumSq = 0; integratedCount = 0; peakDb = -Infinity;

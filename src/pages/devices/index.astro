@@ -9,9 +9,9 @@ const schema = {
   '@graph': [
     {
       '@type': 'CollectionPage',
-      name: 'Bluetooth Headphone & Earbuds Latency Guide — Device Database',
+      name: 'Bluetooth Headphone & Earbuds Compatibility Guide',
       url: 'https://onlineaudiotest.com/devices/',
-      description: 'Bluetooth latency, codec support, and audio delay data for AirPods, Sony, Bose, Samsung, and Google headphones and earbuds.',
+      description: 'Reference guide to Bluetooth headphones, earbuds, codec support, and platform compatibility.',
       provider: {
         '@type': 'Organization',
         name: 'OnlineAudioTest.com',
@@ -47,8 +47,8 @@ for (const device of DEVICES) {
 ---
 
 <Layout
-  title="Bluetooth Headphone Latency Guide — AirPods, Sony, Bose, Samsung & More"
-  description="Bluetooth audio latency data for the most popular headphones and earbuds. Compare AirPods, Sony WH/WF-1000XM5, Bose QC Ultra, Galaxy Buds, and Pixel Buds by codec and latency in ms."
+  title="Bluetooth Headphone & Earbuds Compatibility Guide"
+  description="Browse headphone and earbud guides covering Bluetooth codec support, platform compatibility, and audio delay factors."
   keywords="bluetooth headphone latency, airpods latency ms, sony wh-1000xm5 latency, bose quietcomfort latency, galaxy buds latency, pixel buds latency, bluetooth earbuds delay comparison"
   canonical="https://onlineaudiotest.com/devices/"
   schema={schema}
@@ -56,22 +56,22 @@ for (const device of DEVICES) {
 
   <section class="tool-hero container">
     <p class="eyebrow" style="margin-bottom:var(--s-sm)">Bluetooth Audio Devices</p>
-    <h1>Headphone & Earbuds Latency Guide</h1>
-    <p>Real Bluetooth latency data — by codec, by device — for the most popular headphones and earbuds. Find your device and learn which settings minimize audio delay.</p>
+    <h1>Bluetooth Headphone & Earbuds Guides</h1>
+    <p>Browse device-specific notes on codec support and platform compatibility. Bluetooth delay varies with the phone, operating system, codec, app, and test method; manufacturer specifications rarely provide a comparable end-to-end latency figure.</p>
   </section>
 
   <div class="devices-wrap container">
 
     <!-- Quick compare table -->
     <section class="devices-section">
-      <h2>Latency Comparison at a Glance</h2>
+      <h2>Device and Codec Overview</h2>
       <div class="compare-table-wrap">
         <table class="compare-table">
           <thead>
             <tr>
               <th>Device</th>
               <th>Category</th>
-              <th>Best Latency</th>
+              <th>Codec Support</th>
               <th>Best Codec</th>
               <th>ANC</th>
               <th></th>
@@ -80,7 +80,6 @@ for (const device of DEVICES) {
           <tbody>
             {DEVICES.map((d) => {
               const codec = CODECS[d.bestLatencyCodec];
-              const rating = latencyRating(d.typicalLatencyMs[0]);
               return (
                 <tr>
                   <td>
@@ -91,7 +90,7 @@ for (const device of DEVICES) {
                   </td>
                   <td class="category-cell">{categoryLabel(d.category)}</td>
                   <td>
-                    <span class={`latency-chip grade-${rating.grade}`}>{d.typicalLatencyMs[0]}–{d.typicalLatencyMs[1]} ms</span>
+                    <span>{d.codecSupport.map((id) => CODECS[id]?.name ?? id.toUpperCase()).join(', ')}</span>
                   </td>
                   <td class="codec-cell">{codec?.name ?? d.bestLatencyCodec.toUpperCase()}</td>
                   <td class="anc-cell">{d.anc ? '✓' : '—'}</td>
@@ -111,7 +110,6 @@ for (const device of DEVICES) {
         <div class="device-cards">
           {devices.map((d) => {
             const codec = CODECS[d.bestLatencyCodec];
-            const rating = latencyRating(d.typicalLatencyMs[0]);
             return (
               <a href={`/devices/${d.slug}/`} class="device-card">
                 <div class="device-card-top">
@@ -119,7 +117,7 @@ for (const device of DEVICES) {
                     <span class="device-card-mfr">{d.manufacturer} · {d.releaseYear}</span>
                     <strong class="device-card-name">{d.name}</strong>
                   </div>
-                  <span class={`latency-chip grade-${rating.grade}`}>{d.typicalLatencyMs[0]}–{d.typicalLatencyMs[1]} ms</span>
+                  <span class="device-card-codecs">{d.codecSupport.map((id) => CODECS[id]?.name ?? id.toUpperCase()).join(' · ')}</span>
                 </div>
                 <p class="device-card-desc">{d.intro.split('.')[0]}.</p>
                 <div class="device-card-meta">
@@ -142,7 +140,7 @@ for (const device of DEVICES) {
       <div class="resource-row">
         <a href="/latency-test/" class="resource-pill">
           <strong>Audio Latency Test</strong>
-          <span>Measure your exact Bluetooth delay in ms</span>
+          <span>Check browser-reported audio output timing</span>
         </a>
         <a href="/bluetooth-latency-test/" class="resource-pill">
           <strong>Bluetooth Latency Test</strong>
@@ -154,7 +152,7 @@ for (const device of DEVICES) {
         </a>
         <a href="/airpods-latency-test/" class="resource-pill">
           <strong>AirPods Latency Test</strong>
-          <span>Apple-specific latency measurement</span>
+          <span>AirPods testing notes and browser measurement limits</span>
         </a>
       </div>
     </section>
