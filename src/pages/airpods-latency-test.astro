@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -73,10 +74,11 @@ const schema = {
 ---
 
 <Layout
-  title="AirPods Latency Test — Measure Your AirPods Audio Delay in ms"
-  description="Test AirPods latency online. Compare AirPods 3, AirPods Pro 2, AirPods Max, and AirPods 4 audio delay. Free browser-based latency test."
+  title="AirPods Latency Test — Measure Delay in ms (All Models)"
+  description="Free AirPods delay test — measure real Bluetooth latency in milliseconds for AirPods 3, Pro 2, Max, and 4 instantly in your browser. No download."
   keywords="airpods latency test, airpods latency ms, airpods pro latency ms, airpods audio delay, airpods delay test, airpods lag test, airpods pro latency, airpods max latency, bluetooth airpods latency"
   canonical="https://onlineaudiotest.com/airpods-latency-test/"
+  alternates={buildToolAlternates('/airpods-latency-test/', '/pt-br/teste-de-latencia-airpods/')}
   schema={schema}
   sidebar={true}
 >

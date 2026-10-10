@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getLocale } from '../lib/i18n';
+import { getLocalizedSiteCopy, getLocalizedToolCopy, getLocalizedToolName } from '../data/localizedSiteCopy';
+
+export interface Props {
+  locale: string;
+  pageId: string;
+  path: string;
+  englishPath: string;
+  toolType: 'latency' | 'mic' | 'channels' | 'devices' | 'tone' | 'recorder' | 'reaction' | 'analyzer' | 'meter' | 'bpm';
+  alternates: { hreflang: string; href: string }[];
+}
+
+const { locale, pageId, path, englishPath, toolType, alternates } = Astro.props;
+const site = getLocalizedSiteCopy(locale);
+const ui = getLocalizedToolCopy(locale, pageId);
+const name = getLocalizedToolName(locale, pageId);
+const localeInfo = getLocale(locale);
+const channelLabels: Record<string, string[]> = {
+  'id-ID': ['Kiri', 'Kanan', 'Stereo'], 'hi-IN': ['बायाँ', 'दायाँ', 'स्टीरियो'], 'vi-VN': ['Trái', 'Phải', 'Stereo'], 'es-MX': ['Izquierda', 'Derecha', 'Estéreo'], 'ur-PK': ['\u0628\u0627\u0626\u06cc\u06ba', '\u062f\u0627\u0626\u06cc\u06ba', 'Stereo'], 'de-DE': ['Links', 'Rechts', 'Stereo'], 'tr-TR': ['Sol', 'Sağ', 'Stereo'], 'bn-BD': ['বাম', 'ডান', 'স্টেরিও'], 'th-TH': ['ซ้าย', 'ขวา', 'สเตอริโอ'], 'fr-FR': ['Gauche', 'Droite', 'Stéréo'],
+};
+const channels = channelLabels[locale] ?? ['Left', 'Right', 'Stereo'];
+const title = `${name} | OnlineAudioTest.com`;
+const description = site.toolIntro.replace('{tool}', name);
+const canonical = `https://onlineaudiotest.com${path}`;
+const schema = { '@context': 'https://schema.org', '@type': 'WebApplication', name, url: canonical, description, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
+---
+
+<Layout title={title} description={description} keywords={`${name}, ${site.hubTitle}`} canonical={canonical} locale={locale} schema={schema} alternates={alternates}>
+  <section class="tool-hero container"><p class="eyebrow">{site.hubTitle}</p><h1>{name}</h1><p>{description}</p></section>
+  <section class="tool-card-wrap"><div class="tool-card" id="localized-tool" data-tool-type={toolType}>
+    <div class="status-bar"><div class="status-pill"><span class="dot" id="status-dot"></span><span id="status-text">{ui.ready}</span></div><span class="eyebrow caption-mono" id="result-value"></span></div>
+    <div class="action-row">
+      {toolType === 'channels' && <><button class="btn btn-primary" data-channel="left">{channels[0]}</button><button class="btn btn-secondary" data-channel="right">{channels[1]}</button><button class="btn btn-secondary" data-channel="both">{channels[2]}</button></>}
+      {toolType === 'tone' && <><label class="control-label" for="frequency">Hz <output id="frequency-value">440</output></label><input id="frequency" type="range" min="20" max="16000" value="440" step="1" /><button class="btn btn-primary btn-lg" id="primary-action">{ui.start}</button></>}
+      {toolType !== 'channels' && toolType !== 'tone' && <button class="btn btn-primary btn-lg" id="primary-action">{ui.start}</button>}
+    </div>
+    {(toolType === 'analyzer' || toolType === 'meter') && <canvas id="analysis-canvas" class="analysis-canvas" width="640" height="180"></canvas>}
+    {toolType === 'mic' && <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>}
+    {toolType === 'devices' && <ul id="device-list" class="device-list"></ul>}
+    <p class="result-note" id="result-note">{ui.resultNote}</p>
+  </div></section>
+  <section class="how-section"><h2>{ui.stepTitle}</h2><div class="steps">{ui.steps.map((step, index) => <div class="step"><span class="step-num">{index + 1}</span><p class="step-body">{step}</p></div>)}</div></section>
+  <section class="how-section"><h2>{site.chooseTitle}</h2><p>{site.guideIntro}</p><p><a href={`/${locale.toLowerCase()}/audio-test/`}>{site.hubTitle}</a></p></section>
+</Layout>
+
+<script define:vars={{ toolType, ready: ui.ready, measuring: ui.measuring, done: ui.done, denied: ui.denied, permission: ui.permission }}>
+  const root = document.getElementById('localized-tool');
+  const button = document.getElementById('primary-action');
+  const status = document.getElementById('status-text');
+  const note = document.getElementById('result-note');
+  const value = document.getElementById('result-value');
+  const setStatus = (text, active = false) => { if (status) status.textContent = text; document.getElementById('status-dot')?.classList.toggle('active', active); };
+  const audioContext = () => new (window.AudioContext || window.webkitAudioContext)();
+  if (toolType === 'latency' && button) button.addEventListener('click', async () => { setStatus(measuring, true); try { const ctx = audioContext(); await ctx.resume(); const ms = ((ctx.baseLatency || 0) + (ctx.outputLatency || 0)) * 1000; value.textContent = ms < .5 ? 'N/A' : `${ms.toFixed(1)} ms`; setStatus(done); ctx.close(); } catch { setStatus(denied); note.textContent = permission; } });
+  if (toolType === 'mic' && button) button.addEventListener('click', async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); const ctx = audioContext(); const analyser = ctx.createAnalyser(); const source = ctx.createMediaStreamSource(stream); source.connect(analyser); const data = new Uint8Array(analyser.fftSize); const fill = document.getElementById('meter-fill'); setStatus(measuring, true); const tick = () => { analyser.getByteTimeDomainData(data); const rms = Math.sqrt(data.reduce((sum, n) => sum + ((n / 128) - 1) ** 2, 0) / data.length); if (fill) fill.style.width = `${Math.min(100, rms * 260)}%`; if (root?.dataset.running !== 'false') requestAnimationFrame(tick); }; root.dataset.running = 'true'; tick(); setTimeout(() => { root.dataset.running = 'false'; stream.getTracks().forEach((track) => track.stop()); ctx.close(); setStatus(done); }, 5000); } catch { setStatus(denied); note.textContent = permission; } });
+  if (toolType === 'devices' && button) button.addEventListener('click', async () => { try { const devices = await navigator.mediaDevices.enumerateDevices(); const audio = devices.filter((d) => d.kind.startsWith('audio')); document.getElementById('device-list').replaceChildren(...audio.map((d) => { const li = document.createElement('li'); li.textContent = `${d.kind}: ${d.label || ready}`; return li; })); value.textContent = `${audio.length}`; setStatus(done); } catch { setStatus(denied); note.textContent = permission; } });
+  if (toolType === 'channels') document.querySelectorAll('[data-channel]').forEach((control) => control.addEventListener('click', async () => { const ctx = audioContext(); await ctx.resume(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); const pan = ctx.createStereoPanner(); pan.pan.value = control.dataset.channel === 'left' ? -1 : control.dataset.channel === 'right' ? 1 : 0; gain.gain.value = .12; osc.connect(pan).connect(gain).connect(ctx.destination); osc.start(); setStatus(measuring, true); setTimeout(() => { osc.stop(); ctx.close(); setStatus(ready); }, 900); }));
+  if (toolType === 'tone' && button) { const slider = document.getElementById('frequency'); const output = document.getElementById('frequency-value'); slider.addEventListener('input', () => { output.textContent = slider.value; }); button.addEventListener('click', async () => { const ctx = audioContext(); await ctx.resume(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.frequency.value = Number(slider.value); gain.gain.value = .08; osc.connect(gain).connect(ctx.destination); osc.start(); setStatus(measuring, true); setTimeout(() => { osc.stop(); ctx.close(); setStatus(done); }, 900); }); }
+  if (toolType === 'recorder' && button) button.addEventListener('click', async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); const recorder = new MediaRecorder(stream); const chunks = []; recorder.ondataavailable = (e) => chunks.push(e.data); recorder.onstop = () => { stream.getTracks().forEach((t) => t.stop()); const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob(chunks, { type: recorder.mimeType })); link.download = 'audio-recording.webm'; link.textContent = done; note.replaceChildren(link); }; recorder.start(); button.textContent = done; setStatus(measuring, true); setTimeout(() => recorder.stop(), 10000); } catch { setStatus(denied); note.textContent = permission; } });
+  if ((toolType === 'analyzer' || toolType === 'meter') && button) button.addEventListener('click', async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); const ctx = audioContext(); const analyser = ctx.createAnalyser(); analyser.fftSize = 512; analyser.connect; const source = ctx.createMediaStreamSource(stream); source.connect(analyser); const data = new Uint8Array(analyser.frequencyBinCount); const canvas = document.getElementById('analysis-canvas'); const pen = canvas.getContext('2d'); setStatus(measuring, true); const draw = () => { analyser.getByteFrequencyData(data); pen.clearRect(0, 0, canvas.width, canvas.height); pen.fillStyle = '#78aef7'; data.forEach((v, i) => pen.fillRect(i * canvas.width / data.length, canvas.height - (v / 255) * canvas.height, Math.max(1, canvas.width / data.length), (v / 255) * canvas.height)); if (root?.dataset.running !== 'false') requestAnimationFrame(draw); }; root.dataset.running = 'true'; draw(); setTimeout(() => { root.dataset.running = 'false'; stream.getTracks().forEach((t) => t.stop()); ctx.close(); setStatus(done); }, 6000); } catch { setStatus(denied); note.textContent = permission; } });
+  if (toolType === 'bpm' && button) { const taps = []; button.addEventListener('click', () => { taps.push(performance.now()); if (taps.length > 8) taps.shift(); if (taps.length > 1) value.textContent = `${Math.round(60000 / (taps.slice(1).map((t, i) => t - taps[i]).reduce((a, b) => a + b, 0) / (taps.length - 1)))} BPM`; setStatus(done); }); }
+  if (toolType === 'reaction' && button) button.addEventListener('click', async () => { button.disabled = true; setStatus(measuring, true); await new Promise((r) => setTimeout(r, 1200 + Math.random() * 2200)); const started = performance.now(); setStatus(done, true); button.disabled = false; button.onclick = () => { value.textContent = `${Math.round(performance.now() - started)} ms`; setStatus(done); }; });
+</script>
+
+<style>
+  .tool-card { max-width: 640px; margin: 0 auto; } .meter-track { height: 10px; background: var(--canvas-soft-2); border-radius: var(--r-full); overflow: hidden; } .meter-fill { height: 100%; width: 0; background: var(--grad-develop); transition: width .08s linear; } .device-list { display: grid; gap: 8px; padding-left: 20px; color: var(--body-text); line-height: 1.6; } .analysis-canvas { width: 100%; height: 180px; background: var(--canvas-soft-2); border-radius: var(--r-md); } .control-label { color: var(--body-text); } input[type="range"] { width: 100%; accent-color: var(--link); }
+</style>

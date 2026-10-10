@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
+
+export interface Props { title: string; description: string; keywords: string; h1: string; intro: string; englishPath: string; portuguesePath: string; sections: Array<{ heading: string; body: string }> }
+const { title, description, keywords, h1, intro, englishPath, portuguesePath, sections } = Astro.props;
+const canonical = `https://onlineaudiotest.com${portuguesePath}`;
+const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: h1, description, url: canonical, isPartOf: { '@type': 'WebSite', name: 'OnlineAudioTest.com', url: 'https://onlineaudiotest.com/' } };
+---
+<Layout title={title} description={description} keywords={keywords} canonical={canonical} locale="pt-BR" alternates={buildToolAlternates(englishPath, portuguesePath)} schema={schema}>
+  <article class="info-page container"><header><p class="eyebrow">OnlineAudioTest.com</p><h1>{h1}</h1><p class="intro">{intro}</p></header>{sections.map((section) => <section><h2>{section.heading}</h2><p>{section.body}</p></section>)}</article>
+</Layout>
+<style>
+  .info-page { max-width: 760px; padding-top: var(--s-4xl); padding-bottom: var(--s-5xl); } .info-page header { text-align: center; margin-bottom: var(--s-3xl); } .info-page h1 { margin: var(--s-sm) 0 var(--s-md); } .intro { color: var(--body-text); line-height: 1.75; max-width: 650px; margin: auto; } .info-page section { border-top: 1px solid var(--hairline); margin-top: var(--s-2xl); padding-top: var(--s-2xl); } .info-page h2 { margin-bottom: var(--s-md); } .info-page section p { color: var(--body-text); line-height: 1.8; }
+</style>

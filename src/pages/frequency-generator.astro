@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -96,6 +97,7 @@ const schema = {
   description="Play any frequency from 20 Hz to 20,000 Hz instantly in your browser. Free tone generator — type exact Hz or kHz, choose sine/square/sawtooth/triangle waves, download as WAV. No signup."
   keywords="frequency generator, frequency generator online, tone generator, sound frequency generator, audio frequency generator, sine wave generator, square wave generator, sawtooth wave generator, triangle wave generator, 440hz tone generator, download test tone, calibration tone, audio test tone, frequency sweep generator, 1000hz tone wav"
   canonical="https://onlineaudiotest.com/frequency-generator/"
+  alternates={buildToolAlternates('/frequency-generator/', '/pt-br/gerador-de-frequencia/')}
   schema={schema}
   sidebar={true}
 >

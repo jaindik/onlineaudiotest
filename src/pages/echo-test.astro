@@ -1,0 +1,206 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Echo Test Online",
+      "url": "https://onlineaudiotest.com/echo-test/",
+      "description": "Free online echo test for calls. Play a test tone through your speakers while recording your mic, then listen back to check if your microphone picks up speaker echo.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires getUserMedia API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Echo Test", "item": "https://onlineaudiotest.com/echo-test/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I test for echo on a call before joining a meeting?", "acceptedAnswer": { "@type": "Answer", "text": "Click Start Echo Test - it plays a short test phrase through your speakers while your microphone records at the same time, with echo cancellation temporarily disabled. Then it plays back what your mic captured. If you hear the test phrase repeated faintly in the playback, your microphone is picking up your speaker output, which is exactly what causes echo on live calls." } },
+        { "@type": "Question", "name": "What causes echo on video calls?", "acceptedAnswer": { "@type": "Answer", "text": "Echo happens when your microphone picks up audio coming from your own speakers and sends it back into the call, so the other person hears their own voice repeated back to them with a delay. It's most common with laptop built-in mic + speakers, speakerphone mode, or open-back headphones sitting near a mic." } },
+        { "@type": "Question", "name": "How do I fix echo on a call?", "acceptedAnswer": { "@type": "Answer", "text": "Use headphones instead of speakers - this is the single most reliable fix, since your mic can no longer pick up the call audio. If headphones aren't an option, lower your speaker volume, move the microphone further from the speakers, or enable your call software's built-in echo cancellation (usually on by default, but can fail with certain USB audio devices)." } },
+        { "@type": "Question", "name": "Why does this test disable echo cancellation?", "acceptedAnswer": { "@type": "Answer", "text": "Your browser and OS normally apply automatic echo cancellation (AEC) to hide this exact problem. This test temporarily requests the microphone without AEC so you can hear your raw setup's actual echo behavior - the same way a call would sound if AEC failed or wasn't supported by your call software." } }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="Echo Test Online — Check Your Mic for Speaker Echo"
+  description="Free online echo test for calls. Play a test tone through your speakers, record your mic at the same time, and listen back to check for echo before your next call."
+  keywords="echo test online, test echo on call, microphone echo test, speaker echo test, test for echo before call, fix echo on video call, audio feedback test"
+  canonical="https://onlineaudiotest.com/echo-test/"
+  alternates={buildToolAlternates('/echo-test/', '/pt-br/teste-de-eco/')}
+  schema={schema}
+  sidebar={true}
+>
+  <section class="tool-hero container">
+    <h1>Echo Test</h1>
+    <p>Check whether your microphone picks up your speaker audio — before you join a call.</p>
+  </section>
+
+  <div class="tool-card-wrap">
+    <div class="tool-card">
+      <div class="status-bar">
+        <div class="status-pill"><span class="dot" id="et-dot"></span><span id="et-status">Ready</span></div>
+      </div>
+
+      <ol class="et-steps" id="et-steps">
+        <li id="et-step-1" class="et-step">Turn your speaker volume to a normal level (not headphones — you need the mic to hear the speaker)</li>
+        <li id="et-step-2" class="et-step">Click Start — a short tone will play through your speakers for 4 seconds while your mic records</li>
+        <li id="et-step-3" class="et-step">Play back the recording — if you hear the tone repeated faintly, your mic is picking up speaker echo</li>
+      </ol>
+
+      <div class="action-row">
+        <button class="btn btn-primary btn-lg" id="et-start">Start Echo Test</button>
+      </div>
+
+      <div id="et-playback" hidden>
+        <p class="et-result" id="et-result-text"></p>
+        <audio id="et-audio" controls style="width:100%"></audio>
+        <div class="action-row" style="margin-top:var(--s-md)">
+          <button class="btn btn-secondary" id="et-retry">Test Again</button>
+        </div>
+      </div>
+
+      <p class="fg-disclaimer">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><line x1="8" y1="5" x2="8" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.75" fill="currentColor"/></svg>
+        Echo cancellation is temporarily disabled during this test so you can hear your setup's real echo behavior.
+      </p>
+    </div>
+  </div>
+
+  <div class="edu-section">
+    <h2>What Causes Echo on Calls?</h2>
+    <p>Echo happens when your microphone picks up sound coming out of your own speakers and sends it back into the call. The other person hears their own voice repeated back to them, delayed by however long it takes for sound to travel from your speaker to your mic and back through the call. It's most common with laptop built-in mic + speaker combos, speakerphone mode, or any open-back headset positioned near a live mic.</p>
+    <h2>How to Fix It</h2>
+    <p><strong>Use headphones.</strong> This is the single most reliable fix — with headphones, your microphone physically cannot pick up the call audio, so there's nothing to echo. If headphones aren't an option: lower your speaker volume, move the mic further away, mute when not speaking, or check that your call software's echo cancellation (AEC) is enabled — it usually is by default, but can silently fail with some USB audio interfaces and virtual audio devices.</p>
+    <p>For a full mic diagnostic beyond echo, see the <a href="/mic-test/">mic test</a> and <a href="/mic-quality-test/">mic quality test</a>.</p>
+  </div>
+
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item"><p class="faq-q">How do I test for echo before joining a meeting?</p><p class="faq-a">Click Start — it plays a test phrase through your speakers while recording your mic simultaneously, with echo cancellation disabled. Play back the result; if you hear the phrase repeated faintly, your mic is picking up your speaker output.</p></div>
+    <div class="faq-item"><p class="faq-q">What causes echo on video calls?</p><p class="faq-a">Your microphone picks up audio from your own speakers and sends it back into the call, so others hear their voice repeated with a delay. Most common with laptop mic+speaker combos or speakerphone mode.</p></div>
+    <div class="faq-item"><p class="faq-q">How do I fix echo on a call?</p><p class="faq-a">Use headphones — the most reliable fix. Otherwise lower speaker volume, move the mic away from speakers, or verify your call software's built-in echo cancellation is active.</p></div>
+    <div class="faq-item"><p class="faq-q">Why does this test disable echo cancellation?</p><p class="faq-a">Your OS/browser normally hides this problem with automatic echo cancellation (AEC). This test disables it temporarily so you hear your setup's real, unmasked echo behavior.</p></div>
+  </div>
+</Layout>
+
+<style>
+  .et-steps { list-style: none; counter-reset: et; margin: var(--s-md) 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-sm); }
+  .et-step { counter-increment: et; position: relative; padding-left: 32px; font-size: 14px; color: var(--body-text); line-height: 1.5; }
+  .et-step::before { content: counter(et); position: absolute; left: 0; top: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--surface-2, #ebebeb); color: var(--ink); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+  .et-step.active::before { background: #0070f3; color: #fff; }
+  .et-step.done { color: var(--muted); }
+  .et-result { font-size: 14px; font-weight: 500; margin-bottom: var(--s-sm); }
+
+  .edu-section { max-width: 680px; margin-inline: auto; padding: 0 var(--container-pad); margin-bottom: var(--s-3xl); }
+  .edu-section h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.8px; margin-bottom: var(--s-md); margin-top: var(--s-3xl); color: var(--ink); }
+  .edu-section h2:first-child { margin-top: 0; }
+  .edu-section p { font-size: 15px; color: var(--body-text); line-height: 1.75; margin-bottom: var(--s-md); }
+  .edu-section strong { color: var(--ink); font-weight: 500; }
+  .edu-section a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+</style>
+
+<script>
+  (() => {
+    const startBtn = document.getElementById('et-start') as HTMLButtonElement;
+    const retryBtn = document.getElementById('et-retry') as HTMLButtonElement;
+    const dot = document.getElementById('et-dot')!;
+    const statusEl = document.getElementById('et-status')!;
+    const step1 = document.getElementById('et-step-1')!;
+    const step2 = document.getElementById('et-step-2')!;
+    const step3 = document.getElementById('et-step-3')!;
+    const playbackWrap = document.getElementById('et-playback')!;
+    const resultText = document.getElementById('et-result-text')!;
+    const audioEl = document.getElementById('et-audio') as HTMLAudioElement;
+
+    const TEST_DURATION_MS = 4000;
+
+    async function run() {
+      startBtn.disabled = true;
+      step1.classList.add('done');
+      step2.classList.add('active');
+      statusEl.textContent = 'Requesting mic access…';
+      dot.className = 'dot warning';
+
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      } catch {
+        statusEl.textContent = 'Microphone permission denied';
+        dot.className = 'dot error';
+        startBtn.disabled = false;
+        step2.classList.remove('active');
+        return;
+      }
+
+      // Play the test tone through speakers
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(660, audioCtx.currentTime + 1);
+      osc.frequency.setValueAtTime(440, audioCtx.currentTime + 2);
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 3);
+      gain.gain.value = 0.35;
+      osc.connect(gain).connect(audioCtx.destination);
+
+      // Record the mic simultaneously
+      const mimeType = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/webm']
+        .find(t => MediaRecorder.isTypeSupported(t)) ?? '';
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      const chunks: BlobPart[] = [];
+      recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+
+      statusEl.textContent = 'Playing tone & recording…';
+      dot.className = 'dot active';
+      recorder.start(100);
+      osc.start();
+      osc.stop(audioCtx.currentTime + TEST_DURATION_MS / 1000);
+
+      setTimeout(() => {
+        recorder.stop();
+        recorder.onstop = () => {
+          stream.getTracks().forEach(t => t.stop());
+          audioCtx.close();
+          const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+          audioEl.src = URL.createObjectURL(blob);
+          step2.classList.remove('active'); step2.classList.add('done');
+          step3.classList.add('active');
+          statusEl.textContent = 'Recording ready';
+          dot.className = 'dot';
+          resultText.textContent = 'Press play below. If you hear the tone repeated faintly after the main tone, your mic is picking up speaker echo.';
+          playbackWrap.hidden = false;
+          startBtn.disabled = false;
+        };
+      }, TEST_DURATION_MS + 150);
+    }
+
+    function reset() {
+      step1.classList.remove('done');
+      step2.classList.remove('active', 'done');
+      step3.classList.remove('active');
+      playbackWrap.hidden = true;
+      statusEl.textContent = 'Ready';
+      dot.className = 'dot';
+      startBtn.disabled = false;
+    }
+
+    startBtn.addEventListener('click', run);
+    retryBtn.addEventListener('click', () => { reset(); run(); });
+  })();
+</script>

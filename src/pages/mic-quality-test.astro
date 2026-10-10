@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -89,6 +90,7 @@ const schema = {
   description="Test your microphone quality online. Analyze noise floor, clipping, SNR, and dynamic range. Get a letter grade (A–F), benchmark comparisons, and personalized recommendations. Free and private."
   keywords="microphone quality test, mic quality test, microphone noise test, microphone analyzer, background noise microphone test, microphone clipping test"
   canonical="https://onlineaudiotest.com/mic-quality-test/"
+  alternates={buildToolAlternates('/mic-quality-test/', '/pt-br/teste-de-qualidade-do-microfone/')}
   schema={schema}
   sidebar={true}
 >

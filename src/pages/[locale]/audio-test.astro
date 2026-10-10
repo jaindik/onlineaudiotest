@@ -1,0 +1,37 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { buildAudioHubAlternates, LOCALES, localizedToolPath } from '../../lib/i18n';
+import { LOCALIZED_AUDIO_HUBS } from '../../data/localizedAudioHubs';
+
+export function getStaticPaths() {
+  return Object.keys(LOCALIZED_AUDIO_HUBS).map((locale) => ({ params: { locale: locale.toLowerCase() }, props: { locale } }));
+}
+
+const { locale } = Astro.props;
+const content = LOCALIZED_AUDIO_HUBS[locale];
+if (!content || !LOCALES[locale]) throw new Error(`Missing localized audio hub: ${locale}`);
+const canonical = `https://onlineaudiotest.com/${locale.toLowerCase()}/audio-test/`;
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebApplication', name: content.title, url: canonical, description: content.description, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', browserRequirements: 'Requires a modern browser with Web Audio API support', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, provider: { '@type': 'Organization', name: 'OnlineAudioTest.com', url: 'https://onlineaudiotest.com/' } },
+    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'OnlineAudioTest.com', item: 'https://onlineaudiotest.com/' }, { '@type': 'ListItem', position: 2, name: content.title, item: canonical }] },
+  ],
+};
+---
+
+<Layout title={content.title} description={content.description} keywords={content.keywords} canonical={canonical} locale={content.code} alternates={buildAudioHubAlternates()} schema={schema}>
+  <section class="tool-hero container hub-hero"><p class="eyebrow">{content.eyebrow}</p><h1>{content.title.split(' — ')[0]}</h1><p>{content.intro}</p><a class="btn btn-primary btn-lg" href={localizedToolPath('/audio-device-check/', content.code)}>{content.cta}</a></section>
+  <section class="hub-section container" aria-labelledby="choose-test"><div class="section-heading"><p class="eyebrow">{content.chooseEyebrow}</p><h2 id="choose-test">{content.chooseTitle}</h2></div><div class="test-grid">{content.tests.map((test, index) => <a class="test-card" href={localizedToolPath(test.href, content.code)}><span class="test-number">0{index + 1}</span><span class="test-card-body"><strong>{test.title}</strong><span>{test.text}</span></span><span class="test-arrow" aria-hidden="true">→</span></a>)}</div></section>
+  <section class="hub-section hub-explain container"><div><p class="eyebrow">{content.startEyebrow}</p><h2>{content.startTitle}</h2></div><div class="quick-check">{content.quick.map((item) => <p><strong>{item.title}</strong> {item.text} {item.links.map((link) => <a href={localizedToolPath(link.href, content.code)}>{link.label}</a>)}</p>)}</div></section>
+  <section class="hub-section hub-copy container"><h2>{content.copyTitle}</h2><p>{content.copyOne}</p><p>{content.copyTwo}</p></section>
+</Layout>
+
+<style>
+  .hub-hero { padding-bottom: var(--s-3xl); } .hub-hero .eyebrow { margin-bottom: var(--s-sm); } .hub-hero h1 { margin-bottom: var(--s-md); } .hub-hero p:not(.eyebrow) { max-width: 670px; margin: 0 auto var(--s-lg); }
+  .hub-section { max-width: 920px; margin-bottom: var(--s-4xl); } .section-heading { margin-bottom: var(--s-lg); } .section-heading h2, .hub-explain h2, .hub-copy h2 { margin-top: var(--s-xs); }
+  .test-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-md); } .test-card { display: flex; align-items: center; gap: var(--s-md); padding: var(--s-lg); border: 1px solid var(--hairline); border-radius: var(--r-lg); background: var(--canvas); color: var(--ink); text-decoration: none; box-shadow: var(--shadow-1); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; } .test-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-color: var(--link); }
+  .test-number { font-family: var(--font-mono); font-size: 12px; color: var(--mute); } .test-card-body { display: flex; flex: 1; flex-direction: column; gap: 4px; } .test-card-body strong { font-size: 17px; } .test-card-body span { color: var(--body-text); font-size: 14px; line-height: 1.45; } .test-arrow { font-size: 22px; color: var(--link); }
+  .hub-explain { display: grid; grid-template-columns: .8fr 1.2fr; gap: var(--s-3xl); padding: var(--s-2xl); border-radius: var(--r-lg); background: var(--canvas-soft); } .quick-check p, .hub-copy p { color: var(--body-text); line-height: 1.75; } .quick-check p { margin: 0 0 var(--s-md); } .quick-check p:last-child { margin-bottom: 0; } .hub-copy { max-width: 720px; } .hub-copy a, .quick-check a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+  @media (max-width: 680px) { .test-grid, .hub-explain { grid-template-columns: 1fr; } .hub-explain { padding: var(--s-lg); gap: var(--s-lg); } }
+</style>

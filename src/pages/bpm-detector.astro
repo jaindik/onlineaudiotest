@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -62,6 +63,7 @@ const schema = {
   description="Upload an MP3 or WAV and instantly detect the BPM of any song. Free online BPM detector — no download, no account, works in your browser."
   keywords="bpm detector, bpm detector mp3, song bpm detector, find bpm of song, tempo detector, beats per minute detector, bpm finder"
   canonical="https://onlineaudiotest.com/bpm-detector/"
+  alternates={buildToolAlternates('/bpm-detector/', '/pt-br/detector-de-bpm/')}
   schema={schema}
   sidebar={true}
 >

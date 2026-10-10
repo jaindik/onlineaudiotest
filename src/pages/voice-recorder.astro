@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -91,6 +92,7 @@ const schema = {
   description="Record audio directly in your browser. Free online voice recorder with pause, resume, waveform trim, normalize, and WAV download. No uploads required."
   keywords="online voice recorder, voice recorder online, free voice recorder, browser voice recorder, record audio online, record microphone online"
   canonical="https://onlineaudiotest.com/voice-recorder/"
+  alternates={buildToolAlternates('/voice-recorder/', '/pt-br/gravador-de-voz/')}
   schema={schema}
   sidebar={true}
 >

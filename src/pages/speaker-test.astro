@@ -1,12 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "WebApplication",
-      "name": "Left Right Speaker Test",
+      "name": "Online Speaker Sound Test",
       "url": "https://onlineaudiotest.com/speaker-test/",
       "description": "Free online left and right speaker test. Detect dead channels, reversed cables, and balance issues in under two minutes. Works with speakers, headphones, soundbars, and Bluetooth devices.",
       "applicationCategory": "UtilitiesApplication",
@@ -20,7 +21,7 @@ const schema = {
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Left Right Speaker Test", "item": "https://onlineaudiotest.com/speaker-test/" }
+        { "@type": "ListItem", "position": 2, "name": "Online Speaker Test", "item": "https://onlineaudiotest.com/speaker-test/" }
       ]
     },
     {
@@ -57,20 +58,24 @@ const schema = {
     }
   ]
 };
+
+// HowTo rich results are no longer a supported Google Search feature.
+schema["@graph"] = schema["@graph"].filter((item) => item["@type"] !== "HowTo");
 ---
 
 <Layout
-  title="Left & Right Speaker Test Online — Free Stereo Check"
-  description="Test your left and right speakers in seconds. Detect dead channels, reversed cables, and balance issues free in your browser — no download needed."
-  keywords="left right speaker test, left right sound test, left right channel test, left right stereo test, speaker test left right, left and right speaker test, stereo speaker test, audio channel test, speaker balance test, online speaker test, headphone left right test"
+  title="Online Speaker Test — Check Speaker Sound & Left/Right Audio"
+  description="Check your speakers with a free online sound test. Test left and right channels, stereo balance, bass, and tone in your browser—no download needed."
+  keywords="online speaker test, speaker test, speaker sound test, check my speaker, left right speaker test, left right sound test, left right channel test, stereo speaker test, audio channel test, speaker balance test"
   schema={schema}
+  alternates={buildToolAlternates('/speaker-test/', '/pt-br/teste-de-alto-falante/')}
   sidebar={true}
 >
 
   <!-- HERO -->
   <section class="tool-hero container">
-    <h1>Left &amp; Right Speaker Test Online</h1>
-    <p>Test your left and right speakers, headphones, or earbuds directly in your browser. Play audio through each channel separately to find dead channels, reversed cables, and balance problems. No download, no account required.</p>
+    <h1>Online Speaker Sound Test</h1>
+    <p>Check your speaker sound with this free online speaker test. Test left and right channels separately, compare stereo balance, and listen to bass and full-range tones on speakers, soundbars, headphones, or earbuds. No download or account required.</p>
   </section>
 
   <!-- TOOL — unchanged -->
@@ -156,7 +161,7 @@ const schema = {
 
   <!-- HOW TO USE -->
   <div class="how-section">
-    <h2>How to Use the Left Right Speaker Test</h2>
+    <h2>How to Check Your Speakers and Test Left and Right Audio</h2>
     <div class="steps">
       <div class="step">
         <span class="step-num">1</span>
@@ -176,7 +181,7 @@ const schema = {
       </div>
       <div class="step">
         <span class="step-num">5</span>
-        <p class="step-body"><strong>Switch signal types</strong> to target specific drivers — use 100 Hz to test your woofer, 440 Hz for midrange, 1 kHz for high-mids.</p>
+        <p class="step-body"><strong>Switch signal types</strong> to target specific drivers — use 100 Hz to test your woofer, 440 Hz for midrange, 1 kHz for high-mids. Noticing a delay between your action and the sound? Run our <a href="/latency-test/">Audio Latency Test</a> to measure it in milliseconds.</p>
       </div>
     </div>
   </div>

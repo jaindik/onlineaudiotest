@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -48,17 +49,18 @@ const schema = {
 ---
 
 <Layout
-  title="Headphone Test Online — Free Left Right & Balance Check"
-  description="Test your headphones, earbuds, or AirPods online. Check left/right channels, driver balance, bass, treble, and distortion free in your browser."
-  keywords="headphone test online, headphone test, left right headphone test, earbud test, AirPods test, headphone balance test, headphone driver test, gaming headset test, bluetooth headphone test, frequency sweep headphone test"
+  title="Headphone Test Online — Sound, Left/Right & Balance Check"
+  description="Run a free headphone sound test for headphones, earbuds, or AirPods. Check left/right audio, driver balance, bass, treble, and distortion in your browser."
+  keywords="headphone test online, headphone test, headphone sound test, headphone audio test, left right headphone test, earbud test, AirPods test, headphone balance test, headphone driver test, gaming headset test, bluetooth headphone test"
   schema={schema}
+  alternates={buildToolAlternates('/headphone-test/', '/pt-br/teste-de-fone-de-ouvido/')}
   sidebar={true}
 >
 
   <!-- HERO -->
   <section class="tool-hero container">
-    <h1>Headphone Test Online</h1>
-    <p>Test your headphones, earbuds, gaming headset, or AirPods directly in your browser. Check left and right channels, driver balance, bass, treble, and distortion — in under three minutes, no download required.</p>
+    <h1>Online Headphone Sound Test</h1>
+    <p>Use this free headphone test to check the sound from your headphones, earbuds, gaming headset, or AirPods. Compare left and right audio, listen for driver imbalance, and test bass, treble, and distortion in your browser—no download required.</p>
   </section>
 
   <!-- TOOL -->

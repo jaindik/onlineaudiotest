@@ -4,6 +4,7 @@ import { DEVICES, getDeviceBySlug, getAllSlugs } from '../../data/devices';
 import { CODECS } from '../../data/codecs';
 import { buildDevicePageSchema, generateDeviceKeywords } from '../../lib/seo';
 import { getRelatedDevices, getSameManufacturerDevices, getRelatedResources, latencyRating, categoryLabel } from '../../lib/related';
+import { buildDeviceAlternates } from '../../lib/i18n';
 
 export function getStaticPaths() {
   return getAllSlugs().map((slug) => ({ params: { slug } }));
@@ -39,6 +40,7 @@ const videoSyncLabel: Record<typeof device.videoSync, string> = {
   description={device.metaDescription}
   keywords={keywords}
   canonical={canonicalURL}
+  alternates={buildDeviceAlternates(device.slug)}
   schema={schema}
   sidebar={true}
 >

@@ -1,0 +1,120 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { buildAudioHubAlternates, localizedToolPath } from '../../lib/i18n';
+
+const canonical = 'https://onlineaudiotest.com/pt-br/teste-de-audio/';
+const alternates = buildAudioHubAlternates();
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      name: 'Teste de Áudio Online',
+      url: canonical,
+      description: 'Teste seus alto-falantes, fones de ouvido, microfone, canais estéreo e atraso do Bluetooth diretamente no navegador.',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Any',
+      browserRequirements: 'Requer um navegador moderno com suporte à Web Audio API',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      provider: { '@type': 'Organization', name: 'OnlineAudioTest.com', url: 'https://onlineaudiotest.com/' },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://onlineaudiotest.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Teste de áudio online', item: canonical },
+      ],
+    },
+  ],
+};
+
+const tests = [
+  { href: '/speaker-test/', title: 'Teste de alto-falante', text: 'Verifique os canais esquerdo e direito, o estéreo e o equilíbrio.' },
+  { href: '/mic-test/', title: 'Teste de microfone', text: 'Confira os níveis de entrada, as permissões e o microfone do headset.' },
+  { href: '/headphone-test/', title: 'Teste de fone de ouvido', text: 'Teste os canais, a resposta de frequência e possíveis falhas no driver.' },
+  { href: '/latency-test/', title: 'Teste de latência de áudio', text: 'Meça o atraso da saída de áudio em milissegundos.' },
+  { href: '/bluetooth-latency-test/', title: 'Teste de latência Bluetooth', text: 'Verifique o atraso do áudio sem fio e o impacto do codec.' },
+  { href: '/audio-device-check/', title: 'Verificação do dispositivo de áudio', text: 'Veja os dispositivos, canais e a taxa de amostragem do navegador.' },
+];
+---
+
+<Layout
+  title="Teste de Áudio Online — Alto-falante, Fone e Microfone"
+  description="Faça um teste de áudio online para alto-falantes, fones de ouvido, microfone, canais estéreo e atraso do Bluetooth. Grátis, privado e sem download."
+  keywords="teste de áudio online, teste de som, teste de alto-falante, teste de fone de ouvido, teste de microfone, teste de latência Bluetooth"
+  canonical={canonical}
+  locale="pt-BR"
+  alternates={alternates}
+  schema={schema}
+>
+  <section class="tool-hero container hub-hero">
+    <p class="eyebrow">Diagnóstico de áudio</p>
+    <h1>Teste de Áudio Online</h1>
+    <p>Teste seus alto-falantes, fones de ouvido, microfone, canais estéreo e atraso do Bluetooth no navegador. Escolha um teste abaixo — sem upload e sem download.</p>
+    <a class="btn btn-primary btn-lg" href={localizedToolPath('/audio-device-check/', 'pt-BR')}>Começar pela verificação do dispositivo</a>
+  </section>
+
+  <section class="hub-section container" aria-labelledby="escolha-teste">
+    <div class="section-heading"><p class="eyebrow">Escolha um diagnóstico</p><h2 id="escolha-teste">O que você quer verificar?</h2></div>
+    <div class="test-grid">
+      {tests.map((test, index) => (
+        <a class="test-card" href={localizedToolPath(test.href, 'pt-BR')}>
+          <span class="test-number">0{index + 1}</span>
+          <span class="test-card-body"><strong>{test.title}</strong><span>{test.text}</span></span>
+          <span class="test-arrow" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="hub-section hub-explain container">
+    <div><p class="eyebrow">Não sabe por onde começar?</p><h2>Faça uma verificação rápida</h2></div>
+    <div class="quick-check">
+      <p><strong>O microfone não funciona?</strong> Abra o <a href={localizedToolPath('/mic-test/', 'pt-BR')}>teste de microfone</a>, permita o acesso e confirme se o nível de entrada reage à sua voz.</p>
+      <p><strong>Não há som ou um lado está mudo?</strong> Use o <a href={localizedToolPath('/speaker-test/', 'pt-BR')}>teste de alto-falante esquerdo e direito</a> para identificar problemas de canal ou equilíbrio.</p>
+      <p><strong>O som está atrasado?</strong> Meça o atraso com o <a href={localizedToolPath('/latency-test/', 'pt-BR')}>teste de latência de áudio</a> e consulte o <a href={localizedToolPath('/bluetooth-codec-guide/', 'pt-BR')}>guia de codecs Bluetooth</a>.</p>
+    </div>
+  </section>
+
+  <section class="hub-section hub-copy container">
+    <h2>Teste de áudio privado no navegador</h2>
+    <p>As ferramentas usam APIs de áudio do navegador para gerar sinais de teste e analisar a entrada localmente. Gravações do microfone não são enviadas para um servidor. Para obter resultados mais confiáveis, use um ambiente silencioso, mantenha o volume confortável e repita o teste depois de mudar um dispositivo ou conexão por vez.</p>
+    <p>Os testes são gratuitos e não exigem instalação. Para informações específicas sobre fones e earbuds Bluetooth, consulte os <a href={localizedToolPath('/devices/', 'pt-BR')}>guias de latência de dispositivos</a>.</p>
+  </section>
+</Layout>
+
+<style>
+  .hub-hero { padding-bottom: var(--s-3xl); } .hub-hero .eyebrow { margin-bottom: var(--s-sm); } .hub-hero h1 { margin-bottom: var(--s-md); }
+  .hub-hero p:not(.eyebrow) { max-width: 670px; margin: 0 auto var(--s-lg); }
+  .hub-section { max-width: 920px; margin-bottom: var(--s-4xl); } .section-heading { margin-bottom: var(--s-lg); }
+  .section-heading h2, .hub-explain h2, .hub-copy h2 { margin-top: var(--s-xs); }
+  .test-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-md); }
+  .test-card { display: flex; align-items: center; gap: var(--s-md); padding: var(--s-lg); border: 1px solid var(--hairline); border-radius: var(--r-lg); background: var(--canvas); color: var(--ink); text-decoration: none; box-shadow: var(--shadow-1); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+  .test-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-color: var(--link); }
+  .test-number { font-family: var(--font-mono); font-size: 12px; color: var(--mute); } .test-card-body { display: flex; flex: 1; flex-direction: column; gap: 4px; }
+  .test-card-body strong { font-size: 17px; } .test-card-body span { color: var(--body-text); font-size: 14px; line-height: 1.45; } .test-arrow { font-size: 22px; color: var(--link); }
+  .hub-explain { display: grid; grid-template-columns: .8fr 1.2fr; gap: var(--s-3xl); padding: var(--s-2xl); border-radius: var(--r-lg); background: var(--canvas-soft); }
+  .quick-check p, .hub-copy p { color: var(--body-text); line-height: 1.75; } .quick-check p { margin: 0 0 var(--s-md); } .quick-check p:last-child { margin-bottom: 0; }
+  .hub-copy { max-width: 720px; } .hub-copy a, .quick-check a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+  @media (max-width: 680px) { .test-grid, .hub-explain { grid-template-columns: 1fr; } .hub-explain { padding: var(--s-lg); gap: var(--s-lg); } }
+</style>
+
+<script is:inline>
+  // Keep navigation inside the Portuguese tool cluster, including links in
+  // the shared English-first header/footer that cannot be localized in Astro
+  // markup without duplicating the entire navigation component.
+  const portugueseTools = {
+    '/audio-test/': '/pt-br/teste-de-audio/',
+    '/audio-device-check/': '/pt-br/verificacao-de-dispositivo-de-audio/',
+    '/mic-test/': '/pt-br/teste-de-microfone/',
+    '/speaker-test/': '/pt-br/teste-de-alto-falante/',
+    '/headphone-test/': '/pt-br/teste-de-fone-de-ouvido/',
+    '/latency-test/': '/pt-br/teste-de-latencia/',
+    '/bluetooth-latency-test/': '/pt-br/teste-de-latencia-bluetooth/',
+  };
+  document.querySelectorAll('a[href]').forEach((link) => {
+    const href = link.getAttribute('href');
+    if (href && portugueseTools[href]) link.setAttribute('href', portugueseTools[href]);
+  });
+</script>

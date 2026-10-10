@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -55,17 +56,19 @@ const schema = {
 ---
 
 <Layout
-  title="Bluetooth Audio Codecs Explained — SBC, AAC, aptX, LDAC, LC3"
-  description="A plain-English guide to every major Bluetooth audio codec — SBC, AAC, aptX, aptX HD, aptX Low Latency, LDAC, and LC3. Learn what each codec does, how they compare, and which to use."
+  title="What Is a Bluetooth Codec? SBC, AAC, aptX, LDAC & LC3"
+  description="What is a Bluetooth codec? Learn how SBC, AAC, aptX, LDAC, and LC3 affect audio quality, Bluetooth delay, compatibility, and battery life."
   keywords="bluetooth codec, sbc vs aac, aptx vs ldac, bluetooth audio codec comparison, lc3 bluetooth, ldac explained, bluetooth le audio, aptx low latency"
   canonical="https://onlineaudiotest.com/bluetooth-codec-guide/"
+  alternates={buildToolAlternates('/bluetooth-codec-guide/', '/pt-br/guia-de-codecs-bluetooth/')}
   schema={schema}
   sidebar={true}
 >
 
   <!-- HERO -->
   <section class="tool-hero container">
-    <h1>Bluetooth Audio Codecs Explained</h1>
+    <h1>What Is a Bluetooth Codec?</h1>
+    <p>A Bluetooth codec is the technology that compresses, transmits, and decodes audio between your phone or computer and wireless headphones. The codec affects sound quality, Bluetooth audio delay, device compatibility, and battery use.</p>
     <p>When you connect Bluetooth headphones, your device and headphones negotiate which audio codec to use. That codec determines how your audio is compressed, transmitted, and decoded — and it is the single biggest factor in Bluetooth audio quality and latency.</p>
   </section>
 

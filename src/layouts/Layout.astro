@@ -1,5 +1,7 @@
 ﻿---
 import ThemeToggle from '../components/ThemeToggle.astro';
+import { buildAlternateLinks, buildSiteAlternates, getLocale, LOCALES, localizedToolPath, type AlternateLink } from '../lib/i18n';
+import { getLocalizedChromeCopy, getLocalizedToolName } from '../data/localizedSiteCopy';
 
 export interface Props {
   title: string;
@@ -9,16 +11,38 @@ export interface Props {
   pageClass?: string;
   sidebar?: boolean;
   keywords?: string;
+  locale?: string;
+  alternates?: AlternateLink[];
 }
 
-const { title, description, canonical, schema, pageClass = '', sidebar = false, keywords } = Astro.props;
+const { title, description, canonical, schema, pageClass = '', sidebar = false, keywords, locale = 'en', alternates = [] } = Astro.props;
 const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const site = 'https://onlineaudiotest.com';
 const canonicalURL = canonical || new URL(Astro.url.pathname, site).href;
 const ogImage = `${site}/ogImage.webp`;
+const localeDefinition = getLocale(locale);
+const navLabels = {
+  mic: getLocalizedToolName(locale, 'mic-test'),
+  speaker: getLocalizedToolName(locale, 'speaker-test'),
+  latency: getLocalizedToolName(locale, 'latency-test'),
+  hearing: getLocalizedToolName(locale, 'hearing-test'),
+  frequency: getLocalizedToolName(locale, 'frequency-generator'),
+  spectrum: getLocalizedToolName(locale, 'audio-spectrum-analyzer'),
+  recorder: getLocalizedToolName(locale, 'voice-recorder'),
+  quality: getLocalizedToolName(locale, 'mic-quality-test'),
+  bpm: getLocalizedToolName(locale, 'bpm-detector'),
+  key: getLocalizedToolName(locale, 'key-detector'),
+};
+const chrome = getLocalizedChromeCopy(locale);
+const alternateLinks = buildSiteAlternates(currentPath).length ? buildSiteAlternates(currentPath) : buildAlternateLinks(alternates);
+const localeOptions = Object.values(LOCALES).map((option) => {
+  const alternate = alternateLinks.find((link) => link.hreflang === option.code);
+  const homePath = option.code === 'en' ? '/' : option.code === 'pt-BR' ? '/pt-br/' : `/${option.code.toLowerCase()}/`;
+  return { ...option, href: alternate?.href ?? homePath };
+});
 ---
 <!doctype html>
-<html lang="en">
+<html lang={localeDefinition.language} dir={localeDefinition.direction}>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,6 +52,7 @@ const ogImage = `${site}/ogImage.webp`;
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="canonical" href={canonicalURL} />
+  {alternateLinks.map((alternate) => <link rel="alternate" hreflang={alternate.hreflang} href={alternate.href} />)}
   <meta name="generator" content={Astro.generator} />
 
   <!-- Primary Meta -->
@@ -49,7 +74,7 @@ const ogImage = `${site}/ogImage.webp`;
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content={title} />
   <meta property="og:site_name" content="OnlineAudioTest.com" />
-  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale" content={localeDefinition.ogLocale} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -83,13 +108,38 @@ const ogImage = `${site}/ogImage.webp`;
   <!-- ───── NAV ───── -->
   <header class="nav" role="banner">
 
-    <!-- Row 1: brand + theme toggle only -->
+    <!-- Row 1: brand, language selector, and theme toggle -->
     <div class="nav-top">
       <div class="nav-top-inner container">
-        <a href="/" class="nav-logo" aria-label="OnlineAudioTest home">
+        <a href={locale === 'en' ? '/' : locale === 'pt-BR' ? '/pt-br/' : `/${locale.toLowerCase()}/`} class="nav-logo" aria-label="OnlineAudioTest home">
           <img src="/icon.png" width="22" height="22" alt="" aria-hidden="true" decoding="async" />
           <span class="logo-text">onlineaudiotest</span>
         </a>
+        <details class="language-menu">
+          <summary class="language-menu-trigger" aria-label={`Choose language. Current language: ${localeDefinition.label}`}>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.4" />
+              <path d="M2.9 10h14.2M10 2.75c2 2 3 4.42 3 7.25s-1 5.25-3 7.25c-2-2-3-4.42-3-7.25s1-5.25 3-7.25Z" stroke="currentColor" stroke-width="1.2" />
+            </svg>
+            <span>{localeDefinition.label}</span>
+            <svg class="language-menu-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </summary>
+          <nav class="language-menu-options" aria-label="Choose language">
+            {localeOptions.map((option) => (
+              <a
+                href={option.href}
+                lang={option.language}
+                aria-current={option.code === localeDefinition.code ? 'page' : undefined}
+                class:list={['language-menu-option', { 'language-menu-option-current': option.code === localeDefinition.code }]}
+              >
+                <span>{option.label}</span>
+                {option.code === localeDefinition.code && <span class="language-menu-current-label">Current</span>}
+              </a>
+            ))}
+          </nav>
+        </details>
         <ThemeToggle />
       </div>
     </div>
@@ -97,81 +147,81 @@ const ogImage = `${site}/ogImage.webp`;
     <!-- Row 2: tools strip -->
     <div class="nav-tools-bar" role="navigation" aria-label="Audio tools">
       <div class="nav-tools-inner container">
-        <a href="/mic-test/" class:list={['nav-tool', { 'nav-active': currentPath === '/mic-test' }]}>
+        <a href={localizedToolPath('/mic-test/', locale)} class:list={['nav-tool', { 'nav-active': currentPath === '/mic-test' }]}>
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <rect x="7" y="2" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.5"/>
             <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             <line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             <line x1="7" y1="19" x2="13" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          Mic Test
+          {navLabels.mic}
         </a>
-        <a href="/speaker-test/" class:list={['nav-tool', { 'nav-active': currentPath === '/speaker-test' }]}>
+        <a href={localizedToolPath('/speaker-test/', locale)} class:list={['nav-tool', { 'nav-active': currentPath === '/speaker-test' }]}>
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M3 7h3.5L11 3v14l-4.5-4H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
             <path d="M14 7a4 4 0 010 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          Speaker Test
+          {navLabels.speaker}
         </a>
-        <a href="/latency-test/" class:list={['nav-tool', { 'nav-active': currentPath === '/latency-test' }]}>
+        <a href={localizedToolPath('/latency-test/', locale)} class:list={['nav-tool', { 'nav-active': currentPath === '/latency-test' }]}>
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
             <path d="M10 6v4.5l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Latency Test
+          {navLabels.latency}
         </a>
-        <a href="/hearing-test/" class:list={['nav-tool', { 'nav-active': currentPath === '/hearing-test' }]}>
+        <a href={localizedToolPath('/hearing-test/', locale)} class:list={['nav-tool', { 'nav-active': currentPath === '/hearing-test' }]}>
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M2 10h2.5l2-5 3 10 2-7 2 5 1.5-3H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Hearing Test
+          {navLabels.hearing}
         </a>
-        <a href="/frequency-generator/" class:list={['nav-tool', { 'nav-active': currentPath === '/frequency-generator' }]}>
+        <a href={localizedToolPath('/frequency-generator/', locale)} class:list={['nav-tool', { 'nav-active': currentPath === '/frequency-generator' }]}>
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M1 10 Q4 3 7 10 Q10 17 13 10 Q16 3 19 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Frequency Generator
+          {navLabels.frequency}
         </a>
-        <a href="/audio-spectrum-analyzer/" class:list={['nav-tool', { 'nav-active': currentPath === '/audio-spectrum-analyzer' }]}>
+        <a href={localizedToolPath('/audio-spectrum-analyzer/', locale)} class:list={['nav-tool', { 'nav-active': currentPath === '/audio-spectrum-analyzer' }]}>
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <rect x="1" y="12" width="3" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
             <rect x="6" y="7" width="3" height="12" rx="1" stroke="currentColor" stroke-width="1.5"/>
             <rect x="11" y="4" width="3" height="15" rx="1" stroke="currentColor" stroke-width="1.5"/>
             <rect x="16" y="9" width="3" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/>
           </svg>
-          Spectrum Analyzer
+          {navLabels.spectrum}
         </a>
-        <a href="/voice-recorder/" class:list={['nav-tool', { 'nav-active': currentPath === '/voice-recorder' }]}>
+        <a href={localizedToolPath('/voice-recorder/', locale)} class:list={['nav-tool', { 'nav-active': currentPath === '/voice-recorder' }]}>
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <rect x="7" y="2" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/>
             <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             <line x1="10" y1="16" x2="10" y2="19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             <circle cx="16" cy="4" r="2.5" fill="#ee0000"/>
           </svg>
-          Voice Recorder
+          {navLabels.recorder}
         </a>
-        <a href="/mic-quality-test/" class:list={['nav-tool', { 'nav-active': currentPath === '/mic-quality-test' }]}>
+        <a href={localizedToolPath('/mic-quality-test/', locale)} class:list={['nav-tool', { 'nav-active': currentPath === '/mic-quality-test' }]}>
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <rect x="7" y="2" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/>
             <path d="M4 10a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             <path d="M13 6l4-3M13 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          Mic Quality
+          {navLabels.quality}
         </a>
-        <a href="/bpm-detector/" class:list={['nav-tool', { 'nav-active': currentPath === '/bpm-detector' }]}>
+        <a href={localizedToolPath('/bpm-detector/', locale)} class:list={['nav-tool', { 'nav-active': currentPath === '/bpm-detector' }]}>
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
             <path d="M10 6v4.2l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          BPM Detector
+          {navLabels.bpm}
         </a>
-        <a href="/key-detector/" class:list={['nav-tool', { 'nav-active': currentPath === '/key-detector' || currentPath === '/key-and-bpm-detector' }]}>
+        <a href={localizedToolPath('/key-detector/', locale)} class:list={['nav-tool', { 'nav-active': currentPath === '/key-detector' || currentPath === '/key-and-bpm-detector' }]}>
           <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M9 19V6l12-3v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="6" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/>
             <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
           </svg>
-          Key Detector
+          {navLabels.key}
         </a>
       </div>
     </div>
@@ -350,55 +400,61 @@ const ogImage = `${site}/ogImage.webp`;
   <footer class="footer" role="contentinfo">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <a href="/" class="nav-logo footer-logo">
+        <a href={locale === 'en' ? '/' : locale === 'pt-BR' ? '/pt-br/' : `/${locale.toLowerCase()}/`} class="nav-logo footer-logo">
           <img src="/icon.png" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async" />
           <span>onlineaudiotest</span>
         </a>
-        <p class="footer-tagline">Free browser-based audio diagnostics. No download required.</p>
+        <p class="footer-tagline">{chrome.tagline}</p>
       </div>
 
       <div class="footer-cols">
         <div class="footer-col">
-          <span class="footer-col-label">Tools</span>
-          <a href="/mic-test/" class="footer-link">Mic Check Online</a>
-          <a href="/speaker-test/" class="footer-link">Left Right Audio Test</a>
-          <a href="/headphone-test/" class="footer-link">Headphone Test</a>
-          <a href="/latency-test/" class="footer-link">Audio Latency Test</a>
-          <a href="/airpods-latency-test/" class="footer-link">AirPods Latency Test</a>
-          <a href="/bluetooth-latency-test/" class="footer-link">Bluetooth Latency Test</a>
-          <a href="/hearing-test/" class="footer-link">Hearing Test</a>
-          <a href="/frequency-generator/" class="footer-link">Frequency Generator</a>
-          <a href="/audio-spectrum-analyzer/" class="footer-link">Audio Spectrum Analyzer</a>
-          <a href="/voice-recorder/" class="footer-link">Online Voice Recorder</a>
-          <a href="/mic-quality-test/" class="footer-link">Microphone Quality Test</a>
-          <a href="/bpm-detector/" class="footer-link">BPM Detector</a>
-          <a href="/key-detector/" class="footer-link">Song Key Detector</a>
-          <a href="/key-and-bpm-detector/" class="footer-link">Key and BPM Detector</a>
+          <span class="footer-col-label">{chrome.tools}</span>
+          <a href={localizedToolPath('/audio-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'audio-test')}</a>
+          <a href={localizedToolPath('/audio-device-check/', locale)} class="footer-link">{getLocalizedToolName(locale, 'audio-device-check')}</a>
+          <a href={localizedToolPath('/mic-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'mic-test')}</a>
+          <a href={localizedToolPath('/speaker-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'speaker-test')}</a>
+          <a href={localizedToolPath('/headphone-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'headphone-test')}</a>
+          <a href={localizedToolPath('/latency-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'latency-test')}</a>
+          <a href={localizedToolPath('/airpods-latency-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'airpods-latency-test')}</a>
+          <a href={localizedToolPath('/bluetooth-latency-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'bluetooth-latency-test')}</a>
+          <a href={localizedToolPath('/hearing-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'hearing-test')}</a>
+          <a href={localizedToolPath('/frequency-generator/', locale)} class="footer-link">{getLocalizedToolName(locale, 'frequency-generator')}</a>
+          <a href={localizedToolPath('/audio-spectrum-analyzer/', locale)} class="footer-link">{getLocalizedToolName(locale, 'audio-spectrum-analyzer')}</a>
+          <a href={localizedToolPath('/voice-recorder/', locale)} class="footer-link">{getLocalizedToolName(locale, 'voice-recorder')}</a>
+          <a href={localizedToolPath('/mic-quality-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'mic-quality-test')}</a>
+          <a href={localizedToolPath('/bpm-detector/', locale)} class="footer-link">{getLocalizedToolName(locale, 'bpm-detector')}</a>
+          <a href={localizedToolPath('/key-detector/', locale)} class="footer-link">{getLocalizedToolName(locale, 'key-detector')}</a>
+          <a href={localizedToolPath('/key-and-bpm-detector/', locale)} class="footer-link">{getLocalizedToolName(locale, 'key-and-bpm-detector')}</a>
+          <a href={localizedToolPath('/decibel-meter/', locale)} class="footer-link">{getLocalizedToolName(locale, 'decibel-meter')}</a>
+          <a href={localizedToolPath('/loudness-meter/', locale)} class="footer-link">{getLocalizedToolName(locale, 'loudness-meter')}</a>
+          <a href={localizedToolPath('/echo-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'echo-test')}</a>
+          <a href={localizedToolPath('/audio-reaction-test/', locale)} class="footer-link">{getLocalizedToolName(locale, 'audio-reaction-test')}</a>
         </div>
         <div class="footer-col">
-          <span class="footer-col-label">Devices</span>
-          <a href="/devices/" class="footer-link">All Device Guides</a>
-          <a href="/devices/airpods-pro-2/" class="footer-link">AirPods Pro 2</a>
-          <a href="/devices/airpods-max/" class="footer-link">AirPods Max</a>
-          <a href="/devices/sony-wh-1000xm5/" class="footer-link">Sony WH-1000XM5</a>
-          <a href="/devices/sony-wf-1000xm5/" class="footer-link">Sony WF-1000XM5</a>
-          <a href="/devices/samsung-galaxy-buds-3-pro/" class="footer-link">Galaxy Buds 3 Pro</a>
+          <span class="footer-col-label">{chrome.devices}</span>
+          <a href={localizedToolPath('/devices/', locale)} class="footer-link">{getLocalizedToolName(locale, 'devices')}</a>
+          <a href={localizedToolPath('/devices/airpods-pro-2/', locale)} class="footer-link">AirPods Pro 2</a>
+          <a href={localizedToolPath('/devices/airpods-max/', locale)} class="footer-link">AirPods Max</a>
+          <a href={localizedToolPath('/devices/sony-wh-1000xm5/', locale)} class="footer-link">Sony WH-1000XM5</a>
+          <a href={localizedToolPath('/devices/sony-wf-1000xm5/', locale)} class="footer-link">Sony WF-1000XM5</a>
+          <a href={localizedToolPath('/devices/samsung-galaxy-buds-3-pro/', locale)} class="footer-link">Galaxy Buds 3 Pro</a>
         </div>
         <div class="footer-col">
-          <span class="footer-col-label">Company</span>
-          <a href="/" class="footer-link">Home</a>
-          <a href="/about/" class="footer-link">About Us</a>
-          <a href="/contact/" class="footer-link">Contact Us</a>
+          <span class="footer-col-label">{chrome.company}</span>
+          <a href={locale === 'en' ? '/' : locale === 'pt-BR' ? '/pt-br/' : `/${locale.toLowerCase()}/`} class="footer-link">{chrome.home}</a>
+          <a href={localizedToolPath('/about/', locale)} class="footer-link">{getLocalizedToolName(locale, 'about')}</a>
+          <a href={localizedToolPath('/contact/', locale)} class="footer-link">{getLocalizedToolName(locale, 'contact')}</a>
         </div>
         <div class="footer-col">
-          <span class="footer-col-label">Legal</span>
-          <a href="/privacy/" class="footer-link">Privacy Policy</a>
-          <a href="/terms/" class="footer-link">Terms &amp; Conditions</a>
+          <span class="footer-col-label">{chrome.legal}</span>
+          <a href={localizedToolPath('/privacy/', locale)} class="footer-link">{getLocalizedToolName(locale, 'privacy')}</a>
+          <a href={localizedToolPath('/terms/', locale)} class="footer-link">{getLocalizedToolName(locale, 'terms')}</a>
         </div>
       </div>
     </div>
     <div class="footer-bottom container">
-      <span class="caption-mono">© {new Date().getFullYear()} OnlineAudioTest.com - All rights reserved.</span>
+      <span class="caption-mono">© {new Date().getFullYear()} OnlineAudioTest.com - {chrome.allRights}</span>
     </div>
   </footer>
 
@@ -534,6 +590,32 @@ const ogImage = `${site}/ogImage.webp`;
     gtag('config', 'G-KD9890JWZD');
   </script>
 
+<script define:vars={{ locale }}>
+    if (locale !== 'en') {
+      const localizedPaths = {
+        '/': locale === 'pt-BR' ? '/pt-br/' : `/${locale.toLowerCase()}/`,
+        '/audio-test/': '/pt-br/teste-de-audio/', '/audio-device-check/': '/pt-br/verificacao-de-dispositivo-de-audio/',
+        '/mic-test/': '/pt-br/teste-de-microfone/', '/speaker-test/': '/pt-br/teste-de-alto-falante/',
+        '/headphone-test/': '/pt-br/teste-de-fone-de-ouvido/', '/latency-test/': '/pt-br/teste-de-latencia/',
+        '/bluetooth-latency-test/': '/pt-br/teste-de-latencia-bluetooth/', '/hearing-test/': '/pt-br/teste-de-audicao/',
+        '/frequency-generator/': '/pt-br/gerador-de-frequencia/', '/audio-spectrum-analyzer/': '/pt-br/analisador-de-espectro-de-audio/',
+        '/voice-recorder/': '/pt-br/gravador-de-voz/', '/mic-quality-test/': '/pt-br/teste-de-qualidade-do-microfone/',
+        '/audio-reaction-test/': '/pt-br/teste-de-reacao-audio/', '/decibel-meter/': '/pt-br/medidor-de-decibeis/',
+        '/loudness-meter/': '/pt-br/medidor-de-volume/', '/echo-test/': '/pt-br/teste-de-eco/', '/bpm-detector/': '/pt-br/detector-de-bpm/',
+        '/key-detector/': '/pt-br/detector-de-tom-musical/', '/key-and-bpm-detector/': '/pt-br/detector-de-tom-e-bpm/',
+        '/bluetooth-codec-guide/': '/pt-br/guia-de-codecs-bluetooth/', '/airpods-latency-test/': '/pt-br/teste-de-latencia-airpods/',
+        '/devices/': '/pt-br/dispositivos/', '/about/': '/pt-br/sobre/', '/contact/': '/pt-br/contato/',
+        '/privacy/': '/pt-br/privacidade/', '/terms/': '/pt-br/termos/',
+      };
+      document.querySelectorAll('a[href]').forEach((link) => {
+        const href = link.getAttribute('href');
+        const localePrefix = `/${locale.toLowerCase()}/`;
+        if (!href || /^https?:/.test(href) || (locale !== 'pt-BR' && href.startsWith(localePrefix))) return;
+        const target = locale === 'pt-BR' ? localizedPaths[href] : (href === '/' ? `/${locale.toLowerCase()}/` : `/${locale.toLowerCase()}${href}`);
+        if (target) link.setAttribute('href', target);
+      });
+    }
+  </script>
 </body>
 </html>
 
@@ -849,7 +931,7 @@ const ogImage = `${site}/ogImage.webp`;
     border-bottom: 1px solid var(--hairline);
   }
 
-  /* Row 1 — brand + theme toggle */
+  /* Row 1 — brand, language selector, and theme toggle */
   .nav-top {
     height: var(--nav-top-height);
     border-bottom: 1px solid var(--hairline);
@@ -871,6 +953,68 @@ const ogImage = `${site}/ogImage.webp`;
     flex-shrink: 0;
     text-decoration: none;
   }
+  .language-menu {
+    position: relative;
+    margin-left: auto;
+    margin-right: var(--s-sm);
+    color: var(--body-text);
+  }
+  .language-menu-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 36px;
+    max-width: min(42vw, 190px);
+    padding: 5px 10px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-full);
+    color: var(--body-text);
+    background: var(--canvas);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    list-style: none;
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .language-menu-trigger::-webkit-details-marker { display: none; }
+  .language-menu-trigger:hover,
+  .language-menu[open] .language-menu-trigger { color: var(--ink); border-color: var(--hairline-strong); background: var(--canvas-soft-2); }
+  .language-menu-trigger span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .language-menu-trigger:focus-visible,
+  .language-menu-option:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  .language-menu-chevron { flex: 0 0 auto; transition: transform .15s; }
+  .language-menu[open] .language-menu-chevron { transform: rotate(180deg); }
+  .language-menu-options {
+    position: absolute;
+    z-index: 120;
+    top: calc(100% + 6px);
+    right: 0;
+    display: grid;
+    width: min(260px, calc(100vw - 32px));
+    max-height: min(70vh, 420px);
+    overflow-y: auto;
+    padding: 5px;
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    background: var(--canvas);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .14);
+  }
+  .language-menu-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: var(--body-text);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .language-menu-option:hover,
+  .language-menu-option-current { color: var(--ink); background: var(--canvas-soft-2); }
+  .language-menu-option-current { font-weight: 600; }
+  .language-menu-current-label { color: var(--mute); font-size: 11px; font-weight: 400; }
 
   /* Row 2 — scrollable tools strip */
   .nav-tools-bar {

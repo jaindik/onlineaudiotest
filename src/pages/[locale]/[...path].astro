@@ -1,0 +1,47 @@
+---
+import LocalizedSitePage from '../../components/LocalizedSitePage.astro';
+import LocalizedToolExperience from '../../components/LocalizedToolExperience.astro';
+import { LOCALES, PT_BR_TOOL_PATHS } from '../../lib/i18n';
+import { INDEXABLE_PAGE_FAMILIES } from '../../data/localizationRegistry';
+import { getAllSlugs, getDeviceBySlug } from '../../data/devices';
+
+const toolTypes: Record<string, 'latency' | 'mic' | 'channels' | 'devices' | 'tone' | 'recorder' | 'reaction' | 'analyzer' | 'meter' | 'bpm'> = {
+  'audio-device-check': 'devices', 'mic-test': 'mic', 'speaker-test': 'channels', 'headphone-test': 'channels', 'latency-test': 'latency', 'bluetooth-latency-test': 'latency', 'hearing-test': 'tone', 'frequency-generator': 'tone', 'audio-spectrum-analyzer': 'analyzer', 'voice-recorder': 'recorder', 'mic-quality-test': 'meter', 'audio-reaction-test': 'reaction', 'decibel-meter': 'meter', 'loudness-meter': 'meter', 'echo-test': 'mic', 'bpm-detector': 'bpm', 'key-detector': 'bpm', 'key-and-bpm-detector': 'bpm'
+};
+export function getStaticPaths() {
+  const supported = Object.keys(LOCALES).filter((locale) => locale !== 'en' && locale !== 'pt-BR');
+  const pageById = new Map(INDEXABLE_PAGE_FAMILIES.map((page) => [page.id, page]));
+  const slugFor = (englishPath: string) => englishPath.replace(/^\//, '').replace(/\/$/, '');
+  const segmentFor = (locale: string) => locale.toLowerCase();
+  const englishPathFor = (pageId: string, deviceSlug?: string) => deviceSlug ? `/devices/${deviceSlug}/` : (pageById.get(pageId)?.englishPath ?? '/');
+  const pathFor = (locale: string, pageId: string, deviceSlug?: string) => {
+    const english = englishPathFor(pageId, deviceSlug);
+    if (pageId === 'home') return locale === 'pt-BR' ? '/pt-br/' : `/${segmentFor(locale)}/`;
+    if (locale === 'pt-BR') {
+      if (deviceSlug) return `/pt-br/dispositivos/${deviceSlug}/`;
+      return PT_BR_TOOL_PATHS[english] ?? (pageId === 'home' ? '/pt-br/' : `/pt-br/${slugFor(english)}/`);
+    }
+    return `/${segmentFor(locale)}/${slugFor(english)}/`;
+  };
+  const familyAlternates = (pageId: string, deviceSlug: string | undefined, localeList: string[]) => [
+    { hreflang: 'en', href: `https://onlineaudiotest.com${englishPathFor(pageId, deviceSlug)}` },
+    ...localeList.map((locale) => ({ hreflang: locale, href: `https://onlineaudiotest.com${pathFor(locale, pageId, deviceSlug)}` })),
+    { hreflang: 'pt-BR', href: `https://onlineaudiotest.com${pathFor('pt-BR', pageId, deviceSlug)}` },
+    { hreflang: 'x-default', href: `https://onlineaudiotest.com${englishPathFor(pageId, deviceSlug)}` },
+  ];
+  const paths = [];
+  for (const locale of supported) {
+    for (const page of INDEXABLE_PAGE_FAMILIES) {
+      if (page.id === 'audio-test' || page.id === 'device-detail') continue;
+      paths.push({ params: { locale: segmentFor(locale), path: slugFor(page.englishPath) }, props: { locale, pageId: page.id, path: pathFor(locale, page.id), englishPath: page.englishPath, kind: page.kind, alternates: familyAlternates(page.id, undefined, supported) } });
+    }
+    for (const slug of getAllSlugs()) {
+      paths.push({ params: { locale: segmentFor(locale), path: `devices/${slug}` }, props: { locale, pageId: 'device-detail', path: pathFor(locale, 'device-detail', slug), englishPath: `/devices/${slug}/`, kind: 'device-detail', deviceName: getDeviceBySlug(slug)?.name ?? slug, alternates: familyAlternates('device-detail', slug, supported) } });
+    }
+  }
+  return paths;
+}
+
+const { locale, pageId, path, englishPath, kind, deviceName, alternates } = Astro.props;
+---
+{toolTypes[pageId] ? <LocalizedToolExperience locale={locale} pageId={pageId} path={path} englishPath={englishPath} toolType={toolTypes[pageId]} alternates={alternates} /> : <LocalizedSitePage locale={locale} pageId={pageId} path={path} englishPath={englishPath} kind={kind} deviceName={deviceName} alternates={alternates} />}

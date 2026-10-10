@@ -1,0 +1,117 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication', name: 'Audio Device Check',
+      url: 'https://onlineaudiotest.com/audio-device-check/',
+      description: 'Inspect browser audio input and output devices, permissions, channel count, sample rate, and latency information.',
+      applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any',
+      browserRequirements: 'Requires microphone permission for input device details',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      provider: { '@type': 'Organization', name: 'OnlineAudioTest.com', url: 'https://onlineaudiotest.com/' },
+    },
+    {
+      '@type': 'BreadcrumbList', itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://onlineaudiotest.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Online Audio Test', item: 'https://onlineaudiotest.com/audio-test/' },
+        { '@type': 'ListItem', position: 3, name: 'Audio Device Check', item: 'https://onlineaudiotest.com/audio-device-check/' },
+      ],
+    },
+  ],
+};
+---
+
+<Layout
+  title="Audio Device Check — Inspect Mic, Speakers & Sample Rate"
+  description="Check your browser audio devices, microphone permission, input/output channels, sample rate, and reported latency. Free online diagnostic."
+  keywords="audio device check, audio input output checker, microphone device checker, speaker device checker, sample rate checker, browser audio device"
+  canonical="https://onlineaudiotest.com/audio-device-check/"
+  alternates={buildToolAlternates('/audio-device-check/', '/pt-br/verificacao-de-dispositivo-de-audio/')}
+  schema={schema}
+  sidebar={true}
+>
+  <section class="tool-hero container">
+    <p class="eyebrow">Audio diagnostics</p>
+    <h1>Audio Device Check</h1>
+    <p>See what your browser can use for audio input and output before running a microphone, speaker, or latency test. Device labels are revealed after microphone permission is granted.</p>
+  </section>
+
+  <div class="tool-card-wrap">
+    <div class="tool-card device-tool">
+      <div class="status-bar"><div class="status-pill"><span class="dot" id="device-dot"></span><span id="device-status">Ready to inspect</span></div><span class="eyebrow caption-mono" id="device-count">0 devices</span></div>
+      <div class="device-summary">
+        <div><span class="summary-label">Browser audio</span><strong id="browser-audio">Not checked</strong></div>
+        <div><span class="summary-label">Sample rate</span><strong id="sample-rate">—</strong></div>
+        <div><span class="summary-label">Output latency</span><strong id="output-latency">—</strong></div>
+      </div>
+      <div class="action-row"><button class="btn btn-primary btn-lg" id="inspect-btn">Inspect audio devices</button></div>
+      <p class="device-note">Permission is used only to reveal device labels and input details. This page does not record, upload, or store audio.</p>
+      <div class="device-list" id="device-list" hidden></div>
+    </div>
+  </div>
+
+  <section class="device-copy container">
+    <h2>What this audio device checker shows</h2>
+    <p>The browser can report available input and output devices, channel counts, sample rate, and some audio-context latency values. These are browser and hardware capabilities—not a laboratory measurement of Bluetooth delay.</p>
+    <div class="next-grid">
+      <a href="/mic-test/"><strong>Microphone Test</strong><span>Confirm that your microphone receives sound.</span></a>
+      <a href="/speaker-test/"><strong>Speaker Test</strong><span>Check left/right channels and stereo routing.</span></a>
+      <a href="/latency-test/"><strong>Audio Latency Test</strong><span>Measure actual output delay in milliseconds.</span></a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .device-tool { max-width: 760px; } .device-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-sm); margin: var(--s-lg) 0; }
+  .device-summary > div { padding: var(--s-md); border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--canvas-soft); }
+  .summary-label { display: block; margin-bottom: 5px; color: var(--mute); font: 11px var(--font-mono); text-transform: uppercase; letter-spacing: .05em; }
+  .device-summary strong { display: block; color: var(--ink); font-size: 17px; overflow-wrap: anywhere; } .device-note { color: var(--mute); font-size: 13px; line-height: 1.6; text-align: center; }
+  .device-list { display: grid; gap: var(--s-sm); margin-top: var(--s-lg); } .device-row { display: grid; grid-template-columns: 1fr auto; gap: var(--s-md); padding: var(--s-md); border: 1px solid var(--hairline); border-radius: var(--r-md); }
+  .device-row strong { color: var(--ink); } .device-row span { display: block; color: var(--body-text); font-size: 13px; margin-top: 3px; } .device-kind { align-self: start; color: var(--link) !important; font: 11px var(--font-mono); text-transform: uppercase; }
+  .device-copy { max-width: 760px; margin-bottom: var(--s-4xl); } .device-copy h2 { margin-bottom: var(--s-md); } .device-copy p { color: var(--body-text); line-height: 1.75; }
+  .next-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-md); margin-top: var(--s-lg); } .next-grid a { display: flex; flex-direction: column; gap: 5px; padding: var(--s-md); border: 1px solid var(--hairline); border-radius: var(--r-md); color: var(--ink); text-decoration: none; }
+  .next-grid a:hover { border-color: var(--link); } .next-grid span { color: var(--body-text); font-size: 13px; line-height: 1.5; }
+  @media (max-width: 640px) { .device-summary, .next-grid { grid-template-columns: 1fr; } .device-row { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  (() => {
+    const button = document.getElementById('inspect-btn') as HTMLButtonElement;
+    const status = document.getElementById('device-status')!;
+    const dot = document.getElementById('device-dot')!;
+    const count = document.getElementById('device-count')!;
+    const list = document.getElementById('device-list')!;
+    const browserAudio = document.getElementById('browser-audio')!;
+    const sampleRate = document.getElementById('sample-rate')!;
+    const outputLatency = document.getElementById('output-latency')!;
+
+    function state(message: string, tone = '') { status.textContent = message; dot.className = tone ? `dot ${tone}` : 'dot'; }
+    function addRow(kind: string, label: string, detail: string) {
+      const row = document.createElement('div'); row.className = 'device-row';
+      const info = document.createElement('div'); const name = document.createElement('strong'); const meta = document.createElement('span');
+      name.textContent = label; meta.textContent = detail; info.append(name, meta);
+      const type = document.createElement('span'); type.className = 'device-kind'; type.textContent = kind; row.append(info, type); list.appendChild(row);
+    }
+    async function inspect() {
+      button.disabled = true; list.innerHTML = ''; list.hidden = true; state('Requesting microphone permission', 'warning');
+      try {
+        if (!navigator.mediaDevices?.enumerateDevices) throw new Error('This browser does not expose media devices.');
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); stream.getTracks().forEach((track) => track.stop());
+        const devices = await navigator.mediaDevices.enumerateDevices(); const audioDevices = devices.filter((d) => d.kind === 'audioinput' || d.kind === 'audiooutput');
+        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        browserAudio.textContent = ctx.state === 'running' ? 'Available' : `Available (${ctx.state})`;
+        sampleRate.textContent = `${ctx.sampleRate} Hz`;
+        outputLatency.textContent = typeof ctx.outputLatency === 'number' ? `${Math.round(ctx.outputLatency * 1000)} ms` : 'Not reported';
+        audioDevices.forEach((d) => addRow(d.kind === 'audioinput' ? 'Input' : 'Output', d.label || 'Audio device', `${d.deviceId === 'default' ? 'Default device' : 'Available device'} · ${d.kind === 'audioinput' ? 'Microphone' : 'Playback'}`));
+        count.textContent = `${audioDevices.length} device${audioDevices.length === 1 ? '' : 's'}`; list.hidden = audioDevices.length === 0; state('Inspection complete', 'ok');
+        if (ctx.state !== 'closed') await ctx.close();
+      } catch (error) { browserAudio.textContent = 'Permission or browser issue'; state(error instanceof Error ? error.message : 'Could not inspect devices', 'error'); count.textContent = '0 devices'; }
+      finally { button.disabled = false; }
+    }
+    button.addEventListener('click', inspect);
+  })();
+</script>

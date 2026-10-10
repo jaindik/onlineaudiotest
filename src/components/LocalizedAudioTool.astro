@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates, localizedToolPath } from '../lib/i18n';
+
+export interface Props {
+  toolType: 'latency' | 'mic' | 'channels' | 'devices' | 'tone' | 'recorder' | 'reaction' | 'hearing' | 'analyzer' | 'meter' | 'bpm';
+  title: string;
+  description: string;
+  keywords: string;
+  h1: string;
+  intro: string;
+  englishPath: string;
+  portuguesePath: string;
+  related: Array<{ href: string; label: string }>;
+}
+
+const { toolType, title, description, keywords, h1, intro, englishPath, portuguesePath, related } = Astro.props;
+const canonical = `https://onlineaudiotest.com${portuguesePath}`;
+const schema = { '@context': 'https://schema.org', '@type': 'WebApplication', name: title, url: canonical, description, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, provider: { '@type': 'Organization', name: 'OnlineAudioTest.com', url: 'https://onlineaudiotest.com/' } };
+---
+
+<Layout title={title} description={description} keywords={keywords} canonical={canonical} locale="pt-BR" alternates={buildToolAlternates(englishPath, portuguesePath)} schema={schema}>
+  <section class="tool-hero container"><p class="eyebrow">Diagnóstico de áudio</p><h1>{h1}</h1><p>{intro}</p></section>
+  <section class="tool-card-wrap"><div class="tool-card" id="localized-tool" data-tool-type={toolType}>
+    <div class="status-bar"><div class="status-pill"><span class="dot" id="status-dot"></span><span id="status-text">Pronto para testar</span></div><span class="eyebrow caption-mono" id="result-value"></span></div>
+    <div class="action-row">
+      {toolType === 'latency' && <button class="btn btn-primary btn-lg" id="primary-action">Medir latência</button>}
+      {toolType === 'mic' && <button class="btn btn-primary btn-lg" id="primary-action">Iniciar teste do microfone</button>}
+      {toolType === 'channels' && <><button class="btn btn-primary" data-channel="left">Esquerdo</button><button class="btn btn-secondary" data-channel="right">Direito</button><button class="btn btn-secondary" data-channel="both">Estéreo</button></>}
+      {toolType === 'devices' && <button class="btn btn-primary btn-lg" id="primary-action">Verificar dispositivos</button>}
+      {toolType === 'tone' && <><label class="control-label" for="frequency">Frequência: <output id="frequency-value">440</output> Hz</label><input id="frequency" type="range" min="20" max="20000" value="440" step="1" /><button class="btn btn-primary btn-lg" id="primary-action">Reproduzir tom</button></>}
+      {toolType === 'recorder' && <button class="btn btn-primary btn-lg" id="primary-action">Iniciar gravação</button>}
+      {toolType === 'reaction' && <button class="btn btn-primary btn-lg" id="primary-action">Iniciar teste</button>}
+      {toolType === 'hearing' && <><label class="control-label" for="frequency">Frequência: <output id="frequency-value">1000</output> Hz</label><input id="frequency" type="range" min="125" max="16000" value="1000" step="1" /><button class="btn btn-primary btn-lg" id="primary-action">Reproduzir frequência</button></>}
+      {toolType === 'analyzer' && <button class="btn btn-primary btn-lg" id="primary-action">Iniciar análise do microfone</button>}
+      {toolType === 'meter' && <button class="btn btn-primary btn-lg" id="primary-action">Iniciar medição</button>}
+      {toolType === 'bpm' && <button class="btn btn-primary btn-lg" id="primary-action">Toque no ritmo</button>}
+    </div>
+    {toolType === 'mic' && <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>}
+    {toolType === 'devices' && <ul id="device-list" class="device-list"></ul>}
+    {(toolType === 'analyzer' || toolType === 'meter') && <canvas id="analysis-canvas" class="analysis-canvas" width="640" height="180"></canvas>}
+    <p class="result-note" id="result-note">Os resultados são processados no seu navegador.</p>
+  </div></section>
+  <section class="how-section"><h2>Como usar este teste</h2><div class="steps"><div class="step"><span class="step-num">1</span><p class="step-body">Use fones ou alto-falantes conectados e mantenha o volume em um nível confortável.</p></div><div class="step"><span class="step-num">2</span><p class="step-body">Execute o teste e siga a mensagem exibida. Permissões de microfone só são solicitadas quando necessárias.</p></div><div class="step"><span class="step-num">3</span><p class="step-body">Se o resultado parecer incorreto, repita em outro navegador ou dispositivo para separar um problema de configuração de um problema de hardware.</p></div></div></section>
+  <section class="how-section"><h2>Testes relacionados</h2><div class="related-grid">{related.map((item) => <a href={localizedToolPath(item.href, 'pt-BR')}>{item.label} →</a>)}</div></section>
+</Layout>
+
+<script define:vars={{ toolType }}>
+  const root = document.getElementById('localized-tool');
+  const status = document.getElementById('status-text');
+  const note = document.getElementById('result-note');
+  const value = document.getElementById('result-value');
+  const dot = document.getElementById('status-dot');
+  const setStatus = (text, active = false) => { if (status) status.textContent = text; if (dot) dot.className = `dot${active ? ' active' : ''}`; };
+  const audioContext = () => new (window.AudioContext || window.webkitAudioContext)();
+
+  if (toolType === 'latency' && document.getElementById('primary-action')) {
+    document.getElementById('primary-action').addEventListener('click', async () => {
+      setStatus('Medindo…', true); note.textContent = 'Lendo a latência exposta pelo navegador…';
+      try { const ctx = audioContext(); await ctx.resume(); const ms = ((ctx.baseLatency || 0) + (ctx.outputLatency || 0)) * 1000; value.textContent = ms < 0.5 ? 'N/D' : `${ms.toFixed(1)} ms`; note.textContent = ms < 0.5 ? 'Este navegador não expõe a latência do sistema. Use o teste de ida e volta em inglês para uma medição acústica.' : 'Latência do sistema medida. Bluetooth normalmente adiciona mais atraso que uma conexão com fio.'; setStatus('Medição concluída'); ctx.close(); } catch { setStatus('Não foi possível medir'); note.textContent = 'Seu navegador não conseguiu criar um contexto de áudio.'; }
+    });
+  }
+  if (toolType === 'channels') document.querySelectorAll('[data-channel]').forEach((button) => button.addEventListener('click', async () => { const ctx = audioContext(); await ctx.resume(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); const pan = ctx.createStereoPanner(); pan.pan.value = button.dataset.channel === 'left' ? -1 : button.dataset.channel === 'right' ? 1 : 0; osc.frequency.value = 440; gain.gain.value = 0.12; osc.connect(pan).connect(gain).connect(ctx.destination); osc.start(); setStatus(`Reproduzindo canal ${button.textContent}`, true); note.textContent = 'Você deve ouvir um tom apenas no canal selecionado.'; setTimeout(() => { osc.stop(); ctx.close(); setStatus('Pronto para testar'); }, 900); }));
+  if (toolType === 'mic' && document.getElementById('primary-action')) document.getElementById('primary-action').addEventListener('click', async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); const ctx = audioContext(); const analyser = ctx.createAnalyser(); const source = ctx.createMediaStreamSource(stream); source.connect(analyser); const data = new Uint8Array(analyser.fftSize); const fill = document.getElementById('meter-fill'); setStatus('Microfone ativo', true); note.textContent = 'Fale normalmente. O nível se move quando o microfone recebe som.'; const tick = () => { analyser.getByteTimeDomainData(data); const rms = Math.sqrt(data.reduce((sum, n) => sum + ((n / 128) - 1) ** 2, 0) / data.length); if (fill) fill.style.width = `${Math.min(100, rms * 260)}%`; if (root?.dataset.running !== 'false') requestAnimationFrame(tick); }; root.dataset.running = 'true'; tick(); setTimeout(() => { root.dataset.running = 'false'; stream.getTracks().forEach((track) => track.stop()); ctx.close(); setStatus('Teste concluído'); }, 5000); } catch { setStatus('Acesso negado'); note.textContent = 'Permita o acesso ao microfone no navegador e tente novamente.'; } });
+  if (toolType === 'devices' && document.getElementById('primary-action')) document.getElementById('primary-action').addEventListener('click', async () => { const list = document.getElementById('device-list'); try { const devices = await navigator.mediaDevices.enumerateDevices(); list.innerHTML = ''; devices.filter((d) => d.kind === 'audioinput' || d.kind === 'audiooutput').forEach((device) => { const li = document.createElement('li'); li.textContent = `${device.kind === 'audioinput' ? 'Entrada' : 'Saída'}: ${device.label || 'dispositivo não identificado'}`; list.appendChild(li); }); value.textContent = `${devices.filter((d) => d.kind.startsWith('audio')).length} encontrados`; setStatus('Verificação concluída'); note.textContent = 'Os nomes podem ficar ocultos até que uma permissão de áudio seja concedida.'; } catch { setStatus('Não foi possível verificar'); note.textContent = 'Seu navegador não oferece a lista de dispositivos de áudio.'; } });
+  if ((toolType === 'tone' || toolType === 'hearing') && document.getElementById('frequency')) { const slider = document.getElementById('frequency'); const output = document.getElementById('frequency-value'); slider.addEventListener('input', () => { output.textContent = slider.value; }); document.getElementById('primary-action').addEventListener('click', async () => { const ctx = audioContext(); await ctx.resume(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.frequency.value = Number(slider.value); gain.gain.value = toolType === 'hearing' ? 0.05 : 0.12; osc.connect(gain).connect(ctx.destination); osc.start(); setStatus('Reproduzindo', true); note.textContent = toolType === 'hearing' ? 'Se o tom causar desconforto, pare imediatamente e reduza o volume.' : 'Você deve ouvir um tom na frequência selecionada.'; setTimeout(() => { osc.stop(); ctx.close(); setStatus('Pronto para testar'); }, 900); }); }
+  if (toolType === 'reaction') document.getElementById('primary-action').addEventListener('click', async () => { const button = document.getElementById('primary-action'); button.disabled = true; setStatus('Aguarde…', true); const delay = 1200 + Math.random() * 2200; await new Promise((resolve) => setTimeout(resolve, delay)); const ctx = audioContext(); const osc = ctx.createOscillator(); osc.connect(ctx.destination); osc.start(); const started = performance.now(); setStatus('Clique agora', true); const click = () => { const ms = performance.now() - started; osc.stop(); ctx.close(); value.textContent = `${Math.round(ms)} ms`; note.textContent = 'Tempo entre o sinal e seu clique. Repita algumas vezes para obter uma média.'; setStatus('Teste concluído'); button.disabled = false; button.removeEventListener('click', click); }; button.addEventListener('click', click, { once: true }); });
+  if (toolType === 'recorder') document.getElementById('primary-action').addEventListener('click', async () => { const button = document.getElementById('primary-action'); if (button.dataset.recording === 'true') { button.dataset.recording = 'false'; setStatus('Gravação parada'); note.textContent = 'A gravação foi encerrada e permanece no seu navegador.'; return; } try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); const recorder = new MediaRecorder(stream); const chunks = []; recorder.ondataavailable = (event) => chunks.push(event.data); recorder.onstop = () => { stream.getTracks().forEach((track) => track.stop()); const url = URL.createObjectURL(new Blob(chunks, { type: recorder.mimeType })); const link = document.createElement('a'); link.href = url; link.download = 'gravacao-audio.webm'; link.textContent = 'Baixar gravação'; link.className = 'download-link'; note.replaceChildren('Gravação pronta: ', link); }; recorder.start(); button.dataset.recording = 'true'; button.textContent = 'Parar gravação'; setStatus('Gravando', true); note.textContent = 'Fale normalmente. Clique novamente para parar e criar o arquivo local.'; } catch { setStatus('Acesso negado'); note.textContent = 'Permita o acesso ao microfone para gravar.'; } });
+  if ((toolType === 'analyzer' || toolType === 'meter') && document.getElementById('primary-action')) document.getElementById('primary-action').addEventListener('click', async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); const ctx = audioContext(); const analyser = ctx.createAnalyser(); analyser.fftSize = 512; const source = ctx.createMediaStreamSource(stream); source.connect(analyser); const data = new Uint8Array(analyser.frequencyBinCount); const canvas = document.getElementById('analysis-canvas'); const pen = canvas.getContext('2d'); setStatus('Analisando', true); note.textContent = 'Fale ou reproduza áudio para ver a atividade no navegador.'; const draw = () => { analyser.getByteFrequencyData(data); pen.clearRect(0, 0, canvas.width, canvas.height); pen.fillStyle = '#78aef7'; data.forEach((v, i) => { const height = (v / 255) * canvas.height; pen.fillRect(i * canvas.width / data.length, canvas.height - height, Math.max(1, canvas.width / data.length), height); }); if (root?.dataset.running !== 'false') requestAnimationFrame(draw); }; root.dataset.running = 'true'; draw(); setTimeout(() => { root.dataset.running = 'false'; stream.getTracks().forEach((track) => track.stop()); ctx.close(); setStatus('Análise concluída'); }, 6000); } catch { setStatus('Acesso negado'); note.textContent = 'Permita o acesso ao microfone para iniciar a análise.'; } });
+  if (toolType === 'bpm') { const taps = []; document.getElementById('primary-action').addEventListener('click', () => { const now = performance.now(); taps.push(now); while (taps.length > 8) taps.shift(); if (taps.length > 1) { const intervals = taps.slice(1).map((t, i) => t - taps[i]); const bpm = 60000 / (intervals.reduce((a, b) => a + b, 0) / intervals.length); value.textContent = `${Math.round(bpm)} BPM`; note.textContent = 'Continue tocando no ritmo para estabilizar o valor. O detector por toque não envia áudio.'; } else note.textContent = 'Toque pelo menos duas vezes no ritmo da música.'; setStatus('Ritmo recebido'); }); }
+  if (toolType === 'reaction') setInterval(() => { const button = document.getElementById('primary-action'); if (status?.textContent === 'Clique agora') button.disabled = false; }, 50);
+</script>
+
+<style>
+  .tool-card { max-width: 640px; margin: 0 auto; } .meter-track { height: 10px; background: var(--canvas-soft-2); border-radius: var(--r-full); overflow: hidden; } .meter-fill { height: 100%; width: 0; background: var(--grad-develop); transition: width .08s linear; } .device-list { display: grid; gap: 8px; padding-left: 20px; color: var(--body-text); line-height: 1.6; } .related-grid { display: grid; gap: 10px; } .related-grid a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+  .control-label { color: var(--body-text); } input[type="range"] { width: 100%; accent-color: var(--link); } .analysis-canvas { width: 100%; height: 180px; background: var(--canvas-soft-2); border-radius: var(--r-md); } .download-link { color: var(--link); text-decoration: underline; }
+</style>

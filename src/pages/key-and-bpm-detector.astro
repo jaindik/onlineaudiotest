@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -62,6 +63,7 @@ const schema = {
   description="Upload any MP3 or WAV to detect the musical key and BPM together. Free online tool for DJs and producers. Get Camelot code for harmonic mixing."
   keywords="key and bpm detector, song key bpm finder, bpm key detector, harmonic mixing tool, camelot wheel finder, dj key bpm, tempo key detector"
   canonical="https://onlineaudiotest.com/key-and-bpm-detector/"
+  alternates={buildToolAlternates('/key-and-bpm-detector/', '/pt-br/detector-de-tom-e-bpm/')}
   schema={schema}
   sidebar={true}
 >

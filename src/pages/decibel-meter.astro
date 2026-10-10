@@ -1,0 +1,260 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Decibel Meter Online",
+      "url": "https://onlineaudiotest.com/decibel-meter/",
+      "description": "Free online decibel meter. Measure relative sound level from your microphone in real time, right in your browser. No download, no app.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires getUserMedia API support",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Decibel Meter", "item": "https://onlineaudiotest.com/decibel-meter/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Is this a real, calibrated decibel (dB SPL) meter?", "acceptedAnswer": { "@type": "Answer", "text": "No. This tool measures relative loudness (dBFS) from your microphone's raw input signal, not absolute sound pressure level (dB SPL) in a physical room. Every microphone has different sensitivity and gain, so the same real-world sound will read differently on different devices. Use it to compare loudness over time or check for consistency, not as a substitute for a calibrated SPL meter." } },
+        { "@type": "Question", "name": "How does an online decibel meter work?", "acceptedAnswer": { "@type": "Answer", "text": "It uses the Web Audio API's AnalyserNode to read your microphone's live input signal, calculates the RMS (root mean square) amplitude of that signal, and converts it to a decibel scale using 20 * log10(RMS). This runs entirely in your browser - no audio is uploaded or stored." }
+        },
+        { "@type": "Question", "name": "Why does the same sound show a different reading on my phone vs laptop?", "acceptedAnswer": { "@type": "Answer", "text": "Different microphones have different sensitivity, automatic gain control (AGC), and noise suppression settings. Phones often apply aggressive AGC that compresses loud and quiet sounds toward a similar level, while laptop mics vary widely in raw gain. This is expected and is exactly why this tool reports relative level, not calibrated SPL." }
+        },
+        { "@type": "Question", "name": "What decibel level is considered loud or dangerous?", "acceptedAnswer": { "@type": "Answer", "text": "On a calibrated SPL scale: 60 dB is normal conversation, 85 dB is where hearing damage risk begins with prolonged exposure, 100 dB is a loud concert, and 120+ dB is the threshold of pain. This tool cannot give you a true SPL reading, but a free dedicated phone app using a calibrated SPL algorithm is a better choice if you need to check real-world noise exposure." }
+        },
+        { "@type": "Question", "name": "Why is the meter not moving or stuck at silence?", "acceptedAnswer": { "@type": "Answer", "text": "Check that you granted microphone permission when prompted, and that the correct input device is selected in your OS sound settings. If you're on a laptop, make sure no other app (like a video call) is currently using the microphone exclusively." }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="Decibel Meter Online — Free Live Sound Level Test"
+  description="Free online decibel meter. Measure relative sound level from your microphone in real time - no download, no app. See live dB level, peak, and average."
+  keywords="decibel meter online, dB meter online, sound level meter online, free decibel meter, online sound meter, dbfs meter, mic level meter, sound level test"
+  canonical="https://onlineaudiotest.com/decibel-meter/"
+  alternates={buildToolAlternates('/decibel-meter/', '/pt-br/medidor-de-decibeis/')}
+  schema={schema}
+  sidebar={true}
+>
+  <section class="tool-hero container">
+    <h1>Decibel Meter</h1>
+    <p>Measure relative sound level from your microphone in real time, right in your browser.</p>
+  </section>
+
+  <div class="tool-card-wrap">
+    <div class="tool-card">
+      <div class="status-bar">
+        <div class="status-pill">
+          <span class="dot" id="dm-dot"></span>
+          <span id="dm-status">Ready</span>
+        </div>
+      </div>
+
+      <div class="dm-display" id="dm-display">
+        <span class="dm-num" id="dm-num">—</span>
+        <span class="dm-unit">dB (relative)</span>
+      </div>
+
+      <div class="dm-bar-track" role="progressbar" aria-label="Sound level meter">
+        <div class="dm-bar-fill" id="dm-bar-fill"></div>
+      </div>
+
+      <div class="dm-stats">
+        <div class="dm-stat"><span class="dm-stat-label">Peak</span><span class="dm-stat-val" id="dm-peak">—</span></div>
+        <div class="dm-stat"><span class="dm-stat-label">Average</span><span class="dm-stat-val" id="dm-avg">—</span></div>
+        <div class="dm-stat"><span class="dm-stat-label">Min</span><span class="dm-stat-val" id="dm-min">—</span></div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-primary btn-lg" id="dm-btn">Start Decibel Meter</button>
+        <button class="btn btn-secondary" id="dm-reset" hidden>Reset Stats</button>
+      </div>
+
+      <p class="fg-disclaimer">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><line x1="8" y1="5" x2="8" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.75" fill="currentColor"/></svg>
+        Measures relative loudness (dBFS) from your mic, not calibrated SPL. Readings vary by device — see FAQ.
+      </p>
+    </div>
+  </div>
+
+  <div class="edu-section">
+    <h2>What This Decibel Meter Measures</h2>
+    <p>This tool reads your microphone's live input using the Web Audio API, calculates the RMS (root mean square) amplitude of the signal, and converts it to decibels relative to full scale (dBFS). It is useful for comparing loudness over time, checking mic sensitivity, or spotting sudden level changes — but it is <strong>not a calibrated sound pressure level (SPL) meter</strong>. Every microphone has different gain and sensitivity, so the same physical sound will read differently across devices.</p>
+    <h2>Typical Real-World Sound Levels (for reference)</h2>
+    <table class="freq-table">
+      <thead><tr><th>Source</th><th>Approx. SPL</th></tr></thead>
+      <tbody>
+        <tr><td>Whisper</td><td>~30 dB</td></tr>
+        <tr><td>Quiet room</td><td>~40 dB</td></tr>
+        <tr><td>Normal conversation</td><td>~60 dB</td></tr>
+        <tr><td>Busy traffic</td><td>~80 dB</td></tr>
+        <tr><td>Hearing damage risk (prolonged)</td><td>~85 dB+</td></tr>
+        <tr><td>Loud concert</td><td>~100–110 dB</td></tr>
+        <tr><td>Threshold of pain</td><td>~120–130 dB</td></tr>
+      </tbody>
+    </table>
+    <p>For checking your <a href="/mic-quality-test/">microphone's noise floor and clipping</a>, see the mic quality test. To check your own hearing range, try the <a href="/hearing-test/">hearing test</a>.</p>
+  </div>
+
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <p class="faq-q">Is this a real, calibrated decibel (dB SPL) meter?</p>
+      <p class="faq-a">No. This measures relative loudness (dBFS) from your microphone's raw signal, not absolute sound pressure level. Readings vary by device sensitivity and gain — use it for relative comparisons, not exposure measurement.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How does an online decibel meter work?</p>
+      <p class="faq-a">It reads your mic's live signal via the Web Audio API's AnalyserNode, computes RMS amplitude, and converts it to decibels with 20 × log10(RMS). Everything runs locally in your browser — no audio is uploaded.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why does the same sound read differently on my phone vs laptop?</p>
+      <p class="faq-a">Different mics have different sensitivity and automatic gain control (AGC). Phones often compress loud and quiet sounds toward similar levels; laptop mics vary widely in raw gain. This is expected.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">What decibel level is considered loud or dangerous?</p>
+      <p class="faq-a">On a calibrated scale: 60 dB is conversation, 85 dB+ is hearing-damage risk with prolonged exposure, 100 dB is a loud concert, 120+ dB is the pain threshold. For real exposure checks, use a dedicated calibrated SPL app.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why is the meter not moving?</p>
+      <p class="faq-a">Check that you granted microphone permission and the correct input device is selected in your OS sound settings. Close other apps (like video calls) that may be using the mic exclusively.</p>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .dm-display { text-align: center; padding: var(--s-lg) 0; }
+  .dm-num { font-size: 64px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .dm-unit { display: block; font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .dm-bar-track { height: 14px; border-radius: 7px; background: var(--surface-2, #ebebeb); overflow: hidden; margin: var(--s-md) 0; }
+  .dm-bar-fill { height: 100%; width: 0%; background: #0070f3; transition: width .06s linear, background .15s; border-radius: 7px; }
+  .dm-bar-fill.high { background: #f5a623; }
+  .dm-bar-fill.clip { background: var(--error, #e5484d); }
+  .dm-stats { display: flex; justify-content: space-between; gap: var(--s-sm); margin: var(--s-md) 0; }
+  .dm-stat { flex: 1; text-align: center; padding: var(--s-sm); border: 1px solid var(--hairline); border-radius: 10px; }
+  .dm-stat-label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .dm-stat-val { display: block; font-size: 18px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+  .edu-section { max-width: 680px; margin-inline: auto; padding: 0 var(--container-pad); margin-bottom: var(--s-3xl); }
+  .edu-section h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.8px; margin-bottom: var(--s-md); margin-top: var(--s-3xl); color: var(--ink); }
+  .edu-section h2:first-child { margin-top: 0; }
+  .edu-section p { font-size: 15px; color: var(--body-text); line-height: 1.75; margin-bottom: var(--s-md); }
+  .edu-section strong { color: var(--ink); font-weight: 500; }
+  .edu-section a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+  .freq-table { width: 100%; border-collapse: collapse; margin-bottom: var(--s-lg); font-size: 14px; }
+  .freq-table th { text-align: left; padding: var(--s-xs) var(--s-sm); border-bottom: 2px solid var(--hairline); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--mute); }
+  .freq-table td { padding: var(--s-xs) var(--s-sm); border-bottom: 1px solid var(--hairline); color: var(--body-text); }
+  .freq-table tr:last-child td { border-bottom: none; }
+  .freq-table tbody tr:hover td { background: var(--canvas-soft); }
+</style>
+
+<script>
+  (() => {
+    const btn = document.getElementById('dm-btn') as HTMLButtonElement;
+    const resetBtn = document.getElementById('dm-reset') as HTMLButtonElement;
+    const dot = document.getElementById('dm-dot')!;
+    const statusEl = document.getElementById('dm-status')!;
+    const num = document.getElementById('dm-num')!;
+    const barFill = document.getElementById('dm-bar-fill')!;
+    const peakEl = document.getElementById('dm-peak')!;
+    const avgEl = document.getElementById('dm-avg')!;
+    const minEl = document.getElementById('dm-min')!;
+
+    let audioCtx: AudioContext | null = null;
+    let analyser: AnalyserNode | null = null;
+    let stream: MediaStream | null = null;
+    let rafId = 0;
+    let running = false;
+
+    let peak = -Infinity, minV = Infinity, sumDb = 0, count = 0;
+
+    function resetStats() {
+      peak = -Infinity; minV = Infinity; sumDb = 0; count = 0;
+      peakEl.textContent = '—'; avgEl.textContent = '—'; minEl.textContent = '—';
+    }
+
+    function fmt(db: number) { return db > -70 ? db.toFixed(1) + ' dB' : '−∞ dB'; }
+
+    function tick() {
+      if (!analyser || !running) return;
+      const buf = new Float32Array(analyser.fftSize);
+      analyser.getFloatTimeDomainData(buf);
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+      const rms = Math.sqrt(sum / buf.length);
+      const db = 20 * Math.log10(Math.max(rms, 1e-10));
+      const clamped = Math.max(-70, db);
+
+      num.textContent = fmt(clamped);
+      const pct = Math.min(100, Math.max(0, (clamped + 70) / 70 * 100));
+      barFill.style.width = pct + '%';
+      barFill.className = 'dm-bar-fill' + (pct > 90 ? ' clip' : pct > 70 ? ' high' : '');
+
+      if (clamped > -69) {
+        if (clamped > peak) { peak = clamped; peakEl.textContent = fmt(peak); }
+        if (clamped < minV) { minV = clamped; minEl.textContent = fmt(minV); }
+        sumDb += clamped; count++;
+        avgEl.textContent = fmt(sumDb / count);
+      }
+
+      rafId = requestAnimationFrame(tick);
+    }
+
+    async function start() {
+      btn.disabled = true;
+      statusEl.textContent = 'Requesting mic access…';
+      dot.className = 'dot warning';
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      } catch {
+        statusEl.textContent = 'Microphone permission denied';
+        dot.className = 'dot error';
+        btn.disabled = false;
+        return;
+      }
+      audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const src = audioCtx.createMediaStreamSource(stream);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      src.connect(analyser);
+
+      running = true;
+      resetStats();
+      dot.className = 'dot active';
+      statusEl.textContent = 'Measuring…';
+      btn.textContent = 'Stop';
+      btn.disabled = false;
+      resetBtn.hidden = false;
+      tick();
+    }
+
+    function stop() {
+      running = false;
+      cancelAnimationFrame(rafId);
+      stream?.getTracks().forEach(t => t.stop());
+      audioCtx?.close();
+      stream = null; audioCtx = null; analyser = null;
+      dot.className = 'dot';
+      statusEl.textContent = 'Ready';
+      btn.textContent = 'Start Decibel Meter';
+      num.textContent = '—';
+      barFill.style.width = '0%';
+    }
+
+    btn.addEventListener('click', () => { running ? stop() : start(); });
+    resetBtn.addEventListener('click', resetStats);
+  })();
+</script>

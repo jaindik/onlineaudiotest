@@ -78,7 +78,6 @@ export function buildDevicePageSchema(device: Device): object {
         headline: device.metaTitle,
         description: device.metaDescription,
         url,
-        dateModified: new Date().toISOString().split('T')[0],
         author: {
           '@type': 'Organization',
           name: 'OnlineAudioTest.com',

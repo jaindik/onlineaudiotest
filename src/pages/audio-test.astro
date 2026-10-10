@@ -1,27 +1,112 @@
-﻿---
-// Merged into /speaker-test/ - audio channel test is now a feature of the speaker test
 ---
-<!doctype html>
-<html lang="en">
-<head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KD9890JWZD"></script>
-  <script is:inline>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-KD9890JWZD');
-  </script>
+import Layout from '../layouts/Layout.astro';
+import { buildAudioHubAlternates } from '../lib/i18n';
 
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="canonical" href="https://onlineaudiotest.com/speaker-test/" />
-  <meta name="robots" content="noindex, follow" />
-  <meta http-equiv="refresh" content="0;url=/speaker-test/" />
-  <title>Redirecting to Speaker Test…</title>
-</head>
-<body>
-  <script>window.location.replace('/speaker-test/');</script>
-  <p>This page has moved. <a href="/speaker-test/">Go to Speaker Test →</a></p>
-</body>
-</html>
+const alternates = buildAudioHubAlternates();
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      name: 'Online Audio Test',
+      url: 'https://onlineaudiotest.com/audio-test/',
+      description: 'A complete browser-based audio check for speakers, headphones, microphones, Bluetooth delay, and stereo channels.',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Any',
+      browserRequirements: 'Requires a modern browser with Web Audio API support',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      provider: { '@type': 'Organization', name: 'OnlineAudioTest.com', url: 'https://onlineaudiotest.com/' },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://onlineaudiotest.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Online Audio Test', item: 'https://onlineaudiotest.com/audio-test/' },
+      ],
+    },
+    {
+      '@type': 'ItemList',
+      name: 'Online audio tests',
+      itemListElement: [
+        ['/speaker-test/', 'Speaker Test'],
+        ['/mic-test/', 'Microphone Test'],
+        ['/headphone-test/', 'Headphone Test'],
+        ['/latency-test/', 'Audio Latency Test'],
+        ['/bluetooth-latency-test/', 'Bluetooth Latency Test'],
+        ['/audio-device-check/', 'Audio Device Check'],
+      ].map(([url, name], index) => ({ '@type': 'ListItem', position: index + 1, name, url: `https://onlineaudiotest.com${url}` })),
+    },
+  ],
+};
+
+const tests = [
+  { href: '/speaker-test/', label: 'Speaker test', description: 'Check left, right, stereo balance, and channel routing.', tone: 'blue' },
+  { href: '/mic-test/', label: 'Microphone test', description: 'Check input levels, permissions, and headset microphones.', tone: 'mint' },
+  { href: '/headphone-test/', label: 'Headphone test', description: 'Test channel balance, frequency response, and driver issues.', tone: 'violet' },
+  { href: '/latency-test/', label: 'Audio latency test', description: 'Measure system output delay in milliseconds.', tone: 'amber' },
+  { href: '/bluetooth-latency-test/', label: 'Bluetooth latency test', description: 'Check wireless audio delay and codec-related lag.', tone: 'coral' },
+  { href: '/audio-device-check/', label: 'Audio device check', description: 'Inspect browser audio devices, channels, and sample rate.', tone: 'slate' },
+];
+---
+
+<Layout
+  title="Online Audio Test — Check Speakers, Headphones & Mic"
+  description="Run a complete online audio test for speakers, headphones, microphones, stereo channels, and Bluetooth delay. Free, private, and browser-based."
+  keywords="online audio test, audio test online, sound test, speaker and microphone test, headphone test, bluetooth audio test"
+  canonical="https://onlineaudiotest.com/audio-test/"
+  alternates={alternates}
+  schema={schema}
+>
+  <section class="tool-hero container hub-hero">
+    <p class="eyebrow">Audio diagnostics</p>
+    <h1>Online Audio Test</h1>
+    <p>Check your speakers, headphones, microphone, stereo channels, and Bluetooth delay in your browser. Choose one focused test below—nothing is uploaded and no download is required.</p>
+    <a class="btn btn-primary btn-lg" href="/audio-device-check/">Start with an audio device check</a>
+  </section>
+
+  <section class="hub-section container" aria-labelledby="choose-test">
+    <div class="section-heading"><p class="eyebrow">Choose a diagnostic</p><h2 id="choose-test">What do you want to check?</h2></div>
+    <div class="test-grid">
+      {tests.map((test, index) => (
+        <a class={`test-card tone-${test.tone}`} href={test.href}>
+          <span class="test-number">0{index + 1}</span>
+          <span class="test-card-body"><strong>{test.label}</strong><span>{test.description}</span></span>
+          <span class="test-arrow" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="hub-section hub-explain container">
+    <div><p class="eyebrow">Start here if you are not sure</p><h2>Run the quick audio check</h2></div>
+    <div class="quick-check">
+      <p><strong>Microphone not working?</strong> Start with the <a href="/mic-test/">microphone test</a> to grant permission and confirm that input levels move.</p>
+      <p><strong>No sound or one side is silent?</strong> Use the <a href="/speaker-test/">left/right speaker test</a> to isolate channel and balance problems.</p>
+      <p><strong>Sound is late?</strong> Measure it with the <a href="/latency-test/">audio latency test</a>, then use the <a href="/bluetooth-codec-guide/">Bluetooth codec guide</a> to understand the result.</p>
+    </div>
+  </section>
+
+  <section class="hub-section hub-copy container">
+    <h2>Private browser-based audio testing</h2>
+    <p>These tools use browser audio APIs to generate test signals and analyze input locally. Microphone recordings are not sent to a server. For the most reliable results, use a quiet room, set a comfortable volume, and repeat a test after changing one device or connection at a time.</p>
+    <p>For exact device-specific Bluetooth information, browse the <a href="/devices/">Bluetooth headphone and earbud latency guides</a>. For codec behavior, read <a href="/bluetooth-codec-guide/">what Bluetooth codecs do</a> before comparing your result.</p>
+  </section>
+</Layout>
+
+<style>
+  .hub-hero { padding-bottom: var(--s-3xl); } .hub-hero .eyebrow { margin-bottom: var(--s-sm); } .hub-hero h1 { margin-bottom: var(--s-md); }
+  .hub-hero p:not(.eyebrow) { max-width: 670px; margin: 0 auto var(--s-lg); }
+  .hub-section { max-width: 920px; margin-bottom: var(--s-4xl); } .section-heading { margin-bottom: var(--s-lg); }
+  .section-heading h2, .hub-explain h2, .hub-copy h2 { margin-top: var(--s-xs); }
+  .test-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-md); }
+  .test-card { display: flex; align-items: center; gap: var(--s-md); padding: var(--s-lg); border: 1px solid var(--hairline); border-radius: var(--r-lg); background: var(--canvas); color: var(--ink); text-decoration: none; box-shadow: var(--shadow-1); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+  .test-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-color: var(--link); }
+  .test-number { font-family: var(--font-mono); font-size: 12px; color: var(--mute); } .test-card-body { display: flex; flex: 1; flex-direction: column; gap: 4px; }
+  .test-card-body strong { font-size: 17px; } .test-card-body span { color: var(--body-text); font-size: 14px; line-height: 1.45; } .test-arrow { font-size: 22px; color: var(--link); }
+  .tone-blue { border-top: 3px solid #3b82f6; } .tone-mint { border-top: 3px solid #10b981; } .tone-violet { border-top: 3px solid #8b5cf6; } .tone-amber { border-top: 3px solid #f59e0b; } .tone-coral { border-top: 3px solid #f97316; } .tone-slate { border-top: 3px solid #64748b; }
+  .hub-explain { display: grid; grid-template-columns: .8fr 1.2fr; gap: var(--s-3xl); padding: var(--s-2xl); border-radius: var(--r-lg); background: var(--canvas-soft); }
+  .quick-check p, .hub-copy p { color: var(--body-text); line-height: 1.75; } .quick-check p { margin: 0 0 var(--s-md); } .quick-check p:last-child { margin-bottom: 0; }
+  .hub-copy { max-width: 720px; } .hub-copy a, .quick-check a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+  @media (max-width: 680px) { .test-grid, .hub-explain { grid-template-columns: 1fr; } .hub-explain { padding: var(--s-lg); gap: var(--s-lg); } }
+</style>

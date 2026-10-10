@@ -1,5 +1,6 @@
 ﻿---
 import Layout from '../layouts/Layout.astro';
+import { buildHomeAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -121,10 +122,43 @@ const tools = [
     gradClass: 'develop',
     cta: 'Analyze track →',
   },
+  {
+    href: '/decibel-meter/',
+    eyebrow: 'Live Sound Level',
+    title: 'Decibel Meter',
+    desc: 'Measure relative sound level from your microphone in real time. Live dB reading, peak, average, and min — free, in your browser.',
+    gradClass: 'ship',
+    cta: 'Measure sound level →',
+  },
+  {
+    href: '/loudness-meter/',
+    eyebrow: 'LUFS Estimate',
+    title: 'Loudness Meter',
+    desc: 'Get a live LUFS-style loudness estimate from your microphone. Check integrated loudness against Spotify, YouTube, and podcast targets.',
+    gradClass: 'preview',
+    cta: 'Check loudness →',
+  },
+  {
+    href: '/echo-test/',
+    eyebrow: 'Call Diagnostic',
+    title: 'Echo Test',
+    desc: 'Check whether your microphone picks up your speaker audio before you join a call. Record and play back to catch echo before it happens live.',
+    gradClass: 'develop',
+    cta: 'Test for echo →',
+  },
+  {
+    href: '/audio-reaction-test/',
+    eyebrow: 'Reflex Test',
+    title: 'Audio Reaction Test',
+    desc: 'How fast do you react to sound? 5 rounds, no warning. Compare your reflexes to the average human auditory reaction time.',
+    gradClass: 'ship',
+    cta: 'Test my reflexes →',
+  },
 ];
 ---
 
 <Layout
+  alternates={buildHomeAlternates()}
   title="Online Audio Test - Free Mic, Speaker, Headphone & Latency"
   description="Free tools to test your mic, speakers, headphones, and Bluetooth latency - runs in your browser. No download, no account. Instant results."
   keywords="audio test, left right audio test, stereo audio test, mic check, mic check online, headphone test, left right headphone test, headphone check, earphone mic test, earphone test left right, audio latency test, bluetooth audio test, airpods test, playback audio test, lossless audio test"
@@ -339,7 +373,7 @@ const tools = [
       <h3>Audio Latency Test — Measure Bluetooth Delay</h3>
       <p>Audio latency is the gap between when a sound is generated and when you actually hear it. For wired headphones and speakers, this is typically under 10 ms and completely imperceptible. For Bluetooth audio, the delay varies dramatically by codec: SBC can introduce 100–200 ms of lag, while aptX Low Latency or LC3 (used in Bluetooth LE Audio) can bring it below 40 ms.</p>
       <p>Our audio latency test measures your device's actual output delay in milliseconds. This Bluetooth audio test is essential for gamers experiencing lip-sync issues, musicians monitoring through wireless headphones, and video editors who need audio and video to stay precisely aligned. The AirPods test and general Bluetooth audio test give you a concrete latency figure so you know whether your wireless headphones are performing within normal range for their codec.</p>
-      <p>AirPods users can also run our dedicated <a href="/airpods-latency-test/">AirPods Latency Test</a> to compare expected latency across AirPods models and troubleshoot audio delay. For exact numbers by device, browse our <a href="/devices/">Bluetooth device latency guides</a> covering AirPods, Sony, Bose, Samsung, and Google earbuds and headphones.</p>
+      <p>AirPods users can also run our dedicated <a href="/airpods-latency-test/">AirPods Latency Test</a> to compare expected latency across AirPods models and troubleshoot audio delay. Using any other wireless headphones or earbuds? Try our <a href="/bluetooth-latency-test/">Bluetooth Latency Test</a> to measure delay and compare codec performance. For exact numbers by device, browse our <a href="/devices/">Bluetooth device latency guides</a> covering AirPods, Sony, Bose, Samsung, and Google earbuds and headphones.</p>
 
       <h3>Privacy First — Your Audio Never Leaves Your Browser</h3>
       <p>Every audio test on this site processes data locally using browser-native APIs. Microphone audio is captured with the MediaRecorder API and is never transmitted to any server. Speaker, headphone, and latency tests generate all audio internally using the Web Audio API — no audio files are fetched from external sources, and no analytics software logs your results. Your tests are entirely private, from the first click to the last.</p>

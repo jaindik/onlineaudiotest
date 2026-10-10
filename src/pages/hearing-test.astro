@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -43,6 +44,7 @@ const schema = {
   description="Test your hearing online with frequencies from 20 Hz to 20 kHz. Discover your hearing range and estimated hearing age instantly."
   keywords="hearing test online, free hearing test online, hearing test online free, online frequency hearing test, frequency hearing test online, high frequency hearing test online, age hearing test, frequency hearing test age, sound frequency hearing test, low frequency hearing test, hearing range by age, normal hearing range by age, child hearing test online, best hearing test online"
   canonical="https://onlineaudiotest.com/hearing-test/"
+  alternates={buildToolAlternates('/hearing-test/', '/pt-br/teste-de-audicao/')}
   schema={schema}
   sidebar={true}
 >

@@ -1,0 +1,25 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { buildHomeAlternates, localizedToolPath } from '../../lib/i18n';
+
+const canonical = 'https://onlineaudiotest.com/pt-br/';
+const tools = [
+  ['/audio-test/', 'Teste de áudio online', 'Uma central para testar todos os seus dispositivos de áudio.'],
+  ['/mic-test/', 'Teste de microfone', 'Veja se o microfone recebe áudio e responda corretamente.'],
+  ['/speaker-test/', 'Teste de alto-falante', 'Confira os canais esquerdo, direito e estéreo.'],
+  ['/headphone-test/', 'Teste de fone de ouvido', 'Verifique canais, equilíbrio e problemas no driver.'],
+  ['/latency-test/', 'Teste de latência de áudio', 'Meça o atraso da saída em milissegundos.'],
+  ['/bluetooth-latency-test/', 'Teste de latência Bluetooth', 'Identifique atraso em fones e dispositivos sem fio.'],
+];
+const schema = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'OnlineAudioTest.com', url: canonical, description: 'Testes de áudio gratuitos no navegador para microfone, alto-falantes, fones e latência Bluetooth.' };
+---
+
+<Layout title="Teste de Áudio Online Grátis — Microfone, Alto-falante e Fone" description="Teste microfone, alto-falantes, fones, estéreo e latência Bluetooth online. Grátis, privado e sem download." keywords="teste de áudio online, teste de som, teste de microfone, teste de alto-falante, teste de fone, latência Bluetooth" canonical={canonical} locale="pt-BR" alternates={buildHomeAlternates()} schema={schema}>
+  <section class="hero container"><p class="eyebrow">Diagnóstico de áudio no navegador</p><h1>Teste seu áudio online</h1><p>Verifique microfone, alto-falantes, fones, canais estéreo e atraso Bluetooth sem instalar nada. Os testes são gratuitos e processados localmente no seu navegador.</p><a class="btn btn-primary btn-lg" href="/pt-br/teste-de-audio/">Ver todos os testes</a></section>
+  <section class="section container"><p class="eyebrow">Comece aqui</p><h2>Escolha um teste de áudio</h2><div class="grid">{tools.map(([path, title, text]) => <a class="card" href={localizedToolPath(path, 'pt-BR')}><strong>{title}</strong><span>{text}</span><small>Iniciar teste →</small></a>)}</div></section>
+  <section class="section section-soft"><div class="container copy"><p class="eyebrow">Privacidade por padrão</p><h2>Seu áudio não sai do navegador</h2><p>Os sinais de teste são gerados localmente. Quando um teste precisa do microfone, a gravação é analisada no dispositivo e não é enviada para um servidor. Permita o acesso somente quando quiser executar um teste de entrada.</p><p>Para entender resultados de atraso, consulte o <a href="/pt-br/guia-de-codecs-bluetooth/">guia de codecs Bluetooth</a> e o <a href="/pt-br/teste-de-latencia-airpods/">guia de latência dos AirPods</a>.</p></div></section>
+</Layout>
+
+<style>
+  .hero { padding-top: var(--s-5xl); padding-bottom: var(--s-5xl); text-align: center; } .hero h1 { margin: var(--s-sm) 0 var(--s-md); } .hero p:not(.eyebrow) { max-width: 650px; margin: 0 auto var(--s-xl); color: var(--body-text); line-height: 1.7; font-size: 18px; } .section { max-width: 920px; margin-bottom: var(--s-5xl); } .section h2 { margin: var(--s-sm) 0 var(--s-xl); } .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-md); } .card { display: flex; flex-direction: column; gap: var(--s-xs); padding: var(--s-xl); border: 1px solid var(--hairline); border-radius: var(--r-lg); background: var(--canvas); color: var(--ink); text-decoration: none; box-shadow: var(--shadow-1); } .card:hover { border-color: var(--link); transform: translateY(-2px); } .card span { color: var(--body-text); line-height: 1.5; } .card small { margin-top: var(--s-sm); color: var(--link); } .section-soft { max-width: none; background: var(--canvas-soft); padding: var(--s-5xl) 0; } .copy { max-width: 700px; } .copy p { color: var(--body-text); line-height: 1.8; } .copy a { color: var(--link); } @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+</style>

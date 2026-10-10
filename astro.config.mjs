@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 import cloudflare from '@astrojs/cloudflare';
 
 // Segments that should never appear in the sitemap (redirect stubs & error pages)
-const EXCLUDE_SEGMENTS = ['audio-test', '404', '500'];
+const EXCLUDE_SEGMENTS = ['404', '500'];
 
 export default defineConfig({
   site: 'https://onlineaudiotest.com',
@@ -24,15 +24,13 @@ export default defineConfig({
       filter: (page) => !EXCLUDE_SEGMENTS.some((seg) => page.includes(`/${seg}`)),
       serialize(item) {
         const u = item.url;
-        const today = new Date().toISOString().split('T')[0];
-        item.lastmod = today;
         if (u === 'https://onlineaudiotest.com/') {
           item.priority = 1.0;
           item.changefreq = 'weekly';
         } else if (/\/(mic-test|speaker-test|headphone-test|latency-test|hearing-test|frequency-generator|audio-spectrum-analyzer|voice-recorder|mic-quality-test|bluetooth-latency-test|airpods-latency-test)\/?$/.test(u)) {
           item.priority = 0.9;
           item.changefreq = 'weekly';
-        } else if (/\/(bluetooth-codec-guide|bpm-detector|key-detector|key-and-bpm-detector)\/?$/.test(u)) {
+        } else if (/\/(bluetooth-codec-guide|bpm-detector|key-detector|key-and-bpm-detector|decibel-meter|loudness-meter|echo-test|audio-reaction-test|audio-device-check)\/?$/.test(u)) {
           item.priority = 0.8;
           item.changefreq = 'monthly';
         } else if (/\/(about|contact|privacy|terms)\/?$/.test(u)) {

@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { buildToolAlternates } from '../lib/i18n';
 
 const schema = {
   "@context": "https://schema.org",
@@ -72,6 +73,7 @@ const CAMELOT: Record<string, string> = {
   description="Upload any MP3 or WAV to detect the musical key and scale. Free online key detector — find whether a song is in C Major, A Minor, and more."
   keywords="key detector, song key detector, find key of song, musical key finder, what key is this song, key finder mp3, chord key detector"
   canonical="https://onlineaudiotest.com/key-detector/"
+  alternates={buildToolAlternates('/key-detector/', '/pt-br/detector-de-tom-musical/')}
   schema={schema}
   sidebar={true}
 >

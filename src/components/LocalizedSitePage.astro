@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getLocalizedSiteCopy, getLocalizedToolName } from '../data/localizedSiteCopy';
+
+export interface Props { locale: string; pageId: string; path: string; englishPath: string; kind: string; deviceName?: string; alternates: { hreflang: string; href: string }[] }
+const { locale, pageId, path, englishPath, kind, deviceName, alternates } = Astro.props;
+const site = getLocalizedSiteCopy(locale);
+const name = deviceName ?? getLocalizedToolName(locale, pageId);
+const title = pageId === 'home' ? site.homeTitle : pageId === 'audio-test' ? site.hubTitle : `${name} | OnlineAudioTest.com`;
+const description = pageId === 'home' ? site.homeDescription : site.toolIntro.replace('{tool}', name);
+const canonical = `https://onlineaudiotest.com${path}`;
+const schema = { '@context': 'https://schema.org', '@type': kind === 'guide' ? 'TechArticle' : 'WebPage', name: title, url: canonical, description };
+---
+<Layout title={title} description={description} keywords={`${name}, ${site.hubTitle}`} canonical={canonical} locale={locale} schema={schema} alternates={alternates}>
+  <section class="tool-hero container"><p class="eyebrow">{site.hubTitle}</p><h1>{title}</h1><p>{description}</p></section>
+  <section class="how-section container localized-content">
+    <h2>{site.chooseTitle}</h2>
+    <p>{site.guideIntro}</p>
+    <p>{site.privacyText}</p>
+    {kind === 'trust' && <p>{site.toolIntro.replace('{tool}', name)}</p>}
+    {kind === 'device-index' && <p>{site.guideIntro} {site.privacyText}</p>}
+    {kind === 'device-detail' && <><h2>{name}</h2><p>{site.toolIntro.replace('{tool}', name)}</p></>}
+    {kind === 'guide' && <><h2>{name}</h2><p>{site.guideIntro}</p><p>{site.toolIntro.replace('{tool}', name)}</p></>}
+  </section>
+  <section class="how-section container"><h2>{site.privacyTitle}</h2><p>{site.privacyText}</p><p><a href={`/${locale.toLowerCase()}/audio-test/`}>{site.hubTitle}</a></p></section>
+</Layout>
+
+<style>.localized-content { max-width: 760px; } .localized-content p { line-height: 1.75; }</style>
