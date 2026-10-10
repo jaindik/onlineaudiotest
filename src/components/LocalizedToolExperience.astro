@@ -8,7 +8,7 @@ export interface Props {
   pageId: string;
   path: string;
   englishPath: string;
-  toolType: 'latency' | 'mic' | 'channels' | 'devices' | 'tone' | 'recorder' | 'reaction' | 'analyzer' | 'meter' | 'bpm';
+  toolType: 'latency' | 'mic' | 'channels' | 'devices' | 'tone' | 'hearing' | 'echo' | 'recorder' | 'reaction' | 'analyzer' | 'meter' | 'bpm' | 'key' | 'keybpm';
   alternates: { hreflang: string; href: string }[];
 }
 
@@ -21,6 +21,24 @@ const channelLabels: Record<string, string[]> = {
   'id-ID': ['Kiri', 'Kanan', 'Stereo'], 'hi-IN': ['बायाँ', 'दायाँ', 'स्टीरियो'], 'vi-VN': ['Trái', 'Phải', 'Stereo'], 'es-MX': ['Izquierda', 'Derecha', 'Estéreo'], 'ur-PK': ['\u0628\u0627\u0626\u06cc\u06ba', '\u062f\u0627\u0626\u06cc\u06ba', 'Stereo'], 'de-DE': ['Links', 'Rechts', 'Stereo'], 'tr-TR': ['Sol', 'Sağ', 'Stereo'], 'bn-BD': ['বাম', 'ডান', 'স্টেরিও'], 'th-TH': ['ซ้าย', 'ขวา', 'สเตอริโอ'], 'fr-FR': ['Gauche', 'Droite', 'Stéréo'],
 };
 const channels = channelLabels[locale] ?? ['Left', 'Right', 'Stereo'];
+const fileAnalysis = ['bpm', 'key', 'keybpm'].includes(toolType);
+const minimumSeconds = toolType === 'bpm' ? 5 : 10;
+const fileCopyByLocale: Record<string, { choose: string; analyze: string; analyzing: string; failure: string; short: string; local: string; bpm: string; meterNote: string }> = {
+  'pt-BR': { choose: 'Selecionar arquivo de áudio', analyze: 'Analisar arquivo', analyzing: 'Analisando áudio…', failure: 'O navegador não conseguiu ler o arquivo. Tente outro arquivo de áudio.', short: 'A análise precisa de pelo menos 10 segundos de áudio.', local: 'O arquivo é analisado no navegador e não é enviado.', bpm: 'BPM', meterNote: 'Nível de entrada relativo em dBFS. Não é uma medição calibrada de pressão sonora nem uma nota de qualidade do microfone.' },
+  'id-ID': { choose: 'Pilih file audio', analyze: 'Analisis file', analyzing: 'Menganalisis audio…', failure: 'Browser tidak dapat membaca file ini. Coba file audio lain.', short: 'Analisis memerlukan audio setidaknya 10 detik.', local: 'File dianalisis di browser dan tidak diunggah.', bpm: 'Tempo', meterNote: 'Level input relatif dalam dBFS. Ini bukan pengukuran tekanan suara terkalibrasi atau nilai kualitas mikrofon.' },
+  'hi-IN': { choose: 'ऑडियो फ़ाइल चुनें', analyze: 'फ़ाइल का विश्लेषण करें', analyzing: 'ऑडियो का विश्लेषण हो रहा है…', failure: 'ब्राउज़र यह फ़ाइल नहीं पढ़ सका। दूसरी ऑडियो फ़ाइल आज़माएँ।', short: 'विश्लेषण के लिए कम से कम 10 सेकंड का ऑडियो चाहिए।', local: 'फ़ाइल का विश्लेषण ब्राउज़र में होता है; इसे अपलोड नहीं किया जाता।', bpm: 'गति', meterNote: 'dBFS में सापेक्ष इनपुट स्तर। यह कैलिब्रेटेड ध्वनि दबाव माप या माइक्रोफ़ोन गुणवत्ता स्कोर नहीं है।' },
+  'vi-VN': { choose: 'Chọn tệp âm thanh', analyze: 'Phân tích tệp', analyzing: 'Đang phân tích âm thanh…', failure: 'Trình duyệt không đọc được tệp này. Hãy thử tệp âm thanh khác.', short: 'Cần ít nhất 10 giây âm thanh để phân tích.', local: 'Tệp được phân tích trong trình duyệt và không được tải lên.', bpm: 'Nhịp độ', meterNote: 'Mức đầu vào tương đối tính bằng dBFS. Đây không phải phép đo áp suất âm thanh đã hiệu chuẩn hay điểm chất lượng mic.' },
+  'es-MX': { choose: 'Elegir archivo de audio', analyze: 'Analizar archivo', analyzing: 'Analizando audio…', failure: 'El navegador no pudo leer este archivo. Prueba otro archivo de audio.', short: 'El análisis requiere al menos 10 segundos de audio.', local: 'El archivo se analiza en el navegador y no se sube.', bpm: 'Tempo', meterNote: 'Nivel de entrada relativo en dBFS. No es una medición calibrada de presión sonora ni una puntuación de calidad del micrófono.' },
+  'ur-PK': { choose: 'آڈیو فائل منتخب کریں', analyze: 'فائل کا تجزیہ کریں', analyzing: 'آڈیو کا تجزیہ ہو رہا ہے…', failure: 'براؤزر یہ فائل نہیں پڑھ سکا۔ دوسری آڈیو فائل آزمائیں۔', short: 'تجزیے کے لیے کم از کم 10 سیکنڈ کی آڈیو درکار ہے۔', local: 'فائل کا تجزیہ براؤزر میں ہوتا ہے اور اپ لوڈ نہیں ہوتی۔', bpm: 'رفتار', meterNote: 'dBFS میں نسبتی اِن پٹ لیول۔ یہ کیلیبریٹڈ صوتی دباؤ کی پیمائش یا مائیکروفون کے معیار کا اسکور نہیں ہے۔' },
+  'de-DE': { choose: 'Audiodatei auswählen', analyze: 'Datei analysieren', analyzing: 'Audio wird analysiert…', failure: 'Der Browser konnte diese Datei nicht lesen. Versuche eine andere Audiodatei.', short: 'Die Analyse benötigt mindestens 10 Sekunden Audio.', local: 'Die Datei wird im Browser analysiert und nicht hochgeladen.', bpm: 'Tempo', meterNote: 'Relativer Eingangspegel in dBFS. Keine kalibrierte Schalldruckmessung und keine Bewertung der Mikrofonqualität.' },
+  'tr-TR': { choose: 'Ses dosyası seçin', analyze: 'Dosyayı analiz et', analyzing: 'Ses analiz ediliyor…', failure: 'Tarayıcı bu dosyayı okuyamadı. Başka bir ses dosyası deneyin.', short: 'Analiz için en az 10 saniyelik ses gerekir.', local: 'Dosya tarayıcıda analiz edilir ve yüklenmez.', bpm: 'Tempo', meterNote: 'dBFS cinsinden göreli giriş seviyesi. Kalibre edilmiş ses basıncı ölçümü veya mikrofon kalite puanı değildir.' },
+  'bn-BD': { choose: 'অডিও ফাইল বেছে নিন', analyze: 'ফাইল বিশ্লেষণ করুন', analyzing: 'অডিও বিশ্লেষণ হচ্ছে…', failure: 'ব্রাউজার এই ফাইলটি পড়তে পারেনি। অন্য অডিও ফাইল চেষ্টা করুন।', short: 'বিশ্লেষণের জন্য অন্তত ১০ সেকেন্ডের অডিও দরকার।', local: 'ফাইলটি ব্রাউজারেই বিশ্লেষণ হয়, আপলোড করা হয় না।', bpm: 'টেম্পো', meterNote: 'dBFS-এ আপেক্ষিক ইনপুট স্তর। এটি ক্যালিব্রেট করা শব্দচাপের পরিমাপ বা মাইক্রোফোনের গুণমানের স্কোর নয়।' },
+  'th-TH': { choose: 'เลือกไฟล์เสียง', analyze: 'วิเคราะห์ไฟล์', analyzing: 'กำลังวิเคราะห์เสียง…', failure: 'เบราว์เซอร์อ่านไฟล์นี้ไม่ได้ โปรดลองไฟล์เสียงอื่น', short: 'การวิเคราะห์ต้องใช้เสียงอย่างน้อย 10 วินาที', local: 'วิเคราะห์ไฟล์ในเบราว์เซอร์โดยไม่อัปโหลด', bpm: 'จังหวะ', meterNote: 'ระดับอินพุตสัมพัทธ์ในหน่วย dBFS ไม่ใช่การวัดความดันเสียงที่ผ่านการสอบเทียบหรือคะแนนคุณภาพไมโครโฟน' },
+  'fr-FR': { choose: 'Choisir un fichier audio', analyze: 'Analyser le fichier', analyzing: 'Analyse audio en cours…', failure: 'Le navigateur n’a pas pu lire ce fichier. Essaie un autre fichier audio.', short: 'L’analyse nécessite au moins 10 secondes d’audio.', local: 'Le fichier est analysé dans le navigateur et n’est pas envoyé.', bpm: 'Tempo', meterNote: 'Niveau d’entrée relatif en dBFS. Ce n’est ni une mesure étalonnée de pression acoustique ni une note de qualité du micro.' },
+};
+const defaultFileCopy = { choose: 'Choose audio file', analyze: 'Analyze file', analyzing: 'Analyzing audio…', failure: 'This browser could not read the file. Try another audio file.', short: 'Analysis requires at least 10 seconds of audio.', local: 'The file is analyzed in your browser and is not uploaded.', bpm: 'BPM', meterNote: 'Relative microphone input level in dBFS. This is not calibrated sound pressure or a microphone quality score.' };
+const fileCopy = fileCopyByLocale[locale] ?? defaultFileCopy;
+fileCopy.short = fileCopy.short.replace('10', String(minimumSeconds));
 const title = `${name} | OnlineAudioTest.com`;
 const description = site.toolIntro.replace('{tool}', name);
 const canonical = `https://onlineaudiotest.com${path}`;
@@ -29,14 +47,17 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebApplication', na
 
 <Layout title={title} description={description} keywords={`${name}, ${site.hubTitle}`} canonical={canonical} locale={locale} schema={schema} alternates={alternates}>
   <section class="tool-hero container"><p class="eyebrow">{site.hubTitle}</p><h1>{name}</h1><p>{description}</p></section>
-  <section class="tool-card-wrap"><div class="tool-card" id="localized-tool" data-tool-type={toolType}>
+  <section class="tool-card-wrap"><div class="tool-card" id="localized-tool" data-tool-type={toolType} data-page-id={pageId} data-min-seconds={minimumSeconds} data-done={ui.done} data-denied={ui.denied} data-analyzing={fileCopy.analyzing} data-file-failure={fileCopy.failure} data-file-short={fileCopy.short} data-file-local={fileCopy.local} data-file-bpm={fileCopy.bpm} data-meter-note={fileCopy.meterNote}>
     <div class="status-bar"><div class="status-pill"><span class="dot" id="status-dot"></span><span id="status-text">{ui.ready}</span></div><span class="eyebrow caption-mono" id="result-value"></span></div>
     <div class="action-row">
       {toolType === 'channels' && <><button class="btn btn-primary" data-channel="left">{channels[0]}</button><button class="btn btn-secondary" data-channel="right">{channels[1]}</button><button class="btn btn-secondary" data-channel="both">{channels[2]}</button></>}
       {toolType === 'tone' && <><label class="control-label" for="frequency">Hz <output id="frequency-value">440</output></label><input id="frequency" type="range" min="20" max="16000" value="440" step="1" /><button class="btn btn-primary btn-lg" id="primary-action">{ui.start}</button></>}
-      {toolType !== 'channels' && toolType !== 'tone' && <button class="btn btn-primary btn-lg" id="primary-action">{ui.start}</button>}
+      {toolType === 'hearing' && <p>Use a comfortable volume. Stop the tone sweep when it is no longer audible. This browser check is not a medical test.</p>}
+      {fileAnalysis && <><label class="control-label file-label" for="audio-file">{fileCopy.choose}</label><input id="audio-file" type="file" accept="audio/*,.mp3,.wav,.ogg,.flac,.aac,.m4a" /><button class="btn btn-primary btn-lg" id="primary-action" disabled>{fileCopy.analyze}</button></>}
+      {toolType !== 'channels' && toolType !== 'tone' && !fileAnalysis && <button class="btn btn-primary btn-lg" id="primary-action">{toolType === 'hearing' ? 'Start tone sweep' : ui.start}</button>}
     </div>
-    {(toolType === 'analyzer' || toolType === 'meter') && <canvas id="analysis-canvas" class="analysis-canvas" width="640" height="180"></canvas>}
+    {toolType === 'analyzer' && <canvas id="analysis-canvas" class="analysis-canvas" width="640" height="180"></canvas>}
+    {toolType === 'meter' && <><output id="level-value" class="level-value">— dBFS</output><div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div></>}
     {toolType === 'mic' && <div class="meter-track"><div class="meter-fill" id="meter-fill"></div></div>}
     {toolType === 'devices' && <ul id="device-list" class="device-list"></ul>}
     <p class="result-note" id="result-note">{ui.resultNote}</p>
@@ -58,12 +79,108 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebApplication', na
   if (toolType === 'devices' && button) button.addEventListener('click', async () => { try { const devices = await navigator.mediaDevices.enumerateDevices(); const audio = devices.filter((d) => d.kind.startsWith('audio')); document.getElementById('device-list').replaceChildren(...audio.map((d) => { const li = document.createElement('li'); li.textContent = `${d.kind}: ${d.label || ready}`; return li; })); value.textContent = `${audio.length}`; setStatus(done); } catch { setStatus(denied); note.textContent = permission; } });
   if (toolType === 'channels') document.querySelectorAll('[data-channel]').forEach((control) => control.addEventListener('click', async () => { const ctx = audioContext(); await ctx.resume(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); const pan = ctx.createStereoPanner(); pan.pan.value = control.dataset.channel === 'left' ? -1 : control.dataset.channel === 'right' ? 1 : 0; gain.gain.value = .12; osc.connect(pan).connect(gain).connect(ctx.destination); osc.start(); setStatus(measuring, true); setTimeout(() => { osc.stop(); ctx.close(); setStatus(ready); }, 900); }));
   if (toolType === 'tone' && button) { const slider = document.getElementById('frequency'); const output = document.getElementById('frequency-value'); slider.addEventListener('input', () => { output.textContent = slider.value; }); button.addEventListener('click', async () => { const ctx = audioContext(); await ctx.resume(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.frequency.value = Number(slider.value); gain.gain.value = .08; osc.connect(gain).connect(ctx.destination); osc.start(); setStatus(measuring, true); setTimeout(() => { osc.stop(); ctx.close(); setStatus(done); }, 900); }); }
+  if ( (toolType === 'hearing') && button) { let ctx; let osc; let timer; let frequency = 20; button.addEventListener('click', async () => { if (osc) { clearInterval(timer); osc.stop(); await ctx.close(); osc = null; value.textContent = `Stopped at ${Math.round(frequency)} Hz`; note.textContent = 'This is the highest frequency reached in this playback session only. It cannot diagnose hearing or estimate hearing age.'; setStatus(done); button.textContent = 'Start tone sweep'; return; } try { frequency = 20; ctx = audioContext(); await ctx.resume(); osc = ctx.createOscillator(); const gain = ctx.createGain(); gain.gain.value = .035; osc.connect(gain).connect(ctx.destination); osc.frequency.value = frequency; osc.start(); setStatus(measuring, true); note.textContent = 'Stop if you feel discomfort. Headphones, volume and environment affect results; this is not a clinical assessment.'; button.textContent = 'Stop sweep'; timer = setInterval(() => { frequency = Math.min(20000, frequency * 1.08); osc.frequency.setTargetAtTime(frequency, ctx.currentTime, .03); if (frequency >= 20000) button.click(); }, 100); } catch { setStatus(denied); note.textContent = permission; } }); }
+  if (toolType === 'echo' && button) button.addEventListener('click', async () => { button.disabled = true; let stream; let ctx; try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } }); ctx = audioContext(); await ctx.resume(); const recorder = new MediaRecorder(stream); const chunks = []; recorder.ondataavailable = (event) => chunks.push(event.data); recorder.onstop = () => { const player = document.createElement('audio'); player.controls = true; player.src = URL.createObjectURL(new Blob(chunks, { type: recorder.mimeType })); note.replaceChildren('Listen to the recording and check whether the test tone is audible: ', player); stream.getTracks().forEach((track) => track.stop()); ctx.close(); button.disabled = false; setStatus(done); }; recorder.start(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); gain.gain.value = .025; osc.connect(gain).connect(ctx.destination); osc.start(); setStatus(measuring, true); note.textContent = 'Keep speaker volume low and do not wear headphones for this check. Your operating system may still process the microphone signal.'; setTimeout(() => { osc.stop(); recorder.stop(); }, 2500); } catch { stream?.getTracks().forEach((track) => track.stop()); await ctx?.close(); button.disabled = false; setStatus(denied); note.textContent = permission; } });
   if (toolType === 'recorder' && button) button.addEventListener('click', async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); const recorder = new MediaRecorder(stream); const chunks = []; recorder.ondataavailable = (e) => chunks.push(e.data); recorder.onstop = () => { stream.getTracks().forEach((t) => t.stop()); const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob(chunks, { type: recorder.mimeType })); link.download = 'audio-recording.webm'; link.textContent = done; note.replaceChildren(link); }; recorder.start(); button.textContent = done; setStatus(measuring, true); setTimeout(() => recorder.stop(), 10000); } catch { setStatus(denied); note.textContent = permission; } });
-  if ((toolType === 'analyzer' || toolType === 'meter') && button) button.addEventListener('click', async () => { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); const ctx = audioContext(); const analyser = ctx.createAnalyser(); analyser.fftSize = 512; analyser.connect; const source = ctx.createMediaStreamSource(stream); source.connect(analyser); const data = new Uint8Array(analyser.frequencyBinCount); const canvas = document.getElementById('analysis-canvas'); const pen = canvas.getContext('2d'); setStatus(measuring, true); const draw = () => { analyser.getByteFrequencyData(data); pen.clearRect(0, 0, canvas.width, canvas.height); pen.fillStyle = '#78aef7'; data.forEach((v, i) => pen.fillRect(i * canvas.width / data.length, canvas.height - (v / 255) * canvas.height, Math.max(1, canvas.width / data.length), (v / 255) * canvas.height)); if (root?.dataset.running !== 'false') requestAnimationFrame(draw); }; root.dataset.running = 'true'; draw(); setTimeout(() => { root.dataset.running = 'false'; stream.getTracks().forEach((t) => t.stop()); ctx.close(); setStatus(done); }, 6000); } catch { setStatus(denied); note.textContent = permission; } });
-  if (toolType === 'bpm' && button) { const taps = []; button.addEventListener('click', () => { taps.push(performance.now()); if (taps.length > 8) taps.shift(); if (taps.length > 1) value.textContent = `${Math.round(60000 / (taps.slice(1).map((t, i) => t - taps[i]).reduce((a, b) => a + b, 0) / (taps.length - 1)))} BPM`; setStatus(done); }); }
+  if ((toolType === 'analyzer' || toolType === 'meter') && button) {
+    button.addEventListener('click', async () => {
+      let stream;
+      let ctx;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        ctx = audioContext();
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 512;
+        const source = ctx.createMediaStreamSource(stream);
+        source.connect(analyser);
+        const isMeter = toolType === 'meter';
+        const data = new Uint8Array(isMeter ? analyser.fftSize : analyser.frequencyBinCount);
+        const canvas = document.getElementById('analysis-canvas');
+        const pen = canvas?.getContext('2d');
+        const level = document.getElementById('level-value');
+        const fill = document.getElementById('meter-fill');
+        if (isMeter) note.textContent = root.dataset.meterNote;
+        setStatus(measuring, true);
+        let frame = 0;
+        const draw = () => {
+          if (isMeter) {
+            analyser.getByteTimeDomainData(data);
+            const rms = Math.sqrt(data.reduce((sum, sample) => sum + ((sample / 128) - 1) ** 2, 0) / data.length);
+            const db = Math.max(-60, 20 * Math.log10(Math.max(rms, 1e-10)));
+            level.textContent = rms > 0.001 ? `${db.toFixed(1)} dBFS` : '— dBFS';
+            fill.style.width = `${Math.max(0, (db + 60) / 60 * 100)}%`;
+          } else {
+            analyser.getByteFrequencyData(data);
+            pen.clearRect(0, 0, canvas.width, canvas.height);
+            pen.fillStyle = '#78aef7';
+            data.forEach((sample, index) => pen.fillRect(index * canvas.width / data.length, canvas.height - (sample / 255) * canvas.height, Math.max(1, canvas.width / data.length), (sample / 255) * canvas.height));
+          }
+          frame = requestAnimationFrame(draw);
+        };
+        draw();
+        setTimeout(() => {
+          cancelAnimationFrame(frame);
+          stream.getTracks().forEach((track) => track.stop());
+          ctx.close();
+          setStatus(done);
+        }, 6000);
+      } catch {
+        stream?.getTracks().forEach((track) => track.stop());
+        await ctx?.close();
+        setStatus(denied);
+        note.textContent = permission;
+      }
+    });
+  }
   if (toolType === 'reaction' && button) button.addEventListener('click', async () => { button.disabled = true; setStatus(measuring, true); await new Promise((r) => setTimeout(r, 1200 + Math.random() * 2200)); const started = performance.now(); setStatus(done, true); button.disabled = false; button.onclick = () => { value.textContent = `${Math.round(performance.now() - started)} ms`; setStatus(done); }; });
 </script>
 
+<script>
+  const fileRoot = document.getElementById('localized-tool');
+  if (fileRoot && ['bpm', 'key', 'keybpm'].includes(fileRoot.dataset.toolType)) {
+    import('../lib/audioAnalysis').then(({ detectBPM, detectKey }) => {
+      const input = document.getElementById('audio-file');
+      const button = document.getElementById('primary-action');
+      const status = document.getElementById('status-text');
+      const dot = document.getElementById('status-dot');
+      const value = document.getElementById('result-value');
+      const note = document.getElementById('result-note');
+      let file;
+      input?.addEventListener('change', () => {
+        file = input.files?.[0];
+        button.disabled = !file;
+        if (file) note.textContent = `${file.name}. ${fileRoot.dataset.fileLocal}`;
+      });
+      button?.addEventListener('click', async () => {
+        if (!file) return;
+        button.disabled = true;
+        status.textContent = fileRoot.dataset.analyzing;
+        dot.classList.add('active');
+        note.textContent = fileRoot.dataset.fileLocal;
+        let context;
+        try {
+          context = new (window.AudioContext || window.webkitAudioContext)();
+          const buffer = await context.decodeAudioData(await file.arrayBuffer());
+          if (buffer.duration < Number(fileRoot.dataset.minSeconds)) throw new Error('short');
+          const tempo = fileRoot.dataset.toolType !== 'key' ? detectBPM(buffer).bpm : null;
+          const tonal = fileRoot.dataset.toolType !== 'bpm' ? detectKey(buffer) : null;
+          value.textContent = [tonal && `${tonal.key} ${tonal.scale}`, tempo && `${tempo} BPM`].filter(Boolean).join(' · ');
+          status.textContent = fileRoot.dataset.done;
+          dot.classList.remove('active');
+          note.textContent = fileRoot.dataset.fileLocal;
+        } catch (error) {
+          status.textContent = fileRoot.dataset.denied;
+          dot.classList.remove('active');
+          note.textContent = error instanceof Error && error.message === 'short' ? fileRoot.dataset.fileShort : fileRoot.dataset.fileFailure;
+          button.disabled = false;
+        } finally {
+          await context?.close();
+        }
+      });
+    });
+  }
+</script>
+
 <style>
-  .tool-card { max-width: 640px; margin: 0 auto; } .meter-track { height: 10px; background: var(--canvas-soft-2); border-radius: var(--r-full); overflow: hidden; } .meter-fill { height: 100%; width: 0; background: var(--grad-develop); transition: width .08s linear; } .device-list { display: grid; gap: 8px; padding-left: 20px; color: var(--body-text); line-height: 1.6; } .analysis-canvas { width: 100%; height: 180px; background: var(--canvas-soft-2); border-radius: var(--r-md); } .control-label { color: var(--body-text); } input[type="range"] { width: 100%; accent-color: var(--link); }
+  .tool-card { max-width: 640px; margin: 0 auto; } .meter-track { height: 10px; background: var(--canvas-soft-2); border-radius: var(--r-full); overflow: hidden; } .meter-fill { height: 100%; width: 0; background: var(--grad-develop); transition: width .08s linear; } .level-value { display: block; margin-block: 12px 8px; color: var(--ink); font: 600 22px var(--font-mono); } .device-list { display: grid; gap: 8px; padding-left: 20px; color: var(--body-text); line-height: 1.6; } .analysis-canvas { width: 100%; height: 180px; background: var(--canvas-soft-2); border-radius: var(--r-md); } .control-label { color: var(--body-text); } .file-label { display: block; } input[type="range"] { width: 100%; accent-color: var(--link); }
 </style>

@@ -5,8 +5,8 @@ import { LOCALES, PT_BR_TOOL_PATHS } from '../../lib/i18n';
 import { INDEXABLE_PAGE_FAMILIES } from '../../data/localizationRegistry';
 import { getAllSlugs, getDeviceBySlug } from '../../data/devices';
 
-const toolTypes: Record<string, 'latency' | 'mic' | 'channels' | 'devices' | 'tone' | 'recorder' | 'reaction' | 'analyzer' | 'meter' | 'bpm'> = {
-  'audio-device-check': 'devices', 'mic-test': 'mic', 'speaker-test': 'channels', 'headphone-test': 'channels', 'latency-test': 'latency', 'bluetooth-latency-test': 'latency', 'hearing-test': 'tone', 'frequency-generator': 'tone', 'audio-spectrum-analyzer': 'analyzer', 'voice-recorder': 'recorder', 'mic-quality-test': 'meter', 'audio-reaction-test': 'reaction', 'decibel-meter': 'meter', 'loudness-meter': 'meter', 'echo-test': 'mic', 'bpm-detector': 'bpm', 'key-detector': 'bpm', 'key-and-bpm-detector': 'bpm'
+const toolTypes: Record<string, 'latency' | 'mic' | 'channels' | 'devices' | 'tone' | 'recorder' | 'reaction' | 'analyzer' | 'meter' | 'bpm' | 'key' | 'keybpm'> = {
+  'audio-device-check': 'devices', 'mic-test': 'mic', 'speaker-test': 'channels', 'headphone-test': 'channels', 'latency-test': 'latency', 'bluetooth-latency-test': 'latency', 'hearing-test': 'hearing', 'frequency-generator': 'tone', 'audio-spectrum-analyzer': 'analyzer', 'voice-recorder': 'recorder', 'mic-quality-test': 'meter', 'audio-reaction-test': 'reaction', 'decibel-meter': 'meter', 'loudness-meter': 'meter', 'echo-test': 'echo', 'bpm-detector': 'bpm', 'key-detector': 'key', 'key-and-bpm-detector': 'keybpm'
 };
 export function getStaticPaths() {
   const supported = Object.keys(LOCALES).filter((locale) => locale !== 'en' && locale !== 'pt-BR');
