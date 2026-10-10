@@ -10,7 +10,7 @@ const schema = {
       "@id": "https://onlineaudiotest.com/voice-recorder/#tool",
       "name": "Online Voice Recorder",
       "url": "https://onlineaudiotest.com/voice-recorder/",
-      "description": "Free browser-based voice recorder. Record, pause, trim, normalize, and download audio as WAV or WebM — entirely in your browser with no uploads.",
+      "description": "Free online voice recorder for recording audio in your browser, with pause, trim, normalize, and WAV or WebM export. The recorder processes audio in the browser; see the privacy policy for site analytics.",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires getUserMedia and MediaRecorder API support",
@@ -49,7 +49,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "Is my recorded audio uploaded anywhere?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. All recording and processing happens in your browser using the MediaRecorder API. Nothing is sent to any server." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The recorder processes and exports audio in your browser; its code does not upload the recording. The site also loads third-party analytics for page usage. See the privacy policy for details." }
         },
         {
           "@type": "Question",
@@ -69,17 +69,17 @@ const schema = {
         {
           "@type": "Question",
           "name": "Can I record podcasts with this?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Record in a quiet room, position the mic 6–12 inches from your mouth, and download WAV for editing in any DAW or audio editor." }
+          "acceptedAnswer": { "@type": "Answer", "text": "It can record a solo voice track, but this browser tool is not a multitrack podcast studio. Check levels, monitor for clipping, and listen to the export before relying on it." }
         },
         {
           "@type": "Question",
           "name": "Why does my recording sound quiet?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Your microphone gain may be too low. Increase input volume in system sound settings or move closer to the microphone. The level meter shows your input level in real time." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Your microphone gain may be too low. Increase input volume in system sound settings or move closer to the microphone. Check the input meter while recording and make a short test clip." }
         },
         {
           "@type": "Question",
           "name": "Which microphone gives the best results?",
-          "acceptedAnswer": { "@type": "Answer", "text": "A USB condenser microphone in a quiet room gives excellent results. USB mics like the Blue Yeti or HyperX QuadCast work without drivers on most systems." }
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no single best microphone for every room and voice. Select a microphone that works with your device, check the input level, and make a short test recording before a longer session." }
         }
       ]
     }
@@ -100,7 +100,7 @@ const schema = {
   <!-- HERO -->
   <section class="tool-hero container">
     <h1>Online Voice Recorder</h1>
-    <p>Record, pause, trim, and download audio directly in your browser. No account. No uploads. Nothing leaves your device.</p>
+    <p>Record, pause, trim, and download audio directly in your browser. No account is required; your recording is processed by the recorder in this browser. The site separately uses analytics for page usage.</p>
   </section>
 
   <!-- TOOL -->
@@ -135,7 +135,7 @@ const schema = {
             <line x1="11" y1="30" x2="21" y2="30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </div>
-        <p class="perm-text">Click <strong>Start Recording</strong> and allow microphone access when prompted. Your audio never leaves your browser.</p>
+        <p class="perm-text">Click <strong>Start Recording</strong> and allow microphone access when prompted. Your recording is processed in this browser and is not uploaded by the recorder.</p>
       </div>
 
       <!-- Live panel (recording/paused) -->
@@ -257,7 +257,7 @@ const schema = {
         </button>
       </div>
 
-      <p class="result-note" id="result-note">Your audio is processed locally and never uploaded. Press <kbd>Space</kbd> to start.</p>
+      <p class="result-note" id="result-note">Your audio is processed locally by the recorder. See the privacy policy for site analytics. Press <kbd>Space</kbd> to start.</p>
     </div>
   </div>
 
@@ -294,7 +294,7 @@ const schema = {
           <path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <div>
-          <strong>All recording happens locally in your browser.</strong> No audio is uploaded or stored on any server. Your microphone data never leaves your device. The tool uses the Web Audio API and MediaRecorder — both are native browser APIs that require no external services.
+          <strong>The recorder processes audio in your browser.</strong> The recorder code does not upload or store recordings on a server. The site does load third-party analytics for page usage; see the <a href="/privacy/">privacy policy</a>.
         </div>
       </div>
 
@@ -335,7 +335,7 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">Is my audio uploaded to a server?</p>
-      <p class="faq-a">No. The recorder uses your browser's built-in MediaRecorder API. All audio stays on your device and is never transmitted anywhere.</p>
+      <p class="faq-a">The recorder uses your browser's built-in MediaRecorder API and does not upload the recording. The site separately loads analytics scripts for page usage; see the <a href="/privacy/">privacy policy</a>.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Can I download the recording as MP3?</p>
@@ -351,7 +351,7 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">Can I use this to record podcasts?</p>
-      <p class="faq-a">Yes for solo episodes. Record in a quiet room, position the mic correctly, apply normalize, trim silence, and download WAV for editing in Audacity, GarageBand, or any DAW.</p>
+      <p class="faq-a">You can record a solo voice track, but this is not a multitrack podcast studio. Make a short test recording, listen back, then export WAV for editing in an audio editor.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Why does my recording sound quiet?</p>
@@ -359,7 +359,7 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">Which microphone works best for online recording?</p>
-      <p class="faq-a">A USB condenser microphone gives the best results — models like the Blue Yeti, HyperX QuadCast, or Rode NT-USB are popular choices. They work without additional drivers and provide significantly better quality than built-in laptop microphones.</p>
+      <p class="faq-a">There is no single best microphone for every room and voice. Select a microphone that works with your device, check the input level, and make a short test recording before a longer session.</p>
     </div>
   </div>
 

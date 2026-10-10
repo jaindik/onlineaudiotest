@@ -301,7 +301,7 @@ const tools = [
         "name": "How do I test audio latency?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Open the Audio Latency Test on OnlineAudioTest.com. The tool measures your audio output delay in milliseconds using the Web Audio API — no microphone or extra hardware required. For wired connections, expect under 10 ms. For Bluetooth, the result reflects codec buffering and typically ranges from 40 ms (aptX Low Latency, LC3) to over 200 ms (standard SBC)."
+          "text": "Open the Audio Latency Test to view browser-reported output timing or run a playback-to-microphone round-trip estimate. The browser-reported value does not isolate Bluetooth or measure sound at your ear."
         }
       },
       {
@@ -317,7 +317,7 @@ const tools = [
         "name": "What is low latency audio?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Low latency audio refers to a signal path with minimal delay — generally under 20 ms for professional work or under 40 ms for consumer listening. Wired audio achieves 5–10 ms. Bluetooth latency depends on the codec: SBC can exceed 200 ms, aptX Low Latency targets under 40 ms, and Bluetooth LE Audio with LC3 is designed to reach below 40 ms. You can measure your exact output latency using the Latency Test on OnlineAudioTest.com."
+          "text": "Low-latency audio means reducing delay through the complete playback path. Results depend on the source, app, operating system, connection, audio buffers, and output hardware. Our browser tool reports browser timing and can estimate playback-to-microphone round-trip delay; it cannot isolate codec latency or certify the full path to your ear."
         }
       },
       {
@@ -376,12 +376,12 @@ const tools = [
       <p>The lossless audio test mode uses pink noise — a full-spectrum signal with equal energy per octave — to drive your headphone drivers across their entire rated frequency range simultaneously. This is faster and more revealing than a single-tone sine wave for spotting frequency holes, driver damage, or tonal imbalance between the left and right earpieces.</p>
 
       <h3>Audio Latency Test — Measure Bluetooth Delay</h3>
-      <p>Audio latency is the gap between when a sound is generated and when you actually hear it. For wired headphones and speakers, this is typically under 10 ms and completely imperceptible. For Bluetooth audio, the delay varies dramatically by codec: SBC can introduce 100–200 ms of lag, while aptX Low Latency or LC3 (used in Bluetooth LE Audio) can bring it below 40 ms.</p>
-      <p>Our audio latency test measures your device's actual output delay in milliseconds. This Bluetooth audio test is essential for gamers experiencing lip-sync issues, musicians monitoring through wireless headphones, and video editors who need audio and video to stay precisely aligned. The AirPods test and general Bluetooth audio test give you a concrete latency figure so you know whether your wireless headphones are performing within normal range for their codec.</p>
-      <p>AirPods users can also run our dedicated <a href="/airpods-latency-test/">AirPods Latency Test</a> to compare expected latency across AirPods models and troubleshoot audio delay. Using any other wireless headphones or earbuds? Try our <a href="/bluetooth-latency-test/">Bluetooth Latency Test</a> to measure delay and compare codec performance. For exact numbers by device, browse our <a href="/devices/">Bluetooth device latency guides</a> covering AirPods, Sony, Bose, Samsung, and Google earbuds and headphones.</p>
+      <p>Audio latency is the delay between scheduling a sound and hearing it through the full playback path. Bluetooth delay varies by source device, headphones, operating system, app, buffering, and connection. Codec support matters, but a codec label alone does not tell you the end-to-end delay.</p>
+      <p>Our audio latency test shows values reported by the browser and offers a playback-to-microphone round-trip estimate. The first value may omit parts of the output path; the second is affected by speakers, room acoustics, microphone placement, and processing. Neither isolates a Bluetooth codec or measures sound at your ear. Use the same setup to compare a change, and check sync in the app where you notice a problem.</p>
+      <p>See the <a href="/airpods-latency-test/">AirPods latency guide</a> for setup notes, the <a href="/bluetooth-latency-test/">Bluetooth latency guide</a> for wireless troubleshooting, and the <a href="/bluetooth-codec-guide/">codec guide</a> for compatibility. Our <a href="/devices/">device guides</a> summarize codec support without presenting unsupported model-specific latency measurements.</p>
 
-      <h3>Privacy First — Your Audio Never Leaves Your Browser</h3>
-      <p>Every audio test on this site processes data locally using browser-native APIs. Microphone audio is captured with the MediaRecorder API and is never transmitted to any server. Speaker, headphone, and latency tests generate all audio internally using the Web Audio API — no audio files are fetched from external sources, and no analytics software logs your results. Your tests are entirely private, from the first click to the last.</p>
+      <h3>Audio stays in your browser</h3>
+      <p>The audio tools process microphone input and generated sounds in the browser; the tool code does not upload the audio or test result values. The site does load third-party analytics for page usage, as described in our <a href="/privacy/">privacy policy</a>. Microphone permission is requested only by tools that need it, and can be revoked in your browser settings.</p>
 
     </div>
   </section>
@@ -413,7 +413,7 @@ const tools = [
 
         <details class="faq-home-item">
           <summary class="faq-home-q">How do I test audio latency?</summary>
-          <p class="faq-home-a">Open the <a href="/latency-test/">Audio Latency Test</a> — no microphone or extra hardware required. The tool measures your output delay in milliseconds using the Web Audio API. Wired connections typically show under 10 ms. Bluetooth ranges from ~40 ms (aptX Low Latency) to over 200 ms (SBC codec).</p>
+          <p class="faq-home-a">Open the <a href="/latency-test/">Audio Latency Test</a> to view browser-reported output timing or run a playback-to-microphone round-trip estimate. Neither method isolates codec delay or measures sound at your ear.</p>
         </details>
 
         <details class="faq-home-item">
@@ -423,7 +423,7 @@ const tools = [
 
         <details class="faq-home-item">
           <summary class="faq-home-q">What is low latency audio?</summary>
-          <p class="faq-home-a">Low latency audio means a signal path with minimal delay — under 20 ms for professional use, under 40 ms for consumer listening. Wired audio achieves 5–10 ms. Bluetooth depends on the codec: SBC can exceed 200 ms, aptX Low Latency targets under 40 ms, and Bluetooth LE Audio (LC3) is designed for below 40 ms. Measure your exact delay with the <a href="/latency-test/">Latency Test</a>.</p>
+          <p class="faq-home-a">Low-latency audio means reducing delay through the full playback path. This depends on the app, device, connection, buffering, and hardware. Our <a href="/latency-test/">browser tool</a> reports browser timing or estimates playback-to-microphone delay; it does not certify end-to-end latency.</p>
         </details>
 
         <details class="faq-home-item">

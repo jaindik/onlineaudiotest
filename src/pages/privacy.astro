@@ -7,9 +7,9 @@ const schema = {
   "@type": "WebPage",
   "url": "https://onlineaudiotest.com/privacy/",
   "name": "Privacy Policy — OnlineAudioTest.com",
-  "description": "Privacy policy for OnlineAudioTest.com. All audio processing happens locally in your browser. No data is sent to any server.",
+  "description": "Privacy policy for OnlineAudioTest.com, including browser audio processing, analytics, cookies, and contact form data.",
   "inLanguage": "en-US",
-  "dateModified": "2025-06-01",
+  "dateModified": "2026-10-11",
   "isPartOf": { "@type": "WebSite", "url": "https://onlineaudiotest.com/", "name": "OnlineAudioTest.com" },
   "publisher": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/", "logo": "https://onlineaudiotest.com/icon.png" }
 };
@@ -17,7 +17,7 @@ const schema = {
 
 <Layout
   title="Privacy Policy — OnlineAudioTest.com"
-  description="Privacy policy for OnlineAudioTest.com. Learn how we handle your data — all audio processing happens locally in your browser. No data is sent to any server."
+  description="Privacy policy for OnlineAudioTest.com, including browser audio processing, analytics, cookies, and contact form data."
   canonical="https://onlineaudiotest.com/privacy/"
   alternates={buildToolAlternates('/privacy/', '/pt-br/privacidade/')}
   schema={schema}
@@ -29,7 +29,7 @@ const schema = {
       <header class="policy-header">
         <span class="eyebrow">Legal</span>
         <h1>Privacy Policy</h1>
-        <p class="policy-meta">Last updated: <time datetime="2025-06-01">June 1, 2025</time></p>
+        <p class="policy-meta">Last updated: <time datetime="2026-10-11">October 11, 2026</time></p>
       </header>
 
       <div class="policy-body">
@@ -37,27 +37,26 @@ const schema = {
         <section>
           <h2>Overview</h2>
           <p>OnlineAudioTest.com ("we", "our", or "the site") is a free, browser-based suite of audio diagnostic tools. We are committed to protecting your privacy. This policy explains what data we collect (if any), how we use it, and what rights you have.</p>
-          <p>The short version: <strong>we do not collect, transmit, or store your microphone audio or any personal audio data.</strong> All audio processing happens entirely within your browser using the Web Audio API and MediaRecorder API. Nothing is uploaded to our servers.</p>
+          <p>The audio tools process microphone input and generated sounds in your browser. The tool code does not upload audio or test result values. The site does load third-party analytics scripts, which can receive page usage and technical information as described below.</p>
         </section>
 
         <section>
           <h2>Information We Collect</h2>
           <h3>Audio Data</h3>
-          <p>We do <strong>not</strong> collect, record, or transmit microphone input or any audio data you generate while using the tools on this site. All microphone access is handled by your browser's native APIs. Audio data never leaves your device.</p>
+          <p>The audio tool code processes microphone input and generated sounds in your browser and does not upload audio or test result values. Microphone access is controlled by your browser. Separate from the tools, third-party analytics scripts load on the site and may collect information about page visits and the browser or device.</p>
 
           <h3>Usage Data (Analytics)</h3>
-          <p>We may collect anonymous, aggregated usage data — such as page views, browser type, and referring pages — using privacy-respecting analytics tools. This data cannot be used to identify you individually and is used solely to understand how the tools are used so we can improve them.</p>
+          <p>The site currently loads Google Analytics and Ahrefs Web Analytics. Google Analytics may process page URLs, usage events, referral information, and technical details such as browser or device information; Google documents that Analytics can use cookies and that browsers may send the page URL and IP address to Google. Ahrefs says its Web Analytics product uses no cookies or persistent identifiers by default and reports aggregated traffic trends. See <a href="https://policies.google.com/technologies/partner-sites?hl=en-in" rel="noopener noreferrer">how Google uses information from sites that use its services</a>, <a href="https://support.google.com/analytics/answer/12159447?hl=en" rel="noopener noreferrer">Google Analytics data collection</a>, and <a href="https://help.ahrefs.com/en/articles/10247870-about-ahrefs-web-analytics" rel="noopener noreferrer">Ahrefs Web Analytics data collection</a>.</p>
 
           <h3>Cookies</h3>
-          <p>We may use cookies for the following purposes:</p>
+          <p>Google Analytics may use cookies or similar technologies depending on browser and configuration. Ahrefs Web Analytics says it does not use cookies or persistent identifiers by default. Third-party services may process information through their own technologies.</p>
           <ul>
-            <li><strong>Analytics cookies:</strong> To measure site traffic and popular tools.</li>
-            <li><strong>Advertising cookies:</strong> If third-party ads are displayed on the site, ad partners may set their own cookies per their respective privacy policies.</li>
+            <li><strong>Analytics:</strong> To understand page visits and site usage.</li>
           </ul>
-          <p>You can control cookie preferences through your browser settings. Disabling cookies will not affect the functionality of the audio test tools.</p>
+          <p>You can manage cookies through your browser settings. Blocking third-party scripts or cookies may affect analytics and may affect other embedded or site features, but the core audio tools are designed to run in the browser.</p>
 
           <h3>Contact Forms</h3>
-          <p>If you contact us via the contact form, we collect your name, email address, and the message you submit. This information is used solely to respond to your inquiry and is not shared with third parties.</p>
+          <p>If you contact us via the contact form, we receive the information you submit, such as your name, email address, and message. The form is handled through the site hosting/form infrastructure. We use submissions to respond and operate support; provider processing and retention may also apply.</p>
         </section>
 
         <section>
@@ -66,24 +65,23 @@ const schema = {
             <li>To operate and improve the audio testing tools</li>
             <li>To respond to support requests and inquiries</li>
             <li>To measure site performance and diagnose technical issues</li>
-            <li>To serve relevant advertising (if applicable)</li>
           </ul>
-          <p>We do not sell, rent, or share your personal information with third parties for their marketing purposes.</p>
+          <p>We do not sell personal information. Analytics providers process information under their own terms and privacy policies. We do not currently describe advertising services here because advertising code was not found in the site layout reviewed for this policy.</p>
         </section>
 
         <section>
           <h2>Third-Party Services</h2>
-          <p>The site may use third-party services that have their own privacy policies, including:</p>
+          <p>The site currently loads these third-party analytics services, which have their own terms and privacy policies:</p>
           <ul>
-            <li><strong>Google Analytics</strong> — for anonymous usage statistics</li>
-            <li><strong>Google AdSense</strong> (if enabled) — for serving advertisements</li>
+            <li><strong>Google Analytics</strong> — site usage measurement</li>
+            <li><strong>Ahrefs Web Analytics</strong> — aggregated site usage measurement</li>
           </ul>
           <p>We encourage you to review the privacy policies of these third parties.</p>
         </section>
 
         <section>
           <h2>Data Retention</h2>
-          <p>Since we do not collect audio data, there is nothing to retain. Contact form submissions are kept only as long as necessary to respond to your inquiry, after which they are deleted.</p>
+          <p>Audio and test result values are not uploaded by the audio tool code. Analytics providers and the hosting/form provider may retain information according to their own policies and configuration. Contact us through the <a href="/contact/">Contact page</a> with a data request.</p>
         </section>
 
         <section>

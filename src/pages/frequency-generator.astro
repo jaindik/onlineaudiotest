@@ -29,62 +29,62 @@ const schema = {
         {
           "@type": "Question",
           "name": "What is a frequency generator?",
-          "acceptedAnswer": { "@type": "Answer", "text": "A frequency generator produces audio tones at a precise frequency in Hertz (Hz). This online version uses the Web Audio API to synthesize tones directly in your browser - no download required. You can generate any frequency from 20 Hz to 20,000 Hz with four wave shapes and download the result as a WAV file." }
+          "acceptedAnswer": { "@type": "Answer", "text": "A frequency generator produces audio tones at a selected frequency in Hertz (Hz). This online version uses the Web Audio API to synthesize tones directly in your browser - no download required. You can select a value from 20 Hz to 20,000 Hz, choose a wave shape, and download the result as a WAV file." }
         },
         {
           "@type": "Question",
           "name": "What frequencies can humans hear?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The human audible range is approximately 20 Hz to 20,000 Hz. The upper limit declines with age - most adults over 40 cannot hear above 15–16 kHz. Low frequencies (20–200 Hz) are felt as bass. Mid frequencies (200 Hz–5 kHz) carry speech. High frequencies (5–20 kHz) add air and detail." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The commonly quoted hearing range is approximate and varies by listener and playback setup. This generator cannot assess hearing or diagnose a hearing condition. Use low volume; if you are concerned about your hearing, contact a qualified professional." }
         },
         {
           "@type": "Question",
           "name": "What is 440 Hz used for?",
-          "acceptedAnswer": { "@type": "Answer", "text": "440 Hz is concert pitch A4 - the international standard tuning reference (ISO 16) used worldwide to tune instruments. It is the A above middle C. Musicians and audio engineers use 440 Hz as the universal tuning anchor." }
+          "acceptedAnswer": { "@type": "Answer", "text": "440 Hz is the standardized concert pitch A4 reference used for musical tuning. It is a signal reference; this browser tool does not calibrate or measure an instrument." }
         },
         {
           "@type": "Question",
           "name": "Can I generate 20000 Hz online?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes - this generator supports 20 Hz to 20,000 Hz. Whether you hear 20,000 Hz depends on your age and hardware. Most adults over 30 cannot hear above 18,000 Hz, and many consumer speakers cannot accurately reproduce frequencies above 14–16 kHz." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The generator supports a selected range up to 20,000 Hz, but the tone may not be audible through every playback device or to every listener. Keep the volume comfortable; this is not a hearing test." }
         },
         {
           "@type": "Question",
           "name": "Why can't I hear high frequencies?",
-          "acceptedAnswer": { "@type": "Answer", "text": "High-frequency hearing declines with age due to loss of cochlear hair cells (presbycusis). This begins in the mid-20s and accelerates with noise exposure. Adults over 40 often cannot hear above 15,000 Hz. Hardware is also a limiting factor - laptop speakers typically cannot reproduce above 14–15 kHz." }
+          "acceptedAnswer": { "@type": "Answer", "text": "A tone may be inaudible because of the playback device, operating-system audio path, selected volume, environment, or individual hearing. This page cannot determine the cause or assess hearing. If you are concerned, seek qualified advice." }
         },
         {
           "@type": "Question",
           "name": "Is this frequency generator free?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes - completely free, no account, no download, no subscription. Runs entirely in your browser. You can also export tones as WAV files for offline use, calibration, or import into video and audio editors." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes, the generator is free to use in your browser. WAV tones are rendered locally by the tool. The site separately loads analytics for page usage; see the privacy policy." }
         },
         {
           "@type": "Question",
           "name": "What is a tone generator?",
-          "acceptedAnswer": { "@type": "Answer", "text": "A tone generator is a tool that produces a steady audio tone at a specific frequency. Online tone generators use the Web Audio API to synthesize these tones directly in your browser with no download or installation. They are widely used for hearing tests, speaker and headphone testing, musical instrument tuning, and audio equipment calibration." }
+          "acceptedAnswer": { "@type": "Answer", "text": "A tone generator produces a steady audio signal at a selected frequency. This browser tool can support listening checks and basic signal demonstrations; its output is not calibrated measurement equipment." }
         },
         {
           "@type": "Question",
           "name": "Is this frequency generator accurate?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The browser schedules a digital oscillator at the frequency you select. The sound you hear also passes through your operating system, audio hardware, and speakers or headphones, so this page does not certify acoustic frequency or level accuracy and should not be used for equipment calibration." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The browser schedules a digital oscillator at the selected frequency. The sound passes through your operating system, audio hardware, and speakers or headphones, so this page does not certify acoustic frequency or level accuracy and must not be used for equipment calibration." }
         },
         {
           "@type": "Question",
           "name": "How do I test my speakers with a frequency generator?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Start at 1,000 Hz as a reference and confirm the tone is clean. Then step down through 500 Hz, 200 Hz, 100 Hz, 60 Hz, 40 Hz, and 20 Hz to test bass extension - listen for buzzing, rattling, or sudden drops that indicate resonance or rolloff. Then step up through 5 kHz, 10 kHz, and 14 kHz to test treble response. Use Sweep mode for a continuous sweep from low to high to hear the full response in one pass." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Play tones at a comfortable low volume and listen for obvious changes or unwanted sounds. Results depend on the speaker, room, and playback path; a listening check cannot measure frequency response or prove a driver is damaged." }
         },
         {
           "@type": "Question",
           "name": "What frequency is best for subwoofer testing?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Use 20 Hz, 40 Hz, 60 Hz, and 80 Hz to test subwoofer performance. 20 Hz is the absolute low limit and stresses the driver at maximum excursion. 40-60 Hz is where most subwoofers are tuned - bass should be strong and clean here. 80 Hz is the typical crossover point between a subwoofer and the main speakers. If tones below 40 Hz are inaudible, your subwoofer has limited extension or the room is absorbing those frequencies." }
+          "acceptedAnswer": { "@type": "Answer", "text": "There is no single best tone for every subwoofer or room. Low-frequency playback depends on the speaker, amplifier, placement, and listening level. Keep the volume low and do not use tones to stress-test a driver." }
         },
         {
           "@type": "Question",
           "name": "Can I download generated tones?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes - click Download WAV to export any tone or sweep as a WAV file. Choose from 1, 5, 10, 30, or 60 second durations. The file is rendered offline inside your browser using the Web Audio API's OfflineAudioContext - no audio is ever sent to a server. Downloaded WAV files can be imported into DAWs, video editors, and audio analysis tools." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. The tool renders selected tones or sweeps as WAV files in your browser. The site separately loads analytics for page usage; see the privacy policy." }
         },
         {
           "@type": "Question",
           "name": "What is a frequency sweep?",
-          "acceptedAnswer": { "@type": "Answer", "text": "A frequency sweep (also called a sine sweep or chirp) plays a tone that changes continuously from a start frequency to an end frequency over a set duration. Sweeps are used to test speaker frequency response, identify resonances in rooms and enclosures, and find the exact rolloff point of a driver or amplifier. Switch to Sweep mode on this generator to run a sweep over any frequency range from 20 Hz to 20,000 Hz." }
+          "acceptedAnswer": { "@type": "Answer", "text": "A frequency sweep plays tones that change over a selected range and duration. It can help you listen for changes, but browser playback does not measure speaker frequency response, room resonances, or hardware rolloff." }
         }
       ]
     }
@@ -95,7 +95,7 @@ const schema = {
 <Layout
   title="Frequency Generator Online — Free Tone Generator 20Hz to 20kHz"
   description="Play any frequency from 20 Hz to 20,000 Hz instantly in your browser. Free tone generator — type exact Hz or kHz, choose sine/square/sawtooth/triangle waves, download as WAV. No signup."
-  keywords="frequency generator, frequency generator online, tone generator, sound frequency generator, audio frequency generator, sine wave generator, square wave generator, sawtooth wave generator, triangle wave generator, 440hz tone generator, download test tone, calibration tone, audio test tone, frequency sweep generator, 1000hz tone wav"
+  keywords="frequency generator, frequency generator online, tone generator, sound frequency generator, audio frequency generator, sine wave generator, square wave generator, sawtooth wave generator, triangle wave generator, 440hz tone generator, download test tone, test tone, audio test tone, frequency sweep generator, 1000hz tone wav"
   canonical="https://onlineaudiotest.com/frequency-generator/"
   alternates={buildToolAlternates('/frequency-generator/', '/pt-br/gerador-de-frequencia/')}
   schema={schema}
@@ -344,7 +344,7 @@ const schema = {
       <!-- Disclaimer -->
       <p class="fg-disclaimer">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><line x1="8" y1="5" x2="8" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.75" fill="currentColor"/></svg>
-        Use headphones for best results. Laptop speakers typically cannot reproduce below 80 Hz or above 14 kHz accurately.
+        Start at a low volume before playing a tone. Playback range and level depend on your headphones or speakers, device, and audio settings; the generator does not measure the acoustic output.
       </p>
 
     </div>
@@ -354,43 +354,32 @@ const schema = {
   <div class="edu-section">
 
     <h2>What Is a Frequency Generator?</h2>
-    <p>A frequency generator produces a continuous audio tone at a specific frequency. Frequency - measured in Hertz (Hz) - describes how many times per second a sound wave completes a full cycle. A 440 Hz tone completes 440 cycles per second; a 20 Hz tone completes just 20. The human ear perceives frequency as pitch: low frequencies are bass, high frequencies are treble.</p>
-    <p>This generator uses the <strong>Web Audio API</strong> to synthesize tones entirely in your browser. No files are downloaded from a server, no audio is transmitted anywhere. The oscillator runs locally, which means there is zero latency between changing a setting and hearing the result. The <strong>Download WAV</strong> feature renders audio offline using a separate high-speed rendering pass - the exported file is identical to what you hear.</p>
+    <p>A frequency generator produces a continuous audio tone at a specific frequency. Frequency - measured in Hertz (Hz) - describes how many times per second a sound wave completes a full cycle. A 440 Hz tone completes 440 cycles per second; a 20 Hz tone completes just 20. People perceive frequency as pitch, though hearing and playback vary between listeners and equipment.</p>
+    <p>This generator uses the <strong>Web Audio API</strong> to synthesize tones entirely in your browser. No files are downloaded from a server, no audio is transmitted anywhere. Changing a control updates the generated tone through the browser audio path; system and device processing may add delay. The <strong>Download WAV</strong> feature renders an offline digital tone, which may sound different from playback through your selected output device.</p>
 
-    <h2>Human Hearing Range</h2>
-    <p>The standard human audible range is <strong>20 Hz to 20,000 Hz</strong>. In practice, the upper limit is highly age-dependent:</p>
-    <table class="freq-table">
-      <thead><tr><th>Age</th><th>Typical upper limit</th></tr></thead>
-      <tbody>
-        <tr><td>Under 18</td><td>Up to 20,000 Hz</td></tr>
-        <tr><td>18–25</td><td>17,000–20,000 Hz</td></tr>
-        <tr><td>26–35</td><td>16,000–18,000 Hz</td></tr>
-        <tr><td>36–50</td><td>14,000–17,000 Hz</td></tr>
-        <tr><td>51–60</td><td>12,000–15,000 Hz</td></tr>
-        <tr><td>60+</td><td>10,000–13,000 Hz</td></tr>
-      </tbody>
-    </table>
-    <p>High-frequency hearing declines because cochlear hair cells at the base of the cochlea - which respond to high frequencies - experience the most mechanical stress and wear out first. This process (presbycusis) begins in the mid-20s and accelerates with noise exposure. Hair cells do not regenerate once lost. Use the <a href="/hearing-test/">hearing test</a> to find your personal upper frequency limit.</p>
+    <h2>Hearing and playback limits</h2>
+    <p>The generator can create tones across its selected range, but whether a tone is audible depends on the listener, playback volume, audio device, and listening environment. A listening result from this page is not a hearing assessment or diagnosis. Use a comfortable low volume and stop if you feel discomfort.</p>
+    <p>If you are concerned about your hearing, contact a qualified hearing professional. The <a href="/hearing-test/">online hearing test</a> is a non-diagnostic browser listening exercise and cannot replace a clinical assessment.</p>
 
     <h2>Wave Types Explained</h2>
-    <p><strong>Sine wave</strong> - A pure tone containing only the fundamental frequency with no harmonics. Smooth, clean, and used for precise acoustic measurements. Sounds like a tuning fork or flute.</p>
+    <p><strong>Sine wave</strong> - A simple waveform containing a fundamental frequency without added harmonics. Sounds like a tuning fork or flute.</p>
     <p><strong>Square wave</strong> - Jumps abruptly between extremes, containing the fundamental plus all odd harmonics (decaying at 1/n). Sounds buzzy and hollow - similar to a clarinet or vintage synthesizer. Useful for testing <a href="/speaker-test/">speaker and amplifier</a> transient response.</p>
     <p><strong>Sawtooth wave</strong> - Contains all harmonics (odd and even, decaying at 1/n). The brightest, most harmonically rich waveform. The starting point for subtractive synthesis in analog synthesizers.</p>
     <p><strong>Triangle wave</strong> - Contains only odd harmonics, but they decay faster than a square wave (at 1/n²). Softer and flute-like - more character than a sine, less buzz than a square.</p>
 
     <h2>Common Frequency Uses</h2>
-    <p>Each part of the audible spectrum has distinct characteristics. The table below covers the most searched frequencies - useful for speaker testing, subwoofer calibration, tuning, and <a href="/hearing-test/">hearing checks</a>.</p>
+    <p>Each part of the audible spectrum has distinct characteristics. The table below lists common audio frequencies used for listening and signal checks, and <a href="/hearing-test/">hearing checks</a>.</p>
     <table class="freq-table">
       <thead><tr><th>Frequency</th><th>Common Name</th><th>Typical Uses</th></tr></thead>
       <tbody>
-        <tr><td>20 Hz</td><td>Sub-bass threshold</td><td>Lower limit of human hearing; felt as vibration more than sound; stress-tests subwoofers and ported enclosures</td></tr>
-        <tr><td>40 Hz</td><td>Deep bass</td><td>Kick drum sub-frequency, bass guitar fundamentals; common subwoofer tuning and alignment point</td></tr>
+        <tr><td>20 Hz</td><td>Sub-bass threshold</td><td>Low-frequency listening and signal check; audibility and output depend on playback equipment and room</td></tr>
+        <tr><td>40 Hz</td><td>Deep bass</td><td>Low-frequency signal for listening checks; actual output depends on speaker and room</td></tr>
         <tr><td>60 Hz</td><td>Mains hum (US/CA)</td><td>Electrical interference reference in North America (50 Hz in Europe); hum and buzz troubleshooting</td></tr>
         <tr><td>100 Hz</td><td>Upper bass</td><td>Bass EQ reference point; <a href="/speaker-test/">speaker</a> low-end rolloff test; room resonance identification</td></tr>
-        <tr><td>440 Hz</td><td>Concert A (A4)</td><td>International tuning standard (ISO 16); used to tune every orchestral instrument worldwide</td></tr>
+        <tr><td>440 Hz</td><td>Concert A (A4)</td><td>International tuning standard (ISO 16); a common reference used for musical tuning</td></tr>
         <tr><td>1,000 Hz</td><td>Reference tone (1 kHz)</td><td>Common reference tone for listening and signal checks; this browser tool is not calibrated measurement equipment</td></tr>
         <tr><td>10,000 Hz</td><td>High treble</td><td>Cymbal and string "air"; treble clarity test; <a href="/headphone-test/">headphone</a> and tweeter quality check</td></tr>
-        <tr><td>20,000 Hz</td><td>Upper hearing limit</td><td>Maximum of the audible range; tweeter stress test; most adults over 30 cannot perceive this frequency</td></tr>
+        <tr><td>20,000 Hz</td><td>Upper end of generator range</td><td>Whether this tone is audible depends on the listener and playback equipment</td></tr>
       </tbody>
     </table>
 
@@ -407,32 +396,32 @@ const schema = {
 
     <div class="faq-item">
       <p class="faq-q">What frequencies can humans hear?</p>
-      <p class="faq-a">The standard human hearing range is 20 Hz to 20,000 Hz. The upper limit declines with age - most adults over 40 cannot hear above 15,000 Hz. Use the <a href="/hearing-test/">hearing test</a> on this site to estimate your personal limit.</p>
+      <p class="faq-a">The commonly quoted hearing range is approximate and varies by listener and playback setup. This generator cannot assess hearing or diagnose a hearing condition. Use low volume; if you are concerned about your hearing, contact a qualified professional.</p>
     </div>
 
     <div class="faq-item">
       <p class="faq-q">What is 440 Hz used for?</p>
-      <p class="faq-a">440 Hz is concert pitch A4 - the international standard tuning reference (ISO 16) used to tune instruments worldwide. It is the A above middle C. Audio engineers use it as a quick calibration reference, and musicians use it to verify tuning before sessions.</p>
+      <p class="faq-a">440 Hz is the standardized concert pitch A4 reference used for musical tuning. It is a signal reference; this browser tool does not calibrate or measure an instrument.</p>
     </div>
 
     <div class="faq-item">
       <p class="faq-q">Can I generate 20,000 Hz online?</p>
-      <p class="faq-a">Yes - the generator supports 20 Hz to 20,000 Hz. Whether you hear it depends on age and hardware. Most adults over 30 cannot perceive 20,000 Hz, and many consumer speakers cannot accurately reproduce frequencies above 14–16 kHz regardless of the source signal.</p>
+      <p class="faq-a">The generator supports a selected range up to 20,000 Hz, but the tone may not be audible through every playback device or to every listener. Keep the volume comfortable; this is not a hearing test.</p>
     </div>
 
     <div class="faq-item">
       <p class="faq-q">Why can't I hear high frequencies?</p>
-      <p class="faq-a">High-frequency hearing declines naturally with age due to the loss of cochlear hair cells (presbycusis). Hair cells do not regenerate once damaged. Adults over 40 commonly cannot hear above 15,000 Hz. Hardware also limits reproduction - cheap laptop speakers and earbuds often cannot produce frequencies above 14–15 kHz regardless of your hearing.</p>
+      <p class="faq-a">A tone may be inaudible because of the playback device, operating-system audio path, selected volume, environment, or individual hearing. This page cannot determine the cause or assess hearing. If you are concerned, seek qualified advice.</p>
     </div>
 
     <div class="faq-item">
       <p class="faq-q">Is this frequency generator free?</p>
-      <p class="faq-a">Yes - completely free, no account, no download, no subscription. Runs entirely in your browser. WAV export is also free - tones are rendered offline locally and never sent to any server.</p>
+      <p class="faq-a">Yes, the generator is free to use in your browser. WAV tones are rendered locally by the tool. The site separately loads analytics for page usage; see the <a href="/privacy/">privacy policy</a>.</p>
     </div>
 
     <div class="faq-item">
       <p class="faq-q">What is a tone generator?</p>
-      <p class="faq-a">A tone generator is a tool that produces a steady audio tone at a specific frequency. Online tone generators use the Web Audio API to synthesize tones directly in your browser with no installation required. They are used for hearing tests, <a href="/speaker-test/">speaker testing</a>, musical instrument tuning, and audio calibration.</p>
+      <p class="faq-a">A tone generator produces a steady audio signal at a selected frequency. This browser tool can support listening checks and basic signal demonstrations; its output is not calibrated measurement equipment.</p>
     </div>
 
     <div class="faq-item">
@@ -442,22 +431,22 @@ const schema = {
 
     <div class="faq-item">
       <p class="faq-q">How do I test my speakers with a frequency generator?</p>
-      <p class="faq-a">Start at 1,000 Hz as a reference and confirm the tone is clean. Step down through 500 Hz, 200 Hz, 100 Hz, 60 Hz, 40 Hz, and 20 Hz to test bass extension - listen for buzzing, rattling, or sudden volume drops that indicate resonance or rolloff. Then step up through 5 kHz, 10 kHz, and 14 kHz to test treble. Use Sweep mode for a continuous pass across the full range. For a dedicated left/right channel check, visit the <a href="/speaker-test/">speaker test</a> page.</p>
+      <p class="faq-a">Play tones at a comfortable low volume and listen for obvious changes or unwanted sounds. Results depend on the speaker, room, and playback path; a listening check cannot measure frequency response or prove a driver is damaged.</p>
     </div>
 
     <div class="faq-item">
       <p class="faq-q">What frequency is best for subwoofer testing?</p>
-      <p class="faq-a">Use 20 Hz, 40 Hz, 60 Hz, and 80 Hz. At 20 Hz the driver is at maximum excursion - if you hear distortion or feel the cone bottoming out, back off the volume. 40-60 Hz is where most subwoofers are tuned and should sound strong and clean. 80 Hz is the standard crossover point. Use the Bass presets in the tone generator to step through each frequency quickly.</p>
+      <p class="faq-a">There is no single best tone for every subwoofer or room. Low-frequency playback depends on the speaker, amplifier, placement, and listening level. Keep the volume low and do not use tones to stress-test a driver.</p>
     </div>
 
     <div class="faq-item">
       <p class="faq-q">Can I download generated tones?</p>
-      <p class="faq-a">Yes - click Download WAV to export any tone or sweep as a WAV file in 1, 5, 10, 30, or 60 second lengths. The audio is rendered offline inside your browser using the Web Audio API's OfflineAudioContext and is never sent to any server. Downloaded files can be imported into DAWs, video editors, and audio analysis tools.</p>
+      <p class="faq-a">Yes. The tool renders selected tones or sweeps as WAV files in your browser. The site separately loads analytics for page usage; see the <a href="/privacy/">privacy policy</a>.</p>
     </div>
 
     <div class="faq-item">
       <p class="faq-q">What is a frequency sweep?</p>
-      <p class="faq-a">A frequency sweep (also called a sine sweep or chirp) plays a tone that changes continuously from a start frequency to an end frequency over a set duration. Sweeps reveal speaker frequency response, identify resonances in rooms and enclosures, and locate rolloff points in drivers or amplifiers. Switch to Sweep mode and set your frequency range and duration, then press Play Sweep.</p>
+      <p class="faq-a">A frequency sweep plays tones that change over a selected range and duration. It can help you listen for changes, but browser playback does not measure speaker frequency response, room resonances, or hardware rolloff.</p>
     </div>
   </div>
 

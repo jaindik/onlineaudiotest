@@ -9,7 +9,7 @@ const schema = {
       "@type": "WebApplication",
       "name": "Bluetooth Latency Test",
       "url": "https://onlineaudiotest.com/bluetooth-latency-test/",
-      "description": "Free Bluetooth latency test. Measure your Bluetooth headphone or speaker audio delay in milliseconds. Understand your codec and how to reduce wireless audio lag. No download.",
+      "description": "Free browser tool showing reported output latency or estimating playback-to-microphone round-trip delay on a Bluetooth audio route. It cannot identify the active codec.",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires Web Audio API support",
@@ -30,32 +30,32 @@ const schema = {
         {
           "@type": "Question",
           "name": "Which Bluetooth codec has the lowest latency?",
-          "acceptedAnswer": { "@type": "Answer", "text": "aptX Low Latency and LC3 (Bluetooth LE Audio) are the codecs designed specifically for low latency. SBC is the universal fallback and introduces higher latency than aptX or AAC. LDAC prioritizes audio quality rather than minimizing latency. Actual latency varies significantly by device, implementation, and conditions. Both your phone and headphones must support the same codec for it to activate." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Some codecs are designed to reduce codec-related delay, but no codec name guarantees a specific end-to-end result. Delay also depends on both devices, operating system, buffering, and the app. Source and headphones need compatible support for a codec to be available." }
         },
         {
           "@type": "Question",
           "name": "How do I reduce Bluetooth audio delay on Android?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Enable Developer Options on Android (Settings → About Phone → tap Build Number 7 times), then go to Developer Options → Bluetooth Audio Codec and select aptX, aptX HD, or LDAC if available. Avoid SBC unless forced. After changing, disconnect and reconnect your headphones. Re-run this test to confirm the new latency. Note that the codec must be supported by both your phone and headphones." }
+          "acceptedAnswer": { "@type": "Answer", "text": "First check whether your Android version and manufacturer expose negotiated codec details in Developer Options or a companion app. Available settings vary, and a manual selection may not be supported by both devices. This browser test cannot confirm a codec change; compare repeated measurements using the same setup." }
         },
         {
           "@type": "Question",
           "name": "Does Bluetooth 5.0 reduce audio latency?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Bluetooth 5.0 increases range and bandwidth over Bluetooth 4.2, but it does not inherently reduce audio latency. Latency is determined by the codec, not the Bluetooth version. A device using Bluetooth 5.0 with the SBC codec will still have 150–250 ms of delay. Latency improvements come from upgrading the codec (aptX LL, LC3) or using 2.4 GHz wireless (not standard Bluetooth), as found in many gaming headsets." }
+          "acceptedAnswer": { "@type": "Answer", "text": "A Bluetooth version number alone does not establish audio latency. Codec support, device implementation, buffering, and the full audio path all matter. Check the specifications for the exact source and headphones; some gaming products use a separate 2.4 GHz dongle rather than Bluetooth." }
         },
         {
           "@type": "Question",
           "name": "My gaming headset has a 'Game Mode' — will it reduce Bluetooth latency?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Many gaming headsets implement 'Game Mode' as a low-latency preset that switches to aptX Low Latency or a proprietary protocol on the Bluetooth connection. This can bring latency down to 40–60 ms, a noticeable improvement over standard SBC. However, some headsets that advertise low gaming latency use a 2.4 GHz USB dongle instead of Bluetooth, which is a different radio technology and can achieve under 20 ms. Check your headset's documentation to confirm which mode uses which connection type." }
+          "acceptedAnswer": { "@type": "Answer", "text": "A Game Mode may change processing or the wireless connection, but the name does not reveal which protocol is used or guarantee a latency figure. Some products use a separate 2.4 GHz USB dongle rather than Bluetooth. Check the exact product documentation and connection mode." }
         },
         {
           "@type": "Question",
           "name": "Why is Bluetooth audio delayed on iPhone?",
-          "acceptedAnswer": { "@type": "Answer", "text": "iPhone supports AAC for Bluetooth audio, negotiating it automatically with compatible headphones and falling back to SBC otherwise. iOS does not expose codec selection — unlike Android, you cannot manually override the codec. For lower latency on iPhone, use a wired connection via a USB-C or Lightning adapter. AirPods are generally well optimized for Apple's ecosystem, but actual latency depends on the device, application, and audio pipeline." }
+          "acceptedAnswer": { "@type": "Answer", "text": "iOS does not provide a general user-facing Bluetooth codec selector. Codec negotiation depends on the device and accessory. For timing-sensitive use, compare a wired connection with the same app and setup; this test cannot identify the active codec or explain app-specific synchronization." }
         },
         {
           "@type": "Question",
           "name": "How do I know which Bluetooth codec I'm using?",
-          "acceptedAnswer": { "@type": "Answer", "text": "On Android, go to Developer Options → Bluetooth Audio Codec — it shows the codec currently negotiated with your connected headphones. Some manufacturer companion apps (Sony Headphones Connect, Jabra Sound+) also display the active codec. On iPhone, iOS does not expose this information. There is no built-in way to check the active Bluetooth codec on iOS." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Some Android versions and manufacturer tools may display codec information while headphones are connected; menu names and availability vary. iOS does not provide a general user-facing codec display. This site cannot detect the active codec." }
         }
       ]
     }
@@ -131,35 +131,35 @@ const schema = {
   <!-- CODEC COMPARISON -->
   <div class="how-section">
     <h2>Bluetooth codec latency comparison</h2>
-    <p style="font-size:14px;color:var(--mute);margin-bottom:var(--s-md)">The codec active between your phone and headphones is the single biggest factor in Bluetooth audio latency. Both devices must support the same codec for it to be used — otherwise the connection falls back to SBC. Actual numbers vary by device and implementation. <a href="/bluetooth-codec-guide/">Learn how every Bluetooth codec works →</a></p>
+    <p style="font-size:14px;color:var(--mute);margin-bottom:var(--s-md)">Codec choice can affect Bluetooth audio delay, but it is only one part of the audio path. Source and headphone implementation, buffering, operating-system processing, and the app also matter. This browser tool cannot detect the active codec or isolate its contribution. <a href="/bluetooth-codec-guide/">Learn how Bluetooth codecs work →</a></p>
     <div class="level-table-wrap">
       <table class="level-table">
         <thead>
           <tr>
             <th>Codec</th>
-            <th>Typical Latency</th>
+            <th>What to know</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><strong>SBC</strong></td>
-            <td class="latency-poor">170–270 ms</td>
+            <td>Baseline codec; total delay varies by implementation and audio path</td>
           </tr>
           <tr>
             <td><strong>AAC</strong></td>
-            <td class="latency-fair">120–200 ms</td>
+            <td>Performance varies by source, headphones, and software</td>
           </tr>
           <tr>
             <td><strong>aptX</strong></td>
-            <td class="latency-fair">80–150 ms</td>
+            <td>Codec support at both ends is required; total delay varies</td>
           </tr>
           <tr>
             <td><strong>aptX Adaptive</strong></td>
-            <td class="latency-good">50–80 ms</td>
+            <td>Adaptive modes and device implementation affect delay</td>
           </tr>
           <tr>
             <td><strong>aptX Low Latency</strong></td>
-            <td class="latency-good">30–40 ms</td>
+            <td>Designed for lower codec delay; end-to-end latency still varies</td>
           </tr>
         </tbody>
       </table>
@@ -172,19 +172,19 @@ const schema = {
     <div class="steps">
       <div class="step">
         <span class="step-num">1</span>
-        <p class="step-body"><strong>Under 50 ms</strong> — Excellent. Suitable for gaming and video. You are likely on aptX Low Latency, LC3, or a wired connection.</p>
+        <p class="step-body">Read the value as a browser or device report, depending on the selected test. It does not identify a codec, establish a universal quality grade, or predict synchronization in a specific app.</p>
       </div>
       <div class="step">
         <span class="step-num">2</span>
-        <p class="step-body"><strong>50–100 ms</strong> — Very good. Most users won't notice any delay during streaming, calls, or casual gaming.</p>
+        <p class="step-body">For comparisons, keep the same device, browser, output route, app state, and measurement method. Repeat the measurement to see whether a change is consistent.</p>
       </div>
       <div class="step">
         <span class="step-num">3</span>
-        <p class="step-body"><strong>100–200 ms</strong> — Typical Bluetooth performance. Normal for SBC and AAC codecs. Acceptable for music and calls; may be noticeable in fast-paced games or rhythm apps.</p>
+        <p class="step-body">The microphone round-trip option estimates playback-to-microphone delay. Room acoustics, microphone placement, and browser or operating-system processing can affect it.</p>
       </div>
       <div class="step">
         <span class="step-num">4</span>
-        <p class="step-body"><strong>Over 200 ms</strong> — Noticeable lag during videos and games. You are likely on SBC or experiencing interference. Switch codec in Android Developer Options or move closer to your device.</p>
+        <p class="step-body">To check a Bluetooth codec, use your device settings or the headphone maker’s documentation. This page cannot tell whether a codec change occurred.</p>
       </div>
     </div>
   </div>
@@ -203,14 +203,14 @@ const schema = {
       </div>
       <div class="step">
         <span class="step-num">3</span>
-        <p class="step-body"><strong>Select the best codec your headphones support.</strong> Choose aptX HD, LDAC, or aptX if available. Avoid SBC unless forced. If your headphones don't support the selected codec, the connection automatically falls back to SBC.</p>
+        <p class="step-body"><strong>Check current codec information.</strong> If your Android version and manufacturer expose Bluetooth codec details in Developer Options, inspect the negotiated value while the headphones are connected. Menu names and available choices vary.</p>
       </div>
       <div class="step">
         <span class="step-num">4</span>
-        <p class="step-body"><strong>Disconnect and reconnect your headphones</strong>, then re-run this test to confirm the latency has changed. A successful codec upgrade typically reduces latency by 50–100 ms.</p>
+        <p class="step-body"><strong>Use supported device guidance.</strong> Codec settings may be unavailable, reset on reconnect, or ignored when one device does not support the selected option. Compare using the same setup and treat browser values as limited indicators.</p>
       </div>
     </div>
-    <p style="font-size:13px;color:var(--mute);margin-top:var(--s-md)">Note: iPhone does not expose codec selection. iOS negotiates AAC automatically with compatible devices and falls back to SBC otherwise.</p>
+    <p style="font-size:13px;color:var(--mute);margin-top:var(--s-md)">Menu names and codec visibility vary across Android versions and manufacturers. iOS does not provide a general user-facing Bluetooth codec selector.</p>
   </div>
 
   <!-- GAMING HEADSETS -->
@@ -219,15 +219,15 @@ const schema = {
     <div class="steps">
       <div class="step">
         <span class="step-num">!</span>
-        <p class="step-body"><strong>Standard Bluetooth is not designed for gaming.</strong> Even at best (aptX LL ~40 ms), Bluetooth latency is perceptible during competitive play. Many "gaming" headsets that use standard Bluetooth simply cannot achieve the latency of a wired connection.</p>
+        <p class="step-body"><strong>For timing-sensitive play, compare the complete setup.</strong> The browser value here does not predict audio and video synchronization inside a particular game. Test the game itself and check its audio settings and device guidance.</p>
       </div>
       <div class="step">
         <span class="step-num">✓</span>
-        <p class="step-body"><strong>Gaming headsets with 2.4 GHz dongles are different.</strong> USB dongle-based wireless headsets (common from brands like SteelSeries, Logitech, Razer, HyperX) use proprietary 2.4 GHz wireless — not standard Bluetooth — and achieve under 20 ms latency. This test will show the latency of your default audio output. If using a USB dongle, connect it and select it as your output before testing.</p>
+        <p class="step-body"><strong>Check the connection type.</strong> Some gaming headsets use a USB dongle and proprietary 2.4 GHz wireless instead of Bluetooth. This page reports browser or device timing; it does not validate manufacturer latency claims. Select the intended output and compare using the same test setup.</p>
       </div>
       <div class="step">
         <span class="step-num">~</span>
-        <p class="step-body"><strong>"Game Mode" on Bluetooth headsets.</strong> Some headsets switch to aptX Low Latency in Game Mode, achieving ~40 ms. This is better than standard Bluetooth but still higher than a 2.4 GHz dongle or wired connection. Check your headset manual to see which radio technology Game Mode uses.</p>
+        <p class="step-body"><strong>Check what Game Mode changes.</strong> The feature may change processing or wireless protocol, depending on the product. Check the headset manual to see whether it uses Bluetooth or a separate wireless dongle.</p>
       </div>
     </div>
   </div>
@@ -237,43 +237,43 @@ const schema = {
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <p class="faq-q">Which Bluetooth codec has the lowest latency?</p>
-      <p class="faq-a">aptX Low Latency and LC3 (Bluetooth LE Audio) are the codecs designed specifically for low latency. SBC is the universal fallback and introduces higher latency than aptX or AAC. LDAC prioritizes audio quality rather than minimizing latency. Actual latency varies significantly by device, implementation, and conditions — both your phone and headphones must support the same codec for it to activate.</p>
+      <p class="faq-a">Some codecs are designed to reduce codec-related delay, but no codec name guarantees a specific end-to-end result. Delay also depends on both devices, operating system, buffering, and the app. Source and headphones need compatible support for a codec to be available.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">How do I reduce Bluetooth audio delay on Android?</p>
-      <p class="faq-a">Enable Developer Options (Settings → About Phone → tap Build Number 7 times), then go to Developer Options → Bluetooth Audio Codec and select aptX, aptX HD, or LDAC if available. Disconnect and reconnect your headphones after changing. Re-run this test to confirm the improvement. Note that both your phone and headphones must support the selected codec.</p>
+      <p class="faq-a">First check whether your Android version and manufacturer expose negotiated codec details in Developer Options or a companion app. Available settings vary, and a manual selection may not persist or be supported by both devices. This browser test cannot confirm a codec change; compare repeated measurements using the same setup.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Does Bluetooth 5.0 reduce audio latency?</p>
-      <p class="faq-a">No — Bluetooth 5.0 increases range and bandwidth over Bluetooth 4.2, but audio latency is determined by the codec, not the Bluetooth version. A Bluetooth 5.0 device using SBC still has 150–250 ms of delay. Latency improvements come from upgrading the codec (aptX LL, LC3) or switching to 2.4 GHz wireless instead of standard Bluetooth.</p>
+      <p class="faq-a">A Bluetooth version number alone does not establish audio latency. Codec support, device implementation, buffering, and the full audio path all matter. Check the specifications for the exact source and headphones; some gaming products use a separate 2.4 GHz dongle rather than Bluetooth.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">My gaming headset has a 'Game Mode' — will it reduce Bluetooth latency?</p>
-      <p class="faq-a">Many gaming headsets implement Game Mode as a lower-latency setting that switches to aptX Low Latency or a proprietary protocol. This can bring latency down to 40–60 ms. However, some headsets advertised as "low latency for gaming" use a 2.4 GHz USB dongle — not standard Bluetooth — which achieves under 20 ms. Check your headset's documentation to confirm which mode uses which connection type.</p>
+      <p class="faq-a">A Game Mode can change processing or wireless protocol, but behavior varies by product. Some gaming headsets use a separate 2.4 GHz USB dongle instead of Bluetooth. Check the documentation for the exact connection mode.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Why is Bluetooth audio delayed on iPhone?</p>
-      <p class="faq-a">iPhone supports AAC for Bluetooth audio, negotiating it automatically with compatible headphones and falling back to SBC otherwise. iOS does not expose codec selection — unlike Android, you cannot manually override it. For lower latency, use a wired connection via a USB-C or Lightning adapter. AirPods are generally well optimized for Apple's ecosystem, but actual latency depends on the device, application, and audio pipeline.</p>
+      <p class="faq-a">iOS does not provide a general user-facing Bluetooth codec selector. Codec negotiation depends on the device and accessory. For timing-sensitive use, compare a wired connection with the same app and setup; this test cannot identify the active codec or explain app-specific synchronization.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">How do I know which Bluetooth codec I'm using?</p>
-      <p class="faq-a">On Android: go to Settings → Developer Options → Bluetooth Audio Codec — it shows the codec currently negotiated with your headphones. Some headphone manufacturer apps (Sony Headphones Connect, Jabra Sound+, etc.) also display the active codec. On iPhone, iOS does not expose this information — there is no built-in way to check which Bluetooth codec is active.</p>
+      <p class="faq-a">Some Android versions and manufacturer tools may display codec information while headphones are connected; menu names and availability vary. iOS does not provide a general user-facing codec display. This site cannot detect the active codec.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Is LDAC better than aptX for low latency?</p>
-      <p class="faq-a">No. LDAC prioritizes audio quality rather than minimizing latency — it transmits audio at up to 990 kbps, which produces excellent sound quality but not a low-latency connection. If low latency is your priority, aptX Low Latency or LC3 (Bluetooth LE Audio) are the right choices. LDAC is best suited for audiophile listening where quality matters more than delay.</p>
+      <p class="faq-a">LDAC is associated with higher-bitrate audio modes, but bitrate alone does not establish sound quality or end-to-end delay. Choose based on supported modes and your listening needs; this page cannot measure codec-specific delay.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">What is a good Bluetooth latency score?</p>
-      <p class="faq-a">Most users consider anything under 100 ms to be very good Bluetooth performance. Competitive gaming generally benefits from latency below 50 ms, which typically requires aptX Low Latency, LC3, or a 2.4 GHz wireless connection rather than standard Bluetooth.</p>
+      <p class="faq-a">There is no universal score threshold on this page: one result may be a browser-reported output value, while the microphone option estimates a round trip. Neither identifies codec or predicts synchronization in a specific game or app.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Why is my Bluetooth audio delayed?</p>
-      <p class="faq-a">Bluetooth audio delay is caused by codec limitations, buffering, signal interference, or device-specific processing. The codec is usually the dominant factor — SBC and AAC introduce more delay than aptX Adaptive or aptX Low Latency. Moving closer to your device and reducing Wi-Fi interference can also help.</p>
+      <p class="faq-a">Bluetooth delay can involve codec processing, buffering, radio conditions, device firmware, operating-system processing, and the app. Their relative effects vary, so this test cannot identify a single cause. Check the device maker guidance and compare changes under the same conditions.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Does Bluetooth version affect latency?</p>
-      <p class="faq-a">Not directly. The codec and device implementation usually matter more than Bluetooth version alone. A Bluetooth 5.0 device using SBC will still have 170–270 ms of delay. The version matters mainly for range and bandwidth — and for LC3 / LE Audio, which requires Bluetooth 5.2 or higher.</p>
+      <p class="faq-a">A Bluetooth version number alone does not establish audio latency or LE Audio support. Check specifications for the exact source, headphones, operating system, and supported audio profile. End-to-end delay also depends on the full audio path.</p>
     </div>
   </div>
 
@@ -364,26 +364,11 @@ const schema = {
       statusDot.className = 'dot' + (active ? ' active' : warning ? ' warning' : '');
     }
 
-    function grade(ms: number): { label: string; cls: string; advice: string } {
-      if (ms < 40) return {
-        label: 'Excellent — low latency codec',
-        cls: 'grade-excellent',
-        advice: 'Very low Bluetooth latency. Likely on aptX Low Latency, LC3, or a 2.4 GHz wireless connection. Suitable for gaming and latency-sensitive audio.'
-      };
-      if (ms < 120) return {
-        label: 'Good — aptX or AAC',
-        cls: 'grade-good',
-        advice: 'Good Bluetooth codec (aptX or AAC). Fine for music, streaming, and calls. May be noticeable in competitive gaming or rhythm games.'
-      };
-      if (ms < 200) return {
-        label: 'Standard — SBC or AAC',
-        cls: 'grade-fair',
-        advice: 'Standard Bluetooth latency. Suitable for music and calls but avoid for gaming. On Android, try switching to aptX or LDAC in Developer Options.'
-      };
+    function grade(_ms: number): { label: string; cls: string; advice: string } {
       return {
-        label: 'High — SBC fallback',
-        cls: 'grade-poor',
-        advice: 'High Bluetooth latency, consistent with SBC codec. On Android, enable Developer Options and switch to a higher-quality codec. Move closer to your device to reduce interference.'
+        label: 'Browser-reported value',
+        cls: 'grade-fair',
+        advice: 'This value does not identify your Bluetooth codec or provide a universal latency grade. Results depend on your browser, operating system, device, and audio route.'
       };
     }
 
