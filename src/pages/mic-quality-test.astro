@@ -10,13 +10,13 @@ const schema = {
       "@id": "https://onlineaudiotest.com/mic-quality-test/#tool",
       "name": "Microphone Quality Test",
       "url": "https://onlineaudiotest.com/mic-quality-test/",
-      "description": "Free browser-based microphone quality analyzer. Measures noise floor, signal-to-noise ratio, clipping, dynamic range, and overall recording quality score — entirely in your browser.",
+      "description": "Browser microphone check showing relative input level, clipping events, and quiet-versus-active frame estimates. Device gain and processing affect results.",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires getUserMedia and Web Audio API support",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "featureList": [
-        "Overall microphone quality score 0–100",
+        "Heuristic 0–100 session indicator",
         "Noise floor measurement in dBFS",
         "Signal-to-noise ratio analysis",
         "Clipping detection and count",
@@ -42,7 +42,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "How do I know if my microphone is good quality?",
-          "acceptedAnswer": { "@type": "Answer", "text": "A good microphone has a low noise floor (below -60 dB), a high signal-to-noise ratio (above 40 dB), no clipping, and a consistent signal level. This tool measures all of these and gives you a 0–100 quality score." }
+          "acceptedAnswer": { "@type": "Answer", "text": "This page summarizes one recording session using relative input levels, clipping events, and variation between quiet and active frames. Results depend on the selected microphone, gain, room, and browser or operating-system processing; the score is a heuristic indicator, not an objective model-quality grade." }
         },
         {
           "@type": "Question",
@@ -87,7 +87,7 @@ const schema = {
 
 <Layout
   title="Microphone Quality Test & Noise Analysis Tool – Online Mic Diagnostics"
-  description="Test your microphone quality online. Analyze noise floor, clipping, SNR, and dynamic range. Get a letter grade (A–F), benchmark comparisons, and personalized recommendations. Free and private."
+  description="Check microphone input level, clipping, and signal variation in your browser. Results are relative to this session and affected by device gain and processing."
   keywords="microphone quality test, mic quality test, microphone noise test, microphone analyzer, background noise microphone test, microphone clipping test"
   canonical="https://onlineaudiotest.com/mic-quality-test/"
   alternates={buildToolAlternates('/mic-quality-test/', '/pt-br/teste-de-qualidade-do-microfone/')}
@@ -253,7 +253,7 @@ const schema = {
       </div>
       <div class="step">
         <span class="step-num">3</span>
-        <p class="step-body"><strong>A full report is generated.</strong> Your microphone receives a quality score from 0–100 based on noise floor, SNR, clipping, input level, and dynamic range.</p>
+        <p class="step-body"><strong>A session report is generated.</strong> The 0–100 indicator is a heuristic summary of this recording session, not an objective microphone grade or comparison across devices.</p>
       </div>
       <div class="step">
         <span class="step-num">4</span>
@@ -286,7 +286,7 @@ const schema = {
       </div>
 
       <h2>Understanding noise floor</h2>
-      <p>The noise floor is the level of sound your microphone captures when you're not making any noise. Every microphone produces some self-noise — electronic noise from the capsule and circuitry. A lower (more negative) noise floor means a quieter, cleaner microphone. Built-in laptop microphones typically measure around −45 to −55 dBFS. A quality USB condenser microphone can reach −65 to −75 dBFS.</p>
+      <p>This tool estimates a quiet baseline from the quietest 15% of short input frames during the 10-second test. That is not a dedicated measurement of microphone self-noise: room noise, your speech, automatic gain control, noise suppression, and the selected input all affect it. Treat the displayed dBFS values as relative readings from this session, not as standardized microphone specifications.</p>
 
       <h2>Common microphone problems and causes</h2>
       <ul class="mq-seo-list">
@@ -309,7 +309,7 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">What is a good noise floor for a microphone?</p>
-      <p class="faq-a">Below −65 dBFS is excellent. −55 to −65 dBFS is good. −45 to −55 dBFS is fair. Above −45 dBFS means your environment or microphone is adding significant noise. Lower (more negative) is always better.</p>
+      <p class="faq-a">There is no universal threshold for this browser check. It estimates a baseline from the quietest 15% of frames in the test, and the result depends on microphone gain, room noise, and browser/OS processing. Compare repeated tests on the same setup and conditions only.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">What causes microphone clipping?</p>
@@ -598,18 +598,11 @@ const schema = {
     }
 
     function nfBenchmark(nf: number): string {
-      if (nf < -70) return 'Better than studio condenser microphones';
-      if (nf < -65) return 'Better than Blue Yeti / professional USB mics';
-      if (nf < -58) return 'Better than most USB headsets';
-      if (nf < -50) return 'Similar to a budget USB headset';
-      return 'Similar to a built-in laptop microphone';
+      return nf < -60 ? 'Lower quiet-frame level in this session' : nf < -45 ? 'Mid-range quiet-frame level in this session' : 'Higher quiet-frame level in this session';
     }
 
     function snrBenchmark(snr: number): string {
-      if (snr > 45) return 'Studio-quality separation from noise';
-      if (snr > 35) return 'Suitable for podcasting and streaming';
-      if (snr > 20) return 'Adequate for video calls and meetings';
-      return 'Background noise may be audible to listeners';
+      return snr > 35 ? 'Larger speech-to-baseline difference in this session' : snr > 15 ? 'Moderate speech-to-baseline difference in this session' : 'Small speech-to-baseline difference in this session';
     }
 
     function renderResults(r: MQResult) {
@@ -617,12 +610,12 @@ const schema = {
       const { letter, gc } = letterGrade(score);
 
       const gradeDesc: Record<string, string> = {
-        aplus: 'Studio-quality microphone. Excellent for everything.',
-        a:     'Professional-grade quality for streaming, podcasting, and calls.',
-        b:     'Good quality. Suitable for all standard recording uses.',
-        c:     'Acceptable quality. Some noise or level issues present.',
-        d:     'Below average. Audio quality may distract listeners.',
-        f:     'Significant issues detected. See recommendations below.',
+        aplus: 'High session indicator. This is a heuristic, not a studio or device quality rating.',
+        a:     'High session indicator. Results depend on this setup and test.',
+        b:     'Moderate session indicator. Review the measured session values below.',
+        c:     'Mixed session readings. Review the measured session values below.',
+        d:     'Low session indicator. Check input selection, gain, and room conditions.',
+        f:     'Low session indicator. Check input selection, gain, and room conditions.',
       };
 
       gradeRing.className = `grade-ring ${gc}`;
@@ -644,7 +637,7 @@ const schema = {
               <span class="mq-metric-name">Noise Floor</span>
               <span class="mq-metric-badge ${nfG}">${cap(nfG)}</span>
             </div>
-            <span class="mq-metric-val">${r.noiseFloor.toFixed(1)} dB</span>
+            <span class="mq-metric-val">${r.noiseFloor.toFixed(1)} dBFS</span>
             <span class="mq-metric-bench">${nfBenchmark(r.noiseFloor)}</span>
           </div>
           <div class="mq-metric ${snrG}">
@@ -652,7 +645,7 @@ const schema = {
               <span class="mq-metric-name">Signal-to-Noise</span>
               <span class="mq-metric-badge ${snrG}">${cap(snrG)}</span>
             </div>
-            <span class="mq-metric-val">${r.snr.toFixed(1)} dB</span>
+            <span class="mq-metric-val">${r.snr.toFixed(1)} dB (session estimate)</span>
             <span class="mq-metric-bench">${snrBenchmark(r.snr)}</span>
           </div>
           <div class="mq-metric ${clipG}">
@@ -682,27 +675,7 @@ const schema = {
             <span class="mq-metric-bench">Of test duration had speech signal</span>
           </div>
         </div>
-        <div class="benchmark-row">
-          <span class="eyebrow">Noise floor vs. common devices</span>
-          <div class="benchmark-bars">
-            ${[
-              { label: 'Your mic',      val: r.noiseFloor, highlight: true },
-              { label: 'Laptop mic',    val: -45 },
-              { label: 'USB headset',   val: -55 },
-              { label: 'Blue Yeti',     val: -68 },
-              { label: 'Studio mic',    val: -76 },
-            ].map(b => {
-              const pct = Math.max(0, Math.min(100, (b.val + 80) / 50 * 100));
-              return `<div class="bench-item">
-                <span class="bench-label ${b.highlight ? 'highlight' : ''}">${b.label}</span>
-                <div class="bench-track">
-                  <div class="bench-fill ${b.highlight ? 'highlight' : ''}" style="width:${pct}%"></div>
-                </div>
-                <span class="bench-val ${b.highlight ? 'highlight' : ''}">${b.val} dB</span>
-              </div>`;
-            }).join('')}
-          </div>
-        </div>`;
+        <p class="fg-disclaimer">These relative readings cannot compare microphone models or certify recording suitability. Run the same test again with the same setup to compare changes.</p>`;
 
       // Use-case compatibility
       const uses = [
@@ -713,7 +686,7 @@ const schema = {
         { label: 'Professional Voiceover', ok: score >= 88 && r.noiseFloor < -65 && r.clips === 0 },
       ];
       useCasesEl.innerHTML = `
-        <span class="eyebrow use-cases-title">Can your microphone handle:</span>
+        <span class="eyebrow use-cases-title">Heuristic checks (not a suitability guarantee):</span>
         <div class="use-case-list">
           ${uses.map(u => `
             <div class="use-case-item ${u.ok ? 'ok' : 'no'}">

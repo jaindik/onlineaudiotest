@@ -273,15 +273,15 @@ const schema = {
       </div>
 
       <h2>What you can learn from your audio spectrum</h2>
-      <p>A real-time audio spectrum turns invisible sound into a visual map of frequency energy. Speak into your microphone and you'll typically see a cluster of peaks in the 100–500 Hz range (your vocal fundamental and lower harmonics) with smaller peaks extending into the 1–4 kHz range where speech intelligibility lives. Play a bass guitar and energy concentrates in 40–200 Hz. A hissing "s" consonant shows up above 4 kHz. Room resonances appear as persistent peaks that remain even when the room is quiet.</p>
+      <p>A real-time spectrum is a visual view of frequency energy from the selected microphone input. The browser and operating system may apply gain control, noise suppression, or other processing. This is not a calibrated sound-level or microphone frequency-response measurement, and a missing visual band alone does not show hardware damage.</p>
       <p>The hover cursor lets you identify any peak's exact frequency, amplitude, and musical note. The Top Peaks table ranks the five loudest distinct components automatically — useful for spotting the harmonic series of an instrument or the dominant resonant modes of a room. When a dominant pitch is detected, use the <strong>Generate in Frequency Generator</strong> link to play back that exact frequency through your speakers and verify what you're hearing.</p>
 
       <h2>Common uses for an online spectrum analyzer</h2>
       <ul class="seo-list">
-        <li><strong>Microphone check:</strong> Confirm your mic is capturing a full-range signal without missing frequency bands, which can indicate hardware damage or a wrong sample rate.</li>
+        <li><strong>Microphone activity:</strong> See whether the selected input produces visible frequency energy while you speak. Use the <a href="/mic-test/">microphone test</a> to check basic input and playback.</li>
         <li><strong>Room acoustics:</strong> Identify room resonances (modes) that cause certain bass frequencies to boom or midrange frequencies to ring.</li>
         <li><strong>Speaker and headphone testing:</strong> Play a <a href="/frequency-generator/">frequency sweep</a> and watch the spectrum to see how your speaker responds at each frequency.</li>
-        <li><strong>Instrument pitch reference:</strong> Play a note and verify the dominant frequency matches the expected Hz value — useful for rough tuning or checking tuning fork accuracy.</li>
+        <li><strong>Instrument pitch reference:</strong> Inspect a dominant frequency as a rough visual reference. Use a chromatic tuner when precise tuning matters.</li>
         <li><strong>Background noise analysis:</strong> Identify the dominant frequency of ambient noise — HVAC hum (50/60 Hz harmonics), fan whine (500–2000 Hz), or electrical interference.</li>
         <li><strong>Audio equipment testing:</strong> Check a mixer, preamp, or audio interface for added coloration or noise at unexpected frequencies.</li>
       </ul>
@@ -302,7 +302,7 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">What is the hover cursor on the spectrum?</p>
-      <p class="faq-a">Hovering over the spectrum canvas shows a vertical cursor line with a tooltip displaying the exact frequency at that horizontal position, the amplitude in dBFS, and the nearest musical note. It works both during live analysis and while frozen, so you can examine a paused frame in detail.</p>
+      <p class="faq-a">The cursor shows the frequency bin and relative dBFS value represented at that point, plus a nearby musical note. These are digital input readings, not calibrated acoustic frequency-response or sound-pressure measurements.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Can I use this to tune my guitar or other instrument?</p>

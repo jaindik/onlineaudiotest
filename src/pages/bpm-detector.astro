@@ -14,7 +14,7 @@ const schema = {
       "operatingSystem": "Any",
       "browserRequirements": "Requires Web Audio API support",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "featureList": ["BPM detection from MP3", "BPM detection from WAV", "Tempo analysis", "Genre tempo reference"],
+      "featureList": ["Browser-based tempo estimate from a decoded audio file", "Tempo analysis", "Genre tempo reference"],
       "provider": { "@type": "Organization", "name": "OnlineAudioTest.com", "url": "https://onlineaudiotest.com/" }
     },
     {
@@ -35,12 +35,12 @@ const schema = {
         {
           "@type": "Question",
           "name": "How accurate is this BPM detector?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The detector is accurate within 1–2 BPM for most mainstream music with a clear, steady beat — pop, dance, hip-hop, rock, and electronic genres. Accuracy is lower for music with variable tempo (live recordings, classical, jazz with rubato), very short clips under 10 seconds, or tracks with no consistent rhythmic pulse. If the result looks like exactly half or double the expected BPM, that is a known half-time artifact — the true tempo is likely double the shown value." }
+          "acceptedAnswer": { "@type": "Answer", "text": "This browser tool estimates tempo from rhythmic patterns; it has not been validated to a fixed BPM error across a representative music dataset. Results can be ambiguous for syncopated, changing-tempo, sparse, or short clips, and algorithms may return a half-time or double-time interpretation. Compare the result with the track or another measurement before relying on it." }
         },
         {
           "@type": "Question",
           "name": "What audio formats does this BPM detector support?",
-          "acceptedAnswer": { "@type": "Answer", "text": "MP3 and WAV files are supported in all browsers. OGG and FLAC files work in Chrome and Firefox. AAC and M4A files work in Safari and Chrome. If your file is not supported, convert it to MP3 first using a free tool like Audacity or CloudConvert." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The browser must be able to decode the selected audio file through its Web Audio API. Supported formats vary by browser and operating system. If a file fails, try exporting it as WAV or MP3 and retry." }
         },
         {
           "@type": "Question",
@@ -50,7 +50,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "Can I detect the BPM of a live recording or microphone input?",
-          "acceptedAnswer": { "@type": "Answer", "text": "This tool analyzes uploaded audio files only. For live BPM detection via microphone, you would need a dedicated app such as Tap Tempo tools or DAW plugins. File-based analysis tends to be more accurate since it processes the full audio without microphone noise." }
+          "acceptedAnswer": { "@type": "Answer", "text": "This page analyzes uploaded audio files; it does not detect tempo live from a microphone. A file analysis avoids room pickup from a mic but can still be uncertain for ambiguous rhythms or short clips." }
         }
       ]
     }
@@ -60,7 +60,7 @@ const schema = {
 
 <Layout
   title="BPM Detector - Find the Tempo of Any Song Online"
-  description="Upload an MP3 or WAV and instantly detect the BPM of any song. Free online BPM detector — no download, no account, works in your browser."
+  description="Upload an audio file to estimate a song's tempo in BPM in your browser. Results can vary with clip length, rhythm, and browser file support."
   keywords="bpm detector, bpm detector mp3, song bpm detector, find bpm of song, tempo detector, beats per minute detector, bpm finder"
   canonical="https://onlineaudiotest.com/bpm-detector/"
   alternates={buildToolAlternates('/bpm-detector/', '/pt-br/detector-de-bpm/')}
@@ -71,7 +71,7 @@ const schema = {
   <!-- HERO -->
   <section class="tool-hero container">
     <h1>BPM Detector</h1>
-    <p>Upload any audio file and get the tempo (beats per minute) instantly. Works with MP3, WAV, OGG, and FLAC — directly in your browser, nothing to install.</p>
+    <p>Upload an audio file to estimate its tempo in beats per minute. Results can be ambiguous for short, syncopated, or changing-tempo music. File decoding depends on your browser; audio is analyzed in the page.</p>
   </section>
 
   <!-- TOOL -->
@@ -215,7 +215,7 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">How accurate is this BPM detector?</p>
-      <p class="faq-a">Within 1–2 BPM for most mainstream music with a clear, steady beat — pop, dance, hip-hop, rock, and electronic genres. Accuracy drops for music with variable tempo (live recordings, jazz, classical with rubato), very short clips under 10 seconds, and tracks with no consistent rhythmic pulse. For anything where precision matters, verify the result by tapping along to the track.</p>
+      <p class="faq-a">This tool estimates tempo, but it has not been validated to a fixed BPM error on a representative dataset. Short or syncopated clips and music with changing tempo can confuse beat detection. Check half-time and double-time alternatives and verify by listening or with another method.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">My result shows 64 BPM but the track feels much faster. Why?</p>
@@ -223,7 +223,7 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">What audio formats are supported?</p>
-      <p class="faq-a">MP3 and WAV work in all modern browsers. OGG and FLAC work in Chrome and Firefox. AAC and M4A work in Chrome and Safari. If your file format is not supported, convert it to MP3 using Audacity (free, offline) or any online converter first.</p>
+      <p class="faq-a">The browser needs to decode the file through its Web Audio API. Supported formats depend on browser and operating system. If upload fails, try exporting the file as WAV or MP3.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Does the file get uploaded anywhere?</p>

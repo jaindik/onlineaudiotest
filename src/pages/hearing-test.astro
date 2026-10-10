@@ -7,10 +7,10 @@ const schema = {
   "@graph": [
     {
       "@type": "WebApplication",
-      "name": "Online Hearing Test — Check Your Hearing Range",
+      "name": "Online Hearing Test — Frequency Sweep",
       "url": "https://onlineaudiotest.com/hearing-test/",
-      "description": "Browser tone sweep that reports the highest frequency heard in a session. Playback equipment affects results; this is not a clinical hearing assessment.",
-      "applicationCategory": "HealthApplication",
+      "description": "Browser tone sweep that reports the highest frequency heard in a session. Playback equipment affects results; not a clinical hearing assessment.",
+      "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires Web Audio API support",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -22,17 +22,6 @@ const schema = {
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://onlineaudiotest.com/" },
         { "@type": "ListItem", "position": 2, "name": "Online Hearing Test", "item": "https://onlineaudiotest.com/hearing-test/" }
       ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        { "@type": "Question", "name": "What is a frequency hearing test?", "acceptedAnswer": { "@type": "Answer", "text": "A frequency hearing test plays tones at specific frequencies (measured in Hz or kHz) to find the highest pitch you can hear. It estimates your audible frequency range and compares it to average values by age. This free online frequency hearing test sweeps from 20 Hz to 20,000 Hz — you stop the tone when it becomes inaudible." } },
-        { "@type": "Question", "name": "What is a high frequency hearing test?", "acceptedAnswer": { "@type": "Answer", "text": "A high frequency hearing test specifically checks your ability to hear sounds above 8,000 Hz (8 kHz). High-frequency hearing is the first to decline with age and noise exposure. Most people begin losing sensitivity to the highest audible frequencies in their early twenties — a gradual process that continues throughout life and accelerates with noise exposure." } },
-        { "@type": "Question", "name": "How does an online hearing test work?", "acceptedAnswer": { "@type": "Answer", "text": "This online hearing test uses the Web Audio API to generate a pure sine wave tone that rises gradually from 20 Hz to 20,000 Hz. When the tone becomes inaudible, you press stop. The frequency at that moment is your estimated maximum audible range. No microphone, no upload, and no download is required — it runs entirely in your browser." } },
-        { "@type": "Question", "name": "Is an online hearing test accurate?", "acceptedAnswer": { "@type": "Answer", "text": "An online frequency hearing test is a useful screening tool but not a clinical audiogram. Accuracy depends on your headphone quality, ambient noise levels, and device audio output. Consumer earbuds vary widely in high-frequency reproduction. For the most accurate result, use quality headphones in a quiet room. For a clinical evaluation, see an audiologist." } },
-        { "@type": "Question", "name": "What is the normal hearing range by age?", "acceptedAnswer": { "@type": "Answer", "text": "Children and teenagers typically have the widest hearing range, often extending close to 20,000 Hz. Most people begin losing sensitivity to the very highest frequencies in their early twenties. By middle age, sensitivity above roughly 14,000–16,000 Hz is commonly reduced. These changes vary significantly between individuals and are affected by noise exposure, genetics, and overall health — any specific number is an approximation, not a clinical threshold." } },
-        { "@type": "Question", "name": "What frequency can children hear that adults cannot?", "acceptedAnswer": { "@type": "Answer", "text": "Children can typically hear frequencies up to 20,000 Hz (20 kHz). Most adults over 25 cannot hear above 18,000 Hz, and adults over 40 often cannot hear above 15,000 Hz. The mosquito tone at 17,400 Hz is a well-known example — most adults over 30 cannot detect it." } }
-      ]
     }
   ]
 };
@@ -41,7 +30,7 @@ const schema = {
 <Layout
   title="Hearing Test Online – Free Frequency Hearing Test"
   description="Try a browser tone sweep from 20 Hz to 20 kHz and see the highest tone heard in this session. Equipment affects results; not a clinical hearing test."
-  keywords="hearing test online, free hearing test online, hearing test online free, online frequency hearing test, frequency hearing test online, high frequency hearing test online, age hearing test, frequency hearing test age, sound frequency hearing test, low frequency hearing test, hearing range by age, normal hearing range by age, child hearing test online, best hearing test online"
+  keywords="hearing test online, free hearing test online, online frequency hearing test, frequency hearing test online, high frequency hearing test online, sound frequency hearing test, hearing range test"
   canonical="https://onlineaudiotest.com/hearing-test/"
   alternates={buildToolAlternates('/hearing-test/', '/pt-br/teste-de-audicao/')}
   schema={schema}
@@ -69,7 +58,7 @@ const schema = {
 
       <!-- ── IDLE ── -->
       <div id="phase-idle">
-        <p class="phase-desc">Follow these steps for the most accurate result:</p>
+        <p class="phase-desc">Use these steps for a more consistent listening check:</p>
         <ul class="checklist">
           <li><span class="chk">✓</span>Use headphones — laptop speakers cannot reproduce high frequencies</li>
           <li><span class="chk">✓</span>Set volume to a comfortable level before starting</li>
@@ -132,28 +121,7 @@ const schema = {
         <!-- You vs Average -->
         <div class="comparison-block" id="comparison-block"></div>
 
-        <div class="result-age-box">
-          <div class="age-label">Age estimate</div>
-          <div class="age-value" id="age-value">—</div>
-          <p class="age-disc">Approximate educational estimate only — not a medical assessment.</p>
-        </div>
-
-        <!-- Comparison table -->
-        <div class="table-wrap">
-          <div class="table-title">Average Hearing Range by Age</div>
-          <table class="age-table" aria-label="Average hearing range by age group">
-            <thead><tr><th>Age Group</th><th>Typical Range</th></tr></thead>
-            <tbody>
-              <tr><td>👶 Children (&lt; 18 yrs)</td><td>up to 20 kHz</td></tr>
-              <tr><td>🧑 18–25 years</td><td>17–20 kHz</td></tr>
-              <tr><td>👨 26–35 years</td><td>16–18 kHz</td></tr>
-              <tr><td>🧓 36–50 years</td><td>14–17 kHz</td></tr>
-              <tr><td>👴 50+ years</td><td>12–15 kHz</td></tr>
-              <tr class="user-row"><td>🎯 You</td><td id="table-user-freq">—</td></tr>
-            </tbody>
-          </table>
-        </div>
-
+        <p class="result-disclaimer">No hearing-age estimate is provided. This result is the tone cutoff reported for this session only.</p>
         <!-- Shareable badge -->
         <div class="badge-block" id="badge-block"></div>
 
@@ -176,146 +144,26 @@ const schema = {
 
   <!-- ═══ EDUCATIONAL CONTENT ═══ -->
   <div class="edu-section">
-
-    <h2>Free Hearing Test Online – How It Works</h2>
-    <p>This free hearing test online uses a pure sine wave tone that rises gradually from <strong>20 Hz to 20,000 Hz</strong> over 25 seconds. As the frequency climbs, you will hear the pitch rising from a low bass rumble into high-pitched tones beyond everyday speech. When the tone becomes inaudible, press <strong>Stop</strong>,the frequency at that moment is your estimated maximum audible range.</p>
-    <p>No microphone, no upload, no server processing. The entire online frequency hearing test runs in your browser using the Web Audio API. Your audio is never recorded or transmitted anywhere.</p>
-    <p><strong>For best accuracy:</strong> use headphones (not laptop speakers,most cannot reproduce frequencies above 14–15 kHz reliably), set volume to a comfortable level, and test in a quiet environment. Background noise is the most common cause of inaccurate results on any online hearing test.</p>
-
-    <h2>Frequency Hearing Test Online Explained</h2>
-    <p>Frequency,measured in Hertz (Hz) or kilohertz (kHz),describes how many times per second a sound wave vibrates. Lower frequencies produce bass; higher frequencies produce treble and high-pitched tones. This online frequency hearing test spans the complete human auditory range:</p>
-    <table class="hearing-table">
-      <thead><tr><th>Frequency Range</th><th>What You Hear</th><th>Hearing Impact of Loss</th></tr></thead>
-      <tbody>
-        <tr><td>20–100 Hz</td><td>Deep bass, sub-bass, kick drum</td><td>Rare; affects music bass only</td></tr>
-        <tr><td>100–1,000 Hz</td><td>Voice fundamentals, instruments</td><td>Affects voice richness</td></tr>
-        <tr><td>1,000–4,000 Hz</td><td>Speech clarity, consonants</td><td>Major impact on speech understanding</td></tr>
-        <tr><td>4,000–8,000 Hz</td><td>High-pitched consonants (s, f, sh)</td><td>First affected by noise damage</td></tr>
-        <tr><td>8,000–12,000 Hz</td><td>Sibilance, air, brightness in music</td><td>Reduces music clarity</td></tr>
-        <tr><td>12,000–20,000 Hz</td><td>Ultra-high harmonics, "presence"</td><td>First affected by age (presbycusis)</td></tr>
-      </tbody>
-    </table>
-    <p>The sound frequency hearing test specifically targets the <strong>8–20 kHz range</strong>,this is where age-related and noise-related hearing loss first appears, and where most people notice meaningful differences based on age.</p>
-
-    <h2>High Frequency Hearing Test,What Your Result Means</h2>
-    <p>The high frequency hearing test online estimates the upper limit of your audible range,the frequency above which sounds become completely inaudible regardless of volume. This is your <strong>high-frequency threshold</strong>.</p>
-    <p>High frequencies above 8 kHz are not critical for everyday conversation, but they do affect speech clarity in noisy environments, the perceived quality and "air" of music, and your ability to locate sound sources in 3D space. A result in the 14–18 kHz range is completely normal for most adults and does not indicate a hearing problem for daily life.</p>
-    <table class="hearing-table">
-      <thead><tr><th>High Frequency Result</th><th>What It Means</th><th>Typical Age Group</th></tr></thead>
-      <tbody>
-        <tr><td>18,000–20,000 Hz</td><td>Excellent high-frequency hearing</td><td>Children, adults under 25</td></tr>
-        <tr><td>16,000–18,000 Hz</td><td>Above average,strong hearing sensitivity</td><td>26–35 years</td></tr>
-        <tr><td>14,000–16,000 Hz</td><td>Typical adult range,normal age-related decline</td><td>36–50 years</td></tr>
-        <tr><td>12,000–14,000 Hz</td><td>Moderate reduction,common after 50</td><td>51–60 years</td></tr>
-        <tr><td>Below 12,000 Hz</td><td>Significant reduction,consider audiologist</td><td>60+ years or noise exposure</td></tr>
-      </tbody>
-    </table>
-
-    <h2>Hearing Test by Age,Normal Frequency Ranges</h2>
-    <p>The age hearing test compares your result against average values for different age groups. This frequency hearing test by age is sometimes called an "age hearing test" because it can estimate your <strong>hearing age</strong>,whether your hearing is older or younger than your biological age.</p>
-    <table class="hearing-table">
-      <thead><tr><th>Age Group</th><th>Typical Upper Limit</th><th>Notes</th></tr></thead>
-      <tbody>
-        <tr><td>👶 Children (&lt; 18)</td><td>Up to 20,000 Hz</td><td>Fully intact hair cells; widest range</td></tr>
-        <tr><td>🧑 18–25 years</td><td>17,000–20,000 Hz</td><td>Peak adult hearing range</td></tr>
-        <tr><td>👨 26–35 years</td><td>16,000–18,000 Hz</td><td>Early presbycusis may begin</td></tr>
-        <tr><td>🧓 36–50 years</td><td>14,000–17,000 Hz</td><td>Moderate high-frequency loss common</td></tr>
-        <tr><td>👴 51–60 years</td><td>12,000–15,000 Hz</td><td>Speech clarity in noise often affected</td></tr>
-        <tr><td>👴 60+ years</td><td>10,000–13,000 Hz</td><td>Significant high-frequency loss</td></tr>
-      </tbody>
-    </table>
-    <p>These ranges assume no significant noise-induced hearing loss. People with a history of loud noise exposure may have results 2,000–4,000 Hz lower than average for their age group. The <strong>age frequency hearing test</strong> on this page accounts for this by showing both your frequency result and an estimated hearing age.</p>
-
-    <h2>Why High Frequencies Are Lost First</h2>
-    <p>High-frequency hearing loss is the earliest and most common form of age-related hearing decline,and understanding why helps explain your frequency hearing test results.</p>
-    <h3>The Cochlea's Architecture</h3>
-    <p>The cochlea is a fluid-filled, snail-shaped structure in the inner ear. It contains approximately <strong>15,000–16,000 hair cells</strong> (stereocilia) arranged like a piano keyboard. Hair cells near the <em>base</em> of the cochlea,the entrance,respond to high frequencies. Hair cells deeper in the spiral respond to low frequencies.</p>
-    <p>Because the base of the cochlea is the first structure sound waves encounter, it receives the most intense mechanical stimulation with every sound. This constant workload, compounded over decades, causes high-frequency hair cells to wear out and die first,a process that begins as early as your mid-20s.</p>
-    <h3>Hair Cells Cannot Regenerate</h3>
-    <p>Unlike most cells in the body, cochlear hair cells <strong>do not regenerate</strong> once damaged. Every loud noise exposure, every year of aging, permanently destroys a small number of cells. Over time, this accumulates into measurable high-frequency hearing loss,which is precisely what the high frequency hearing test online measures.</p>
-    <h3>Presbycusis</h3>
-    <p><strong>Presbycusis</strong> is the clinical term for age-related sensorineural hearing loss. It is the most common cause of hearing loss worldwide. It begins gradually in the mid-20s, primarily affecting frequencies above 2,000 Hz. The 8–20 kHz range is typically the first to go,followed by 4–8 kHz, then 2–4 kHz as the condition progresses further.</p>
-
-    <h2>Low vs High Frequency Hearing Loss</h2>
-    <p>The low frequency hearing test and high frequency hearing test measure different things,and losses in each range have very different impacts on daily life.</p>
-    <h3>High Frequency Hearing Loss (most common)</h3>
-    <p>High-frequency hearing loss (above 2,000 Hz) is the most common type. It is typically caused by aging (presbycusis), noise exposure, or a combination of both. Symptoms include difficulty understanding speech in noisy environments, trouble distinguishing consonants like "s," "f," and "th," and reduced music quality. This is what the online frequency hearing test primarily measures.</p>
-    <h3>Low Frequency Hearing Loss (less common)</h3>
-    <p>Low-frequency hearing loss (below 2,000 Hz) is less common and more often associated with specific conditions such as Meniere's disease, sudden sensorineural hearing loss, or certain medications. People with low-frequency loss may find bass-heavy voices harder to understand, or notice that low rumbles and background noise sound muffled. A comprehensive audiogram from an audiologist is needed to assess this range accurately.</p>
-    <h3>Which Matters More?</h3>
-    <p>For everyday speech, the <strong>1,000–4,000 Hz range</strong> is most critical. High-frequency loss above 8 kHz mainly affects music quality and speech clarity in noise. Low-frequency loss is rarer but tends to have a more immediate impact on understanding normal conversation. Most age-related hearing decline starts with high frequencies,which is why an online high frequency hearing test is a useful early screen.</p>
-
-    <h2>Hearing Age by Frequency</h2>
-    <table class="hearing-table">
-      <thead><tr><th>Highest Audible Frequency</th><th>Typical Hearing Age</th></tr></thead>
-      <tbody>
-        <tr><td>18–20 kHz</td><td>Teenagers</td></tr>
-        <tr><td>17–18 kHz</td><td>Early 20s</td></tr>
-        <tr><td>15–17 kHz</td><td>Late 20s to 30s</td></tr>
-        <tr><td>13–15 kHz</td><td>40s</td></tr>
-        <tr><td>Below 13 kHz</td><td>50+</td></tr>
-      </tbody>
-    </table>
-    <p>This is only a rough estimate. Hearing ability varies significantly between individuals.</p>
-
-    <h2>What Does My Hearing Test Result Mean?</h2>
-    <p>The highest frequency you can hear may provide insight into age-related hearing changes. Most adults gradually lose the ability to hear very high frequencies over time.</p>
-    <p>A result above 17 kHz is generally considered excellent. Many adults over 40 struggle to hear frequencies above 14–15 kHz.</p>
-
+    <h2>How this online frequency test works</h2>
+    <p>The browser plays a tone sweep from 20 Hz to 20,000 Hz. Stop when you can no longer hear it; the result is the approximate frequency at that point in this playback session. The page does not record your microphone or measure the sound reaching your ears.</p>
+    <p>Headphone frequency response, volume, device audio processing, hearing environment, and attention can all change the result. A tone you cannot hear here does not establish a hearing loss, and a high result does not rule one out. This is an entertainment and listening check, not a diagnostic test or substitute for an audiogram.</p>
+    <h2>For a more consistent listening check</h2>
+    <ul>
+      <li>Use the same headphones and device each time.</li>
+      <li>Choose a quiet room and set a comfortable listening level before starting.</li>
+      <li>Stop if any tone feels uncomfortable; do not raise volume to chase a result.</li>
+      <li>Contact a qualified hearing professional if you have hearing concerns or symptoms.</li>
+    </ul>
+    <p>To check whether your speakers reproduce left and right channels, use the <a href="/speaker-test/">speaker test</a>. To generate a selected tone for listening, use the <a href="/frequency-generator/">online frequency generator</a>.</p>
   </div>
 
-  <!-- FAQ -->
   <div class="faq-section">
-    <h2>Frequently Asked Questions</h2>
-
-    <div class="faq-item">
-      <p class="faq-q">What is a frequency hearing test?</p>
-      <p class="faq-a">A frequency hearing test plays tones at specific frequencies (measured in Hz or kHz) to find the highest pitch you can hear. This free online frequency hearing test sweeps from 20 Hz to 20,000 Hz,you stop the tone when it becomes inaudible, and the result is your estimated maximum audible frequency range.</p>
-    </div>
-
-    <div class="faq-item">
-      <p class="faq-q">What is a high frequency hearing test?</p>
-      <p class="faq-a">A high frequency hearing test checks your ability to hear sounds above 8,000 Hz. High-frequency hearing is the first to decline with age and noise exposure. Most people begin losing sensitivity to the very highest audible frequencies in their early twenties — a gradual process that varies significantly between individuals depending on noise exposure history and genetics. This online high frequency hearing test targets exactly that range.</p>
-    </div>
-
-    <div class="faq-item">
-      <p class="faq-q">How does this online hearing test work?</p>
-      <p class="faq-a">The test generates a pure sine wave using the Web Audio API that rises logarithmically from 20 Hz to 20,000 Hz over 25 seconds. When you can no longer hear the tone, press Stop. The frequency at that moment is your result. No microphone, no recording, no server,everything runs locally in your browser.</p>
-    </div>
-
-    <div class="faq-item">
-      <p class="faq-q">Is an online hearing test accurate?</p>
-      <p class="faq-a">It is a useful screening tool, not a clinical audiogram. Accuracy is most affected by headphone quality,consumer earbuds vary widely in how well they reproduce frequencies above 14 kHz. For the most reliable result, use quality over-ear headphones in a quiet room. For a medical evaluation, see a licensed audiologist.</p>
-    </div>
-
-    <div class="faq-item">
-      <p class="faq-q">What is the normal hearing range by age?</p>
-      <p class="faq-a">Children and teenagers typically have the widest hearing range, often extending close to 20,000 Hz. Most people begin losing sensitivity to the very highest frequencies in their early twenties. By middle age, sensitivity to frequencies above roughly 14,000–16,000 Hz is commonly reduced. These ranges vary significantly between individuals — any specific cutoff is an approximation, not a clinical threshold, and noise exposure can accelerate the decline at any age.</p>
-    </div>
-
-    <div class="faq-item">
-      <p class="faq-q">What is an age hearing test?</p>
-      <p class="faq-a">An age hearing test estimates your "hearing age" by comparing your maximum audible frequency against typical values for different age groups. If your result is 17 kHz, your hearing age is estimated at 26–35 years,regardless of your actual age. It is an educational comparison, not a medical metric.</p>
-    </div>
-
-    <div class="faq-item">
-      <p class="faq-q">What frequency can children hear that adults cannot?</p>
-      <p class="faq-a">Children can typically hear up to 20,000 Hz. Most adults over 25 cannot hear above 18,000 Hz, and adults over 40 often cannot hear above 15,000 Hz. The "mosquito ringtone" at 17,400 Hz is a well-known example,audible to most teenagers but inaudible to most adults over 30.</p>
-    </div>
-    <div class="faq-item">
-      <p class="faq-q">Is hearing age accurate?</p>
-      <p class="faq-a">No. Hearing age is only an estimate and should not replace a professional hearing assessment.</p>
-    </div>
-    <div class="faq-item">
-      <p class="faq-q">Why can't adults hear very high frequencies?</p>
-      <p class="faq-a">The hair cells responsible for detecting high frequencies gradually degrade with age and noise exposure.</p>
-    </div>
-    <div class="faq-item">
-      <p class="faq-q">Can headphones affect hearing test results?</p>
-      <p class="faq-a">Yes. Poor-quality headphones may struggle to reproduce frequencies above 15–16 kHz accurately.</p>
-    </div>
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item"><p class="faq-q">Does this online hearing test diagnose hearing loss?</p><p class="faq-a">No. It reports the point where you stopped hearing a browser-generated tone sweep. It is affected by playback equipment and listening conditions and is not a clinical hearing assessment.</p></div>
+    <div class="faq-item"><p class="faq-q">Why can my result change between attempts?</p><p class="faq-a">Headphone response, device audio processing, volume, background noise, attention, and the way you judge the tone can change what you hear. Use the same setup for a rough comparison, not as a medical measurement.</p></div>
+    <div class="faq-item"><p class="faq-q">Should I turn up the volume if I cannot hear a tone?</p><p class="faq-a">No. Keep the volume comfortable and do not increase it to force a tone to become audible. Stop if you experience discomfort.</p></div>
+    <div class="faq-item"><p class="faq-q">When should I seek a professional hearing check?</p><p class="faq-a">If you are concerned about your hearing or notice a change, contact a qualified hearing professional. This browser test cannot determine the cause or degree of a hearing problem.</p></div>
   </div>
-
 </Layout>
 
 <script>
@@ -353,8 +201,6 @@ const schema = {
     const resultInterp     = document.getElementById('result-interp')!;
     const personalizedBlock= document.getElementById('personalized-block')!;
     const comparisonBlock  = document.getElementById('comparison-block')!;
-    const ageValue         = document.getElementById('age-value')!;
-    const tableUserFreq    = document.getElementById('table-user-freq')!;
     const badgeBlock       = document.getElementById('badge-block')!;
     const dynamicSeo       = document.getElementById('dynamic-seo')!;
 
@@ -458,31 +304,16 @@ const schema = {
       return { label: 'Playback result', text: 'This is the highest tone you reported hearing in this session. It is not a clinical hearing test: headphones, volume, browser output, background noise, and listening conditions can change the result. Contact a hearing professional if you have concerns.', cls: 'grade-fair' };
     }
 
-    function getAge(_hz: number): string { return 'Not estimated'; }
 
     function buildPersonalized(hz: number): string {
       const k = (hz / 1000).toFixed(1);
-      if (hz >= 18000) return `<p><strong>Your result: ${k} kHz</strong></p><p>Most adults between 18 and 25 years old hear between 17 kHz and 20 kHz. Your result places you in this top range, suggesting excellent high-frequency hearing sensitivity.</p><p>Many people over 30 begin losing sensitivity above 16 kHz. Hearing above 18 kHz is typically only possible for younger adults with no significant history of noise exposure.</p>`;
-      if (hz >= 16000) return `<p><strong>Your result: ${k} kHz</strong></p><p>Most adults between 26 and 35 years old hear between 16 kHz and 18 kHz. Your result falls within this range and suggests strong high-frequency hearing sensitivity.</p><p>Many people over 40 struggle to hear frequencies above 15 kHz, while frequencies above 18 kHz are typically heard only by younger adults with excellent hearing.</p>`;
-      if (hz >= 14000) return `<p><strong>Your result: ${k} kHz</strong></p><p>Most adults between 36 and 50 years old hear between 14 kHz and 17 kHz. Your result falls within this typical adult range,mild high-frequency decline is a completely normal part of aging.</p><p>High-frequency hearing above 16 kHz becomes progressively harder after 35. Most adults retain clear hearing in the speech range (1–4 kHz) well into their 60s.</p>`;
-      if (hz >= 12000) return `<p><strong>Your result: ${k} kHz</strong></p><p>Most adults over 50 hear between 12 kHz and 15 kHz. Your result is consistent with moderate high-frequency hearing loss, which is very common at this stage of life.</p><p>While high-frequency sensitivity has declined, the speech frequency range (500 Hz–4 kHz) is typically far less affected. Day-to-day hearing is usually still good.</p>`;
-      return `<p><strong>Your result: ${k} kHz</strong></p><p>Your result suggests significant high-frequency hearing reduction, which can result from natural aging, prolonged noise exposure, or other factors.</p><p>If this is unexpected for your age, it may be worth consulting an audiologist for a comprehensive hearing evaluation.</p>`;
+      return `<p><strong>Session result: ${k} kHz</strong></p><p>This is the approximate point where you stopped hearing the tone in this attempt. It cannot be used to estimate hearing age or diagnose a hearing condition. Playback equipment and listening conditions affect the result.</p>`;
     }
 
     function buildComparison(hz: number): string {
       const k = (hz / 1000).toFixed(1);
-      const rows = [
-        { label: '20-year-old average', range: '18–20 kHz', min: 18000 },
-        { label: '30-year-old average', range: '16–18 kHz', min: 16000 },
-        { label: '50-year-old average', range: '12–15 kHz', min: 12000 },
-      ];
-      const items = rows.map(r => {
-        const above = hz >= r.min;
-        return `<div class="comp-row ${above ? 'comp-above' : 'comp-below'}"><span class="comp-icon" aria-hidden="true">${above ? '✓' : '○'}</span><span><strong>${r.label}:</strong> ${r.range}</span></div>`;
-      }).join('');
-      return `<div class="comp-title">You vs Average</div>${items}<div class="comp-score">Your score: <strong>${k} kHz</strong></div>`;
+      return `<div class="comp-title">This attempt</div><p>You stopped near <strong>${k} kHz</strong>. Repeat only at a comfortable volume, using the same playback setup if you want to compare sessions.</p>`;
     }
-
     function buildBadge(hz: number): string {
       const k = (hz / 1000).toFixed(1);
       const copyText = `Highest tone heard in this session: ${k} kHz\nNot a clinical hearing test.\nTested at OnlineAudioTest.com`;
@@ -502,8 +333,6 @@ const schema = {
 
       resultNum.textContent  = num;
       resultUnit.textContent = unit;
-      tableUserFreq.textContent = (hz / 1000).toFixed(1) + ' kHz';
-      ageValue.textContent   = 'Not estimated';
 
       resultInterp.innerHTML      = `<div class="interp-row"><span class="grade-badge ${interp.cls}">${interp.label}</span><p class="interp-text">${interp.text}</p></div>`;
       personalizedBlock.innerHTML = buildPersonalized(hz);

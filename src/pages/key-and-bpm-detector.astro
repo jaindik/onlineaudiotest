@@ -45,7 +45,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "What if my track detects an unusual key or low confidence?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Low confidence means the track does not have a strong tonal center — common in ambient, experimental, heavily processed electronic music, or very percussive tracks. In that case, the key result is a best guess rather than a definitive answer. BPM detection is generally more reliable across genres since it only needs a rhythmic pulse rather than harmonic content." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The displayed confidence is a heuristic score, not a probability or tested accuracy guarantee. Percussive, noisy, short, or weakly tonal clips can make key detection uncertain. Beat detection can also return half-time or double-time. Verify both results before relying on them." }
         },
         {
           "@type": "Question",
@@ -60,7 +60,7 @@ const schema = {
 
 <Layout
   title="Key and BPM Detector - Find Key and Tempo of Any Song"
-  description="Upload any MP3 or WAV to detect the musical key and BPM together. Free online tool for DJs and producers. Get Camelot code for harmonic mixing."
+  description="Upload audio for browser-based key and tempo estimates in one step. Results vary with the clip and browser decoding support."
   keywords="key and bpm detector, song key bpm finder, bpm key detector, harmonic mixing tool, camelot wheel finder, dj key bpm, tempo key detector"
   canonical="https://onlineaudiotest.com/key-and-bpm-detector/"
   alternates={buildToolAlternates('/key-and-bpm-detector/', '/pt-br/detector-de-tom-e-bpm/')}
@@ -71,7 +71,7 @@ const schema = {
   <!-- HERO -->
   <section class="tool-hero container">
     <h1>Key and BPM Detector</h1>
-    <p>Upload any audio file and get the musical key, Camelot code, and BPM in one pass. Ideal for DJs doing harmonic mixing, producers matching samples, and anyone who wants tempo and tonality in a single click.</p>
+    <p>Upload an audio file to get estimated tempo and key from the same clip. These are algorithmic estimates, not validated measurements; ambiguous rhythm or harmony can affect either result. File decoding varies by browser.</p>
   </section>
 
   <!-- TOOL -->
@@ -205,7 +205,7 @@ const schema = {
   <!-- HOW IT WORKS -->
   <div class="how-section">
     <h2>How the analysis works</h2>
-    <p>Both analyses run on the same decoded audio in a single pass. Key detection uses a 45-second chromagram analysis (FFT with Hann windowing, Krumhansl-Schmuckler profiles). BPM detection uses a 60-second energy flux and autocorrelation pass. The two algorithms are independent — one does not affect the other's accuracy.</p>
+    <p>Both analyses use the same decoded audio, with separate algorithms for rhythmic pulse and tonal profile. The displayed confidence values are heuristic scores, not calibrated probabilities. Short excerpts, changing tempo, syncopation, noise, or weak tonal centers may affect the results; check each estimate against the track before using it in a mix.</p>
   </div>
 
   <!-- RELATED -->
@@ -244,7 +244,7 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">The key confidence is low. Should I trust the result?</p>
-      <p class="faq-a">Low confidence (below 50%) means the algorithm did not find a clear tonal center. This is common for very percussive tracks, ambient music, atonal electronic music, and recordings with a lot of noise. In that case, the key result is a best guess — verify it by ear before relying on it for harmonic mixing. BPM confidence tends to be more reliable across genres.</p>
+      <p class="faq-a">The confidence value is a heuristic score, not a probability or tested accuracy guarantee. Percussive, noisy, short, or weakly tonal clips can make key detection uncertain. Beat detection can also return half-time or double-time. Verify both results before using them for harmonic mixing.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Does analysis happen in my browser or on a server?</p>

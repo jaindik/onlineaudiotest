@@ -35,7 +35,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "How accurate is this key detector?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Accuracy is good for tonal music — pop, rock, classical, jazz, electronic — typically correct within one or two closely related keys. It is less reliable for atonal music, heavy ambient soundscapes, or very percussive material with little harmonic content. The confidence percentage gives you an indication of how strongly the algorithm found a tonal center." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The detector compares a track's chroma profile with key profiles. It has not been validated to a fixed accuracy on a representative dataset. Relative major/minor keys can be difficult to distinguish, and short, noisy, percussive, or weakly tonal audio can produce uncertain results. The displayed score is not a calibrated probability; verify the result by ear before relying on it." }
         },
         {
           "@type": "Question",
@@ -70,7 +70,7 @@ const CAMELOT: Record<string, string> = {
 
 <Layout
   title="Song Key Detector - Find the Musical Key of Any Song"
-  description="Upload any MP3 or WAV to detect the musical key and scale. Free online key detector — find whether a song is in C Major, A Minor, and more."
+  description="Upload an audio file for a browser-based musical key estimate. Results can be uncertain for short, noisy, or weakly tonal music."
   keywords="key detector, song key detector, find key of song, musical key finder, what key is this song, key finder mp3, chord key detector"
   canonical="https://onlineaudiotest.com/key-detector/"
   alternates={buildToolAlternates('/key-detector/', '/pt-br/detector-de-tom-musical/')}
@@ -81,7 +81,7 @@ const CAMELOT: Record<string, string> = {
   <!-- HERO -->
   <section class="tool-hero container">
     <h1>Song Key Detector</h1>
-    <p>Upload any audio file and find the musical key and scale in seconds. Works with MP3, WAV, OGG, and FLAC — processed entirely in your browser, nothing uploaded.</p>
+    <p>Upload an audio file for a browser-based key estimate. The confidence value is an algorithm score, not a calibrated probability; short, noisy, percussive, or weakly tonal clips can produce uncertain results. File decoding varies by browser.</p>
   </section>
 
   <!-- TOOL -->
@@ -237,7 +237,7 @@ const CAMELOT: Record<string, string> = {
     </div>
     <div class="faq-item">
       <p class="faq-q">How accurate is the key detector?</p>
-      <p class="faq-a">Good for tonal music — pop, rock, electronic, jazz, and classical. It typically returns the correct key or the relative key (e.g., C Major when the answer is A Minor). Accuracy is lower for atonal music, heavy ambient soundscapes, mostly-percussive tracks, and short clips under 15 seconds. The confidence score tells you how clearly the algorithm found a tonal center — below 50% means the result is a best guess.</p>
+      <p class="faq-a">The detector compares a track's chroma profile with key profiles. It has not been validated to a fixed accuracy on a representative dataset. Relative major/minor keys can be difficult to distinguish, and short, noisy, percussive, or weakly tonal audio can produce uncertain results. The displayed score is not a calibrated probability; verify the result by ear before relying on it.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">What is the difference between major and minor?</p>

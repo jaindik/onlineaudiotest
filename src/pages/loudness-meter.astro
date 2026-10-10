@@ -26,10 +26,10 @@ const schema = {
     {
       "@type": "FAQPage",
       "mainEntity": [
-        { "@type": "Question", "name": "Is this a broadcast-certified LUFS meter?", "acceptedAnswer": { "@type": "Answer", "text": "No. This tool applies a simplified approximation of the ITU-R BS.1770 K-weighting curve used in real LUFS meters, so readings are directionally accurate but not certified for broadcast delivery (EBU R128, ATSC A/85, or streaming platform loudness compliance). For those, use a dedicated DAW plugin or hardware meter." } },
-        { "@type": "Question", "name": "What LUFS target should I aim for?", "acceptedAnswer": { "@type": "Answer", "text": "Common targets: Spotify and Apple Music normalize to around -14 LUFS integrated, YouTube to around -14 LUFS, and podcasts typically target -16 to -19 LUFS. Broadcast TV (EBU R128) targets -23 LUFS. Mixing louder than your platform's target usually just gets turned down on playback, so there's no benefit to exceeding it." } },
+        { "@type": "Question", "name": "Is this a broadcast-certified LUFS meter?", "acceptedAnswer": { "@type": "Answer", "text": "No. This tool does not implement the complete ITU-R BS.1770 measurement and should not be used to check broadcast or streaming delivery compliance." } },
+        { "@type": "Question", "name": "What LUFS target should I aim for?", "acceptedAnswer": { "@type": "Answer", "text": "Targets vary by platform and delivery specification. This browser estimate cannot check them; consult platform requirements and measure the audio file with a standards-compliant meter." } },
         { "@type": "Question", "name": "What is the difference between LUFS and dB?", "acceptedAnswer": { "@type": "Answer", "text": "Decibels (dB) measure raw signal amplitude with no regard for how loud a sound is perceived. LUFS (Loudness Units Full Scale) apply frequency weighting that approximates human hearing sensitivity, so two signals with the same peak dB can have very different perceived loudness (and different LUFS values) depending on their frequency content." } },
-        { "@type": "Question", "name": "Can I measure a song or video file with this tool?", "acceptedAnswer": { "@type": "Answer", "text": "This version measures live microphone input. To measure a file, play it through your speakers with the mic active (less accurate, picks up room acoustics), or use a dedicated offline LUFS analyzer / DAW plugin for file-based measurement." } }
+        { "@type": "Question", "name": "Can I measure a song or video file with this tool?", "acceptedAnswer": { "@type": "Answer", "text": "This page reads live microphone input, not an uploaded audio file. Use a standards-compliant audio-file loudness meter for mastering or delivery checks." } }
       ]
     }
   ]
@@ -86,26 +86,14 @@ const schema = {
   <div class="edu-section">
     <h2>What This Meter Measures</h2>
     <p>This page reads microphone samples and applies a simplified filter and averaging calculation. The browser's microphone gain control, noise suppression, room, and microphone all affect the result. It does not implement the complete ITU-R BS.1770 measurement, including the required filtering and gating, and its values should not be labeled or used as LUFS for delivery decisions.</p>
-    <h2>Streaming Platform Loudness Targets</h2>
-    <table class="freq-table">
-      <thead><tr><th>Platform</th><th>Target (Integrated LUFS)</th></tr></thead>
-      <tbody>
-        <tr><td>Spotify</td><td>≈ −14 LUFS</td></tr>
-        <tr><td>Apple Music</td><td>≈ −16 LUFS</td></tr>
-        <tr><td>YouTube</td><td>≈ −14 LUFS</td></tr>
-        <tr><td>Podcasts (Apple guideline)</td><td>−16 to −19 LUFS</td></tr>
-        <tr><td>Broadcast TV (EBU R128)</td><td>−23 LUFS</td></tr>
-      </tbody>
-    </table>
-    <p>Mixing louder than a platform's target has no benefit — most platforms turn overly loud content down automatically on playback, so extra loudness just costs you dynamic range. Use this tool to get directionally close, then verify final masters with a dedicated LUFS plugin before release. For raw signal level, see the <a href="/decibel-meter/">decibel meter</a>.</p>
-  </div>
+    <p>This estimate is not suitable for checking streaming loudness targets or preparing a master. For those tasks, analyze the audio file itself with a standards-compliant loudness meter in an audio editor or DAW. For a relative live microphone input view, see the <a href="/decibel-meter/">microphone level meter</a>.</p>  </div>
 
   <div class="faq-section">
     <h2>Frequently Asked Questions</h2>
-    <div class="faq-item"><p class="faq-q">Is this a broadcast-certified LUFS meter?</p><p class="faq-a">No. It applies a simplified approximation of ITU-R BS.1770 K-weighting, so readings are directionally accurate but not certified for broadcast delivery. Use a DAW plugin or hardware meter for compliance work.</p></div>
-    <div class="faq-item"><p class="faq-q">What LUFS target should I aim for?</p><p class="faq-a">Spotify and YouTube normalize around −14 LUFS, Apple Music around −16, podcasts −16 to −19, and broadcast TV −23. Mixing louder than your target platform gets turned down anyway.</p></div>
+    <div class="faq-item"><p class="faq-q">Is this a broadcast-certified LUFS meter?</p><p class="faq-a">No. This tool does not implement the complete ITU-R BS.1770 measurement and should not be used to check broadcast or streaming delivery compliance.</p></div>
+    <div class="faq-item"><p class="faq-q">What LUFS target should I aim for?</p><p class="faq-a">Targets vary by platform and delivery specification. This browser estimate cannot check them; consult the platform requirements and measure the audio file with a standards-compliant meter.</p></div>
     <div class="faq-item"><p class="faq-q">What is the difference between LUFS and dB?</p><p class="faq-a">dB measures raw amplitude with no regard for perceived loudness. LUFS applies frequency weighting that approximates human hearing, so two signals with the same peak dB can have very different LUFS values depending on frequency content.</p></div>
-    <div class="faq-item"><p class="faq-q">Can I measure a song or video file with this?</p><p class="faq-a">This measures live microphone input. To check a file, play it through your speakers with the mic active (less accurate — picks up room acoustics), or use a dedicated offline LUFS analyzer for file-based measurement.</p></div>
+    <div class="faq-item"><p class="faq-q">Can I measure a song or video file with this?</p><p class="faq-a">This page reads live microphone input, not an uploaded audio file. Use a standards-compliant audio-file loudness meter for mastering or delivery checks.</p></div>
   </div>
 </Layout>
 
@@ -159,7 +147,7 @@ const schema = {
 
     let integratedSumSq = 0, integratedCount = 0;
     let peakDb = -Infinity;
-    const GATE_LUFS = -70;
+    const GATE_ESTIMATE = -70;
     const K_OFFSET = -0.691; // ITU-R BS.1770 constant
 
     function fmt(v: number) { return v > -69 ? v.toFixed(1) + ' est.' : '—'; }
@@ -193,7 +181,7 @@ const schema = {
       if (peakDbfs > peakDb) { peakDb = peakDbfs; peakEl.textContent = peakDb.toFixed(1) + ' dBFS'; }
 
       // Gated integration (simplified — absolute gate only, no relative gate)
-      if (momentary > GATE_LUFS) {
+      if (momentary > GATE_ESTIMATE) {
         integratedSumSq += meanSq;
         integratedCount++;
         const integrated = K_OFFSET + 10 * Math.log10(integratedSumSq / integratedCount);
