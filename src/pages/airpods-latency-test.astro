@@ -75,7 +75,7 @@ const schema = {
 
 <Layout
   title="AirPods Latency Test — Measure Delay in ms (All Models)"
-  description="Free AirPods delay test — measure real Bluetooth latency in milliseconds for AirPods 3, Pro 2, Max, and 4 instantly in your browser. No download."
+  description="Check AirPods audio delay in your browser. View reported output latency or estimate playback-to-microphone round-trip delay."
   keywords="airpods latency test, airpods latency ms, airpods pro latency ms, airpods audio delay, airpods delay test, airpods lag test, airpods pro latency, airpods max latency, bluetooth airpods latency"
   canonical="https://onlineaudiotest.com/airpods-latency-test/"
   alternates={buildToolAlternates('/airpods-latency-test/', '/pt-br/teste-de-latencia-airpods/')}
@@ -86,7 +86,7 @@ const schema = {
   <!-- HERO -->
   <section class="tool-hero container">
     <h1>AirPods Latency Test</h1>
-    <p>Connect your AirPods first, then run the test. This measures the actual audio output delay your AirPods introduce via Bluetooth — in milliseconds, instantly in your browser.</p>
+    <p>Connect your AirPods as the output device, then run the test. The first result uses latency values reported by your browser and device; the microphone round-trip option estimates playback-to-mic delay and may be affected by your room and setup.</p>
   </section>
 
   <!-- TOOL -->
@@ -346,7 +346,7 @@ const schema = {
     </div>
     <div class="faq-item">
       <p class="faq-q">My AirPods latency test shows a low number but video still looks out of sync. Why?</p>
-      <p class="faq-a">This test measures your system's reported audio output latency, which reflects the Bluetooth buffer as seen by your operating system. Some OS versions underreport actual latency. Additionally, if you're watching video in a browser, the browser may apply its own audio buffering. Try the Round-Trip Test (microphone required) for a direct acoustic measurement. Also check that your video player's audio sync settings are set to default.</p>
+      <p class="faq-a">The first result uses latency values reported by your browser and audio system. These values may not reflect the full Bluetooth path. The microphone round-trip option estimates delay from playback to microphone, but room acoustics and microphone placement affect it. Also check that your video player's audio sync settings are set to default.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">How do I fix AirPods audio delay on Mac?</p>
@@ -489,7 +489,7 @@ const schema = {
         resultNote.className = 'result-note';
       } else {
         showResult(total, 'AirPods latency', base, output);
-        resultNote.textContent = 'Latency measured. Make sure AirPods were the active output device.';
+        resultNote.textContent = 'Browser-reported system latency. Make sure AirPods were the active output device; compare results with the same setup.';
         resultNote.className = 'result-note success';
       }
 
@@ -553,7 +553,7 @@ const schema = {
         resultNote.className = 'result-note error';
       } else {
         showResult(latencyMs, 'Round-trip latency');
-        resultNote.textContent = 'Round-trip latency measured. This includes AirPods speaker → air → mic delay.';
+        resultNote.textContent = 'Round-trip delay estimate detected from AirPods playback to microphone. Room acoustics and microphone placement can affect the result.';
         resultNote.className = 'result-note success';
       }
 

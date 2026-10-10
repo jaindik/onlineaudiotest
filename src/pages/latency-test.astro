@@ -9,7 +9,7 @@ const schema = {
       "@type": "WebApplication",
       "name": "Audio Latency Test — Bluetooth & AirPods Delay Checker",
       "url": "https://onlineaudiotest.com/latency-test/",
-      "description": "Free audio latency test online. Measure Bluetooth audio delay, AirPods latency, and system output lag in milliseconds. Bluetooth audio test and AirPods test — instant, no download.",
+      "description": "Check audio delay with browser-reported output latency or estimate playback-to-microphone round-trip delay.",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires Web Audio API support",
@@ -35,7 +35,7 @@ const schema = {
         {
           "@type": "Question",
           "name": "What is the difference between base latency and output latency?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Base latency is the fixed delay your browser's audio engine adds to process audio in chunks (typically 5–20 ms). Output latency is the additional delay introduced by your audio driver and hardware — this is where Bluetooth delay shows up. Together they form your total audio output latency, which this test measures." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Base latency and output latency are values exposed by the browser's audio context. They provide a system estimate, but may not include every part of the Bluetooth path and are not a direct measurement at the listener's ear. The microphone round-trip option estimates playback-to-microphone delay instead." }
         },
         {
           "@type": "Question",
@@ -80,7 +80,7 @@ const schema = {
 
 <Layout
   title="Audio Latency Test — Measure Bluetooth & Audio Delay in ms"
-  description="Measure audio latency in milliseconds. Test Bluetooth headphones, AirPods, speakers, and wired devices instantly. Free online audio latency test."
+  description="Run an online audio latency test. See browser-reported output delay or use the microphone round-trip test to estimate acoustic delay."
   keywords="audio latency test, sound latency test, latency test audio, bluetooth audio test, audio delay test, bluetooth latency checker, audio lag test, wireless audio latency"
   schema={schema}
   alternates={buildToolAlternates('/latency-test/', '/pt-br/teste-de-latencia/')}
@@ -90,7 +90,7 @@ const schema = {
   <!-- HERO -->
   <section class="tool-hero container">
     <h1>Audio Latency Test</h1>
-    <p>Measure Bluetooth audio delay, AirPods latency, and system output lag in milliseconds. The fastest Bluetooth audio test and AirPods test — right in your browser.</p>
+    <p>Check audio delay in your browser. The first result uses latency values reported by your browser; the microphone round-trip test estimates the full path from playback to microphone and needs mic permission.</p>
   </section>
 
   <!-- TOOL -->
@@ -150,15 +150,15 @@ const schema = {
     <div class="steps">
       <div class="step">
         <span class="step-num">1</span>
-        <p class="step-body"><strong>Click "Measure Latency"</strong> to instantly read your system's audio output delay using the Web Audio API. No microphone required - this reports the delay from your software to your speakers or headphones.</p>
+        <p class="step-body"><strong>Click "Measure Latency"</strong> to read the audio context's reported base and output latency values. This is a browser and device estimate, not a direct acoustic measurement of sound reaching your ears.</p>
       </div>
       <div class="step">
         <span class="step-num">2</span>
-        <p class="step-body"><strong>For a full round-trip test</strong>, click "Round-Trip Test" and allow microphone access. The tool plays a click through your speakers and detects when it arrives at your mic - measuring the total acoustic delay.</p>
+        <p class="step-body"><strong>For a microphone round-trip estimate</strong>, click "Round-Trip Test" and allow microphone access. The tool plays a short sound and detects it at the mic. Room acoustics, speaker volume, microphone placement, and echo processing can affect this result.</p>
       </div>
       <div class="step">
         <span class="step-num">3</span>
-        <p class="step-body"><strong>Read your result.</strong> Under 20 ms is excellent (wired). 40–100 ms means Bluetooth is likely involved. Over 150 ms points to SBC codec or a slow audio driver - switch to a wired connection or enable a low-latency codec.</p>
+        <p class="step-body"><strong>Compare results carefully.</strong> A browser-reported value is not directly comparable to an acoustic round-trip result or a lab measurement. Repeat the same test with one device or setting changed at a time; use wired audio as a practical comparison when investigating Bluetooth delay.</p>
       </div>
     </div>
   </div>
@@ -229,7 +229,7 @@ const schema = {
       </div>
       <div class="step">
         <span class="step-num">5</span>
-        <p class="step-body"><strong>Playback hardware</strong> — The audio driver and output hardware (DAC, amplifier, speaker, or headphone driver) introduce their own delay. This is the "output latency" reported by the Web Audio API and is where Bluetooth hardware delay is captured.</p>
+        <p class="step-body"><strong>Playback hardware</strong> — The audio driver and output hardware add delay. The Web Audio API can expose an output-latency estimate, but the value may not include every part of the Bluetooth path and is not a direct measurement at the listener's ear.</p>
       </div>
     </div>
   </div>
@@ -425,7 +425,7 @@ const schema = {
         resultNote.className = 'result-note';
       } else {
         showResult(total, 'System latency', base, output);
-        resultNote.textContent = 'System latency measured. Run the round-trip test for full acoustic delay.';
+        resultNote.textContent = 'Browser-reported system latency. Run the round-trip test to estimate playback-to-microphone delay.';
         resultNote.className = 'result-note success';
       }
 
@@ -492,7 +492,7 @@ const schema = {
         resultNote.className = 'result-note error';
       } else {
         showResult(latencyMs, 'Round-trip latency');
-        resultNote.textContent = 'Round-trip latency measured. This includes speaker → air → mic delay.';
+        resultNote.textContent = 'Round-trip delay estimate detected from playback to microphone. Room acoustics and microphone placement can affect the result.';
         resultNote.className = 'result-note success';
       }
 

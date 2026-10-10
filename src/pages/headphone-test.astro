@@ -177,9 +177,9 @@ const schema = {
         <tr><td>Left / Right test</td><td>Channel correctness — each ear gets only its signal</td></tr>
         <tr><td>Driver match (1 kHz)</td><td>Volume balance between left and right drivers</td></tr>
         <tr><td>Bass test (100 Hz)</td><td>Low-frequency response and driver seal</td></tr>
-        <tr><td>Frequency sweep</td><td>Full-range performance across all drivers</td></tr>
+        <tr><td>Frequency sweep</td><td>Lets you listen for changes across the tested tones; it is not a calibrated frequency-response measurement</td></tr>
         <tr><td>Pink noise</td><td>Overall tonal balance, left vs right comparison</td></tr>
-        <tr><td>Any signal with distortion</td><td>Physical driver damage or debris</td></tr>
+        <tr><td>Any signal with distortion</td><td>May point to a playback, fit, volume, or driver issue; this listening test cannot identify the physical cause</td></tr>
       </tbody>
     </table>
   </div>
@@ -594,7 +594,7 @@ const schema = {
         currentChannel = null;
         setVisualStopped();
         statusText.textContent = 'Sweep complete';
-        resultNote.textContent = 'Sweep complete — compare how each driver responded. If one ear dropped out at any frequency, that driver is failing.';
+        resultNote.textContent = 'Sweep complete — compare what you heard in each ear. A difference can come from fit, device settings, hearing, or hardware; this test cannot identify the cause.';
         resultNote.className = 'result-note success';
         updateBothLabel();
         try { activeNodes.forEach(({ gain }) => gain.disconnect()); } catch {}

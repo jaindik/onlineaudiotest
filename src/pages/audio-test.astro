@@ -8,21 +8,17 @@ const schema = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': 'WebApplication',
-      name: 'Online Audio Test',
+      '@type': 'WebPage',
+      name: 'Audio Test Finder',
       url: 'https://onlineaudiotest.com/audio-test/',
-      description: 'A complete browser-based audio check for speakers, headphones, microphones, Bluetooth delay, and stereo channels.',
-      applicationCategory: 'UtilitiesApplication',
-      operatingSystem: 'Any',
-      browserRequirements: 'Requires a modern browser with Web Audio API support',
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      description: 'Choose the right browser-based test for a microphone, speaker, headphones, or audio delay.',
       provider: { '@type': 'Organization', name: 'OnlineAudioTest.com', url: 'https://onlineaudiotest.com/' },
     },
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://onlineaudiotest.com/' },
-        { '@type': 'ListItem', position: 2, name: 'Online Audio Test', item: 'https://onlineaudiotest.com/audio-test/' },
+        { '@type': 'ListItem', position: 2, name: 'Choose an Audio Test', item: 'https://onlineaudiotest.com/audio-test/' },
       ],
     },
     {
@@ -43,25 +39,25 @@ const schema = {
 const tests = [
   { href: '/speaker-test/', label: 'Speaker test', description: 'Check left, right, stereo balance, and channel routing.', tone: 'blue' },
   { href: '/mic-test/', label: 'Microphone test', description: 'Check input levels, permissions, and headset microphones.', tone: 'mint' },
-  { href: '/headphone-test/', label: 'Headphone test', description: 'Test channel balance, frequency response, and driver issues.', tone: 'violet' },
-  { href: '/latency-test/', label: 'Audio latency test', description: 'Measure system output delay in milliseconds.', tone: 'amber' },
+  { href: '/headphone-test/', label: 'Headphone sound test', description: 'Check left/right audio, balance, bass, and treble.', tone: 'violet' },
+  { href: '/latency-test/', label: 'Audio latency test', description: 'View reported output latency or estimate playback-to-microphone delay.', tone: 'amber' },
   { href: '/bluetooth-latency-test/', label: 'Bluetooth latency test', description: 'Check wireless audio delay and codec-related lag.', tone: 'coral' },
   { href: '/audio-device-check/', label: 'Audio device check', description: 'Inspect browser audio devices, channels, and sample rate.', tone: 'slate' },
 ];
 ---
 
 <Layout
-  title="Online Audio Test — Check Speakers, Headphones & Mic"
-  description="Run a complete online audio test for speakers, headphones, microphones, stereo channels, and Bluetooth delay. Free, private, and browser-based."
-  keywords="online audio test, audio test online, sound test, speaker and microphone test, headphone test, bluetooth audio test"
+  title="Choose an Online Audio Test | Mic, Speaker & Headphone Checks"
+  description="Choose a free browser test for your microphone, speakers, headphones, or audio delay. See what each test checks and where to start troubleshooting."
+  keywords="audio test tools, microphone test, speaker test, headphone test, audio latency test, audio device check"
   canonical="https://onlineaudiotest.com/audio-test/"
   alternates={alternates}
   schema={schema}
 >
   <section class="tool-hero container hub-hero">
     <p class="eyebrow">Audio diagnostics</p>
-    <h1>Online Audio Test</h1>
-    <p>Check your speakers, headphones, microphone, stereo channels, and Bluetooth delay in your browser. Choose one focused test below—nothing is uploaded and no download is required.</p>
+    <h1>Choose the right audio test</h1>
+    <p>Pick a focused browser test for the problem you are checking: microphone input, speaker output, headphone channels, or audio delay. Each test explains what it measures and what to try next.</p>
     <a class="btn btn-primary btn-lg" href="/audio-device-check/">Start with an audio device check</a>
   </section>
 

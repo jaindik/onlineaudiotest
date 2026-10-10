@@ -65,7 +65,7 @@ const schema = {
 
 <Layout
   title="Bluetooth Latency Test (Free) — Measure Audio Delay in ms"
-  description="Free bluetooth latency test — measure your wireless audio delay in milliseconds instantly, no download. Compare SBC, AAC, and aptX codec performance."
+  description="Check Bluetooth audio delay in your browser. View reported output latency or estimate playback-to-microphone round-trip delay."
   keywords="bluetooth latency test, bluetooth audio delay, wireless audio latency, bluetooth headphone latency, bluetooth 5.0 latency test, bluetooth audio lag test, aptx latency test, sbc latency test"
   canonical="https://onlineaudiotest.com/bluetooth-latency-test/"
   schema={schema}
@@ -76,8 +76,8 @@ const schema = {
   <!-- HERO -->
   <section class="tool-hero container">
     <h1>Bluetooth Latency Test</h1>
-    <p>Run a Bluetooth latency test to measure the delay between an audio signal and what you hear through your wireless headphones, earbuds, or speaker. This test helps identify Bluetooth audio lag caused by codec limitations, buffering, or device processing.</p>
-    <p style="font-size:16px;color:var(--body-text);max-width:540px;margin-inline:auto;margin-top:var(--s-md);line-height:1.6">Most Bluetooth devices introduce some delay, but the amount varies depending on the codec being used. Modern codecs such as aptX Adaptive can perform significantly better than standard SBC connections.</p>
+    <p>Connect your Bluetooth headphones, earbuds, or speaker before testing. The first result uses latency values reported by your browser and audio device; the microphone round-trip test estimates playback-to-mic delay and may be affected by your room and setup.</p>
+    <p style="font-size:16px;color:var(--body-text);max-width:540px;margin-inline:auto;margin-top:var(--s-md);line-height:1.6">Results can vary by browser, operating system, device, codec, and audio routing. Use the same test and setup when comparing a change; this page cannot identify the active codec by itself.</p>
   </section>
 
   <!-- TOOL -->
@@ -437,7 +437,7 @@ const schema = {
         resultNote.className = 'result-note';
       } else {
         showResult(total, 'Bluetooth latency', base, output);
-        resultNote.textContent = 'Latency measured. Confirm your Bluetooth device is the active output.';
+        resultNote.textContent = 'Browser-reported system latency. Confirm your Bluetooth device is the active output; compare results with the same setup.';
         resultNote.className = 'result-note success';
       }
 
@@ -501,7 +501,7 @@ const schema = {
         resultNote.className = 'result-note error';
       } else {
         showResult(latencyMs, 'Round-trip latency');
-        resultNote.textContent = 'Round-trip latency measured. Includes speaker → air → mic delay.';
+        resultNote.textContent = 'Round-trip delay estimate detected from playback to microphone. Room acoustics and microphone placement can affect the result.';
         resultNote.className = 'result-note success';
       }
 

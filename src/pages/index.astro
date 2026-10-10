@@ -10,11 +10,6 @@ const schema = {
       "name": "OnlineAudioTest.com",
       "url": "https://onlineaudiotest.com/",
       "description": "Free browser-based audio test tools. Mic check online, left right audio test, stereo audio test, headphone test, and audio latency test — no download required.",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://onlineaudiotest.com/{search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
     },
     {
       "@type": "Organization",
@@ -27,15 +22,16 @@ const schema = {
       "name": "Free Online Audio Test Tools",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "url": "https://onlineaudiotest.com/mic-test/",                    "name": "Mic Check Online — Free Microphone & Earphone Mic Test" },
-        { "@type": "ListItem", "position": 2, "url": "https://onlineaudiotest.com/speaker-test/",               "name": "Left Right Audio Test — Stereo & Headphone Check" },
-        { "@type": "ListItem", "position": 3, "url": "https://onlineaudiotest.com/latency-test/",               "name": "Audio Latency Test — Bluetooth & AirPods Delay" },
-        { "@type": "ListItem", "position": 4, "url": "https://onlineaudiotest.com/hearing-test/",               "name": "Online Hearing Test — Check Your Hearing Range & Frequency Limit" },
-        { "@type": "ListItem", "position": 5, "url": "https://onlineaudiotest.com/audio-spectrum-analyzer/",    "name": "Audio Spectrum Analyzer — Real-Time FFT Microphone Frequency Visualizer" },
-        { "@type": "ListItem", "position": 6, "url": "https://onlineaudiotest.com/voice-recorder/",             "name": "Online Voice Recorder — Free Browser Audio Recorder with WAV Download" },
-        { "@type": "ListItem", "position": 7, "url": "https://onlineaudiotest.com/mic-quality-test/",           "name": "Microphone Quality Test — Noise Floor, SNR, Clipping & Quality Score" },
-        { "@type": "ListItem", "position": 8, "url": "https://onlineaudiotest.com/bpm-detector/",               "name": "BPM Detector — Find the Tempo of Any Song Online" },
-        { "@type": "ListItem", "position": 9, "url": "https://onlineaudiotest.com/key-detector/",               "name": "Song Key Detector — Find the Musical Key of Any Song" },
-        { "@type": "ListItem", "position": 10, "url": "https://onlineaudiotest.com/key-and-bpm-detector/",      "name": "Key and BPM Detector — Find Key and Tempo Together" }
+        { "@type": "ListItem", "position": 2, "url": "https://onlineaudiotest.com/speaker-test/",               "name": "Speaker Test — Check Speaker Sound and Left/Right Channels" },
+        { "@type": "ListItem", "position": 3, "url": "https://onlineaudiotest.com/headphone-test/",            "name": "Headphone Test — Check Sound, Left/Right Channels, and Balance" },
+        { "@type": "ListItem", "position": 4, "url": "https://onlineaudiotest.com/latency-test/",               "name": "Audio Latency Test — Check Audio Delay" },
+        { "@type": "ListItem", "position": 5, "url": "https://onlineaudiotest.com/hearing-test/",               "name": "Online Hearing Test — Check Your Hearing Range" },
+        { "@type": "ListItem", "position": 6, "url": "https://onlineaudiotest.com/audio-spectrum-analyzer/",    "name": "Audio Spectrum Analyzer — Real-Time Microphone Frequency Visualizer" },
+        { "@type": "ListItem", "position": 7, "url": "https://onlineaudiotest.com/voice-recorder/",             "name": "Online Voice Recorder — Record and Download Audio" },
+        { "@type": "ListItem", "position": 8, "url": "https://onlineaudiotest.com/mic-quality-test/",           "name": "Microphone Quality Test — Analyze Noise and Clipping" },
+        { "@type": "ListItem", "position": 9, "url": "https://onlineaudiotest.com/bpm-detector/",               "name": "BPM Detector — Find the Tempo of a Song" },
+        { "@type": "ListItem", "position": 10, "url": "https://onlineaudiotest.com/key-detector/",              "name": "Song Key Detector — Find the Musical Key" },
+        { "@type": "ListItem", "position": 11, "url": "https://onlineaudiotest.com/key-and-bpm-detector/",      "name": "Key and BPM Detector — Find Key and Tempo Together" }
       ]
     },
   ]
@@ -53,10 +49,18 @@ const tools = [
   {
     href: '/speaker-test/',
     eyebrow: 'Left Right Audio Test',
-    title: 'Speaker & Headphone Test',
-    desc: 'Stereo audio test for speakers, headphones, and earphones. Left right audio test, headphone check, pink noise lossless audio test, and playback audio test.',
+    title: 'Speaker Test',
+    desc: 'Check speaker sound, left and right channels, and stereo balance. Use the test with speakers, soundbars, or another audio output.',
     gradClass: 'preview',
     cta: 'Run stereo test →',
+  },
+  {
+    href: '/headphone-test/',
+    eyebrow: 'Headphone Sound Test',
+    title: 'Headphone Test',
+    desc: 'Check left and right headphone audio, balance, bass, treble, and distortion with separate listening tests.',
+    gradClass: 'ship',
+    cta: 'Test headphones →',
   },
   {
     href: '/latency-test/',
@@ -208,6 +212,7 @@ const tools = [
       <div class="tools-header">
         <span class="eyebrow">Audio Tools</span>
         <h2 class="display-md tools-title">Free audio tools. Every device.</h2>
+        <p><a href="/audio-test/">Not sure which test to choose? Browse audio diagnostics →</a></p>
       </div>
       <div class="tools-grid">
         {tools.map(tool => (
