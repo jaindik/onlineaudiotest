@@ -45,7 +45,7 @@ const canonical = `https://onlineaudiotest.com${path}`;
 const schema = { '@context': 'https://schema.org', '@type': 'WebApplication', name, url: canonical, description, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
 
-<Layout title={title} description={description} keywords={`${name}, ${site.hubTitle}`} canonical={canonical} locale={locale} schema={schema} alternates={alternates}>
+<Layout title={title} description={description} keywords={`${name}, ${site.hubTitle}`} canonical={canonical} locale={locale} schema={schema} alternates={alternates} noindex>
   <section class="tool-hero container"><p class="eyebrow">{site.hubTitle}</p><h1>{name}</h1><p>{description}</p></section>
   <section class="tool-card-wrap"><div class="tool-card" id="localized-tool" data-tool-type={toolType} data-page-id={pageId} data-min-seconds={minimumSeconds} data-done={ui.done} data-denied={ui.denied} data-analyzing={fileCopy.analyzing} data-file-failure={fileCopy.failure} data-file-short={fileCopy.short} data-file-local={fileCopy.local} data-file-bpm={fileCopy.bpm} data-meter-note={fileCopy.meterNote}>
     <div class="status-bar"><div class="status-pill"><span class="dot" id="status-dot"></span><span id="status-text">{ui.ready}</span></div><span class="eyebrow caption-mono" id="result-value"></span></div>

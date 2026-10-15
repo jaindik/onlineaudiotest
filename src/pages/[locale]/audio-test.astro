@@ -20,7 +20,7 @@ const schema = {
 };
 ---
 
-<Layout title={content.title} description={content.description} keywords={content.keywords} canonical={canonical} locale={content.code} alternates={buildAudioHubAlternates()} schema={schema}>
+<Layout title={content.title} description={content.description} keywords={content.keywords} canonical={canonical} locale={content.code} alternates={buildAudioHubAlternates()} schema={schema} noindex>
   <section class="tool-hero container hub-hero"><p class="eyebrow">{content.eyebrow}</p><h1>{content.title.split(' — ')[0]}</h1><p>{content.intro}</p><a class="btn btn-primary btn-lg" href={localizedToolPath('/audio-device-check/', content.code)}>{content.cta}</a></section>
   <section class="hub-section container" aria-labelledby="choose-test"><div class="section-heading"><p class="eyebrow">{content.chooseEyebrow}</p><h2 id="choose-test">{content.chooseTitle}</h2></div><div class="test-grid">{content.tests.map((test, index) => <a class="test-card" href={localizedToolPath(test.href, content.code)}><span class="test-number">0{index + 1}</span><span class="test-card-body"><strong>{test.title}</strong><span>{test.text}</span></span><span class="test-arrow" aria-hidden="true">→</span></a>)}</div></section>
   <section class="hub-section hub-explain container"><div><p class="eyebrow">{content.startEyebrow}</p><h2>{content.startTitle}</h2></div><div class="quick-check">{content.quick.map((item) => <p><strong>{item.title}</strong> {item.text} {item.links.map((link) => <a href={localizedToolPath(link.href, content.code)}>{link.label}</a>)}</p>)}</div></section>

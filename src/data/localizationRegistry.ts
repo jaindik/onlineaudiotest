@@ -20,7 +20,7 @@ export interface LocalePageStatus {
   sourceRevision: string;
 }
 
-/** The source-of-truth inventory for every indexable page family. */
+/** The source-of-truth inventory for every page family available in each locale. */
 export const INDEXABLE_PAGE_FAMILIES: LocalizedPageDefinition[] = [
   { id: 'home', englishPath: '/', kind: 'landing', priority: 'core' },
   { id: 'audio-test', englishPath: '/audio-test/', kind: 'landing', priority: 'core' },

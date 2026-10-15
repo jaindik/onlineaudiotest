@@ -7,6 +7,8 @@ import cloudflare from '@astrojs/cloudflare';
 
 // Segments that should never appear in the sitemap (redirect stubs & error pages)
 const EXCLUDE_SEGMENTS = ['404', '500'];
+// Draft locale pages stay crawlable for their noindex directive, but are not sitemap entries.
+const NON_INDEXABLE_LOCALE_PREFIXES = ['/id-id/', '/hi-in/', '/vi-vn/', '/es-mx/', '/ur-pk/', '/de-de/', '/tr-tr/', '/bn-bd/', '/th-th/', '/fr-fr/'];
 
 export default defineConfig({
   site: 'https://onlineaudiotest.com',
@@ -21,7 +23,9 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      filter: (page) => !EXCLUDE_SEGMENTS.some((seg) => page.includes(`/${seg}`)),
+      filter: (page) =>
+        !EXCLUDE_SEGMENTS.some((seg) => page.includes(`/${seg}`)) &&
+        !NON_INDEXABLE_LOCALE_PREFIXES.some((prefix) => page.includes(prefix)),
       serialize(item) {
         const u = item.url;
         if (u === 'https://onlineaudiotest.com/') {

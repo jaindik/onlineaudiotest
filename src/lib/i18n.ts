@@ -143,7 +143,7 @@ const INDEXABLE_ENGLISH_PATHS = new Set([
   '/about/', '/contact/', '/privacy/', '/terms/',
 ]);
 
-/** Generate one complete family for any indexable English, PT, or prefixed locale URL. */
+/** Generate alternates only for the English and established PT-BR page families. */
 export function buildSiteAlternates(currentPath: string): AlternateLink[] {
   const normalized = currentPath.endsWith('/') ? currentPath : `${currentPath}/`;
   let englishPath = normalized;
@@ -160,7 +160,6 @@ export function buildSiteAlternates(currentPath: string): AlternateLink[] {
   return buildAlternateLinks([
     { hreflang: 'en', href: `https://onlineaudiotest.com${englishPath}` },
     { hreflang: 'pt-BR', href: `https://onlineaudiotest.com${localizedToolPath(englishPath, 'pt-BR')}` },
-    ...Object.keys(LOCALES).filter((code) => code !== 'en' && code !== 'pt-BR').map((code) => ({ hreflang: code, href: `https://onlineaudiotest.com/${code.toLowerCase()}${englishPath}` })),
     { hreflang: 'x-default', href: `https://onlineaudiotest.com${englishPath}` },
   ]);
 }

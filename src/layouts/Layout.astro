@@ -13,9 +13,10 @@ export interface Props {
   keywords?: string;
   locale?: string;
   alternates?: AlternateLink[];
+  noindex?: boolean;
 }
 
-const { title, description, canonical, schema, pageClass = '', sidebar = false, keywords, locale = 'en', alternates = [] } = Astro.props;
+const { title, description, canonical, schema, pageClass = '', sidebar = false, keywords, locale = 'en', alternates = [], noindex = false } = Astro.props;
 const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const site = 'https://onlineaudiotest.com';
 const canonicalURL = canonical || new URL(Astro.url.pathname, site).href;
@@ -34,7 +35,7 @@ const navLabels = {
   key: getLocalizedToolName(locale, 'key-detector'),
 };
 const chrome = getLocalizedChromeCopy(locale);
-const alternateLinks = buildSiteAlternates(currentPath).length ? buildSiteAlternates(currentPath) : buildAlternateLinks(alternates);
+const alternateLinks = noindex ? [] : (buildSiteAlternates(currentPath).length ? buildSiteAlternates(currentPath) : buildAlternateLinks(alternates));
 const localeOptions = Object.values(LOCALES).map((option) => {
   const alternate = alternateLinks.find((link) => link.hreflang === option.code);
   const homePath = option.code === 'en' ? '/' : option.code === 'pt-BR' ? '/pt-br/' : `/${option.code.toLowerCase()}/`;
@@ -60,7 +61,7 @@ const localeOptions = Object.values(LOCALES).map((option) => {
   <meta name="title" content={title} />
   <meta name="description" content={description} />
   {keywords && <meta name="keywords" content={keywords} />}
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow'} />
   <meta name="theme-color" content="#ffffff" />
   <meta name="author" content="Dik Jain" />
 
